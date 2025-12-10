@@ -3,6 +3,8 @@ import { Product } from '../../common/product';
 import { ProductService } from '../../services/product.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
+import { CartService } from '../../services/cart.service';
+import { CartItem } from '../../common/cart-item';
 
 @Component({
   selector: 'app-product-details',
@@ -15,6 +17,7 @@ export class ProductDetailsComponent {
 
   constructor(
     private productService: ProductService,
+    private cartService: CartService,
     private route: ActivatedRoute
   ) {}
 
@@ -27,8 +30,13 @@ export class ProductDetailsComponent {
   handleProductDetails() {
     const theProductId: number = +this.route.snapshot.paramMap.get('id')!;
 
-    this.productService.getProduct(theProductId).subscribe((data=>{
+    this.productService.getProduct(theProductId).subscribe((data) => {
       this.product = data;
-    }))
+    });
+  }
+
+  addToCart() {
+    const theCartItem = new CartItem(this.product);
+    this.cartService.addToCart(theCartItem);
   }
 }

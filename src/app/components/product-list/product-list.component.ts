@@ -4,6 +4,8 @@ import { Product } from '../../common/product';
 import { CurrencyPipe, CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import { CartItem } from '../../common/cart-item';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-product-list',
@@ -27,6 +29,7 @@ export class ProductListComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
+    private cartService: CartService,
     private route: ActivatedRoute
   ) {}
 
@@ -135,6 +138,8 @@ export class ProductListComponent implements OnInit {
   }
 
   addToCart(theProduct: Product) {
-    throw new Error('Method not implemented.');
+    const theCartItem = new CartItem(theProduct);
+
+    this.cartService.addToCart(theCartItem);
   }
 }
