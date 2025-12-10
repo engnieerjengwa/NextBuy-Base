@@ -1,0 +1,69 @@
+<div class="main-content">
+  <div class="section-content section-content-p30">
+    <h4>Category: {{ currentCategoryName }}</h4>
+    <hr />
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3" *ngFor="let tempProduct of products">
+          <div class="product-box">
+            <a routerLink="/products/{{ tempProduct.id }}"
+              ><img
+                [src]="tempProduct.imageUrl"
+                alt="{{ tempProduct.name }}"
+                class="img-responsive"
+              />
+            </a>
+            <a routerLink="/products/{{ tempProduct.id }}"
+              ><h1>{{ tempProduct.name }}</h1></a
+            >
+            <div class="price">
+              {{ tempProduct.unitPrice | currency : "USD" }}
+            </div>
+
+            <button (click)="addToCart(tempProduct)" class="btn btn-primary btn-sm">Add to cart</button>
+          </div>
+        </div>
+        <!-- If products not found -->
+        <div
+          *ngIf="products?.length == 0"
+          class="alert alert-warning col-md-12"
+          role="alert"
+        >
+          No products matching your search were found!
+        </div>
+      </div>
+
+      <div class="footer-pagination">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="pagination-controls d-flex justify-content-between align-items-center">
+              <div class="flex-grow-1"></div>
+              <div class="pagination-nav">
+                <ngb-pagination
+                  [(page)]="thePageNumber"
+                  [pageSize]="thePageSize"
+                  [collectionSize]="theTotalElements"
+                  [maxSize]="5"
+                  [boundaryLinks]="true"
+                  (pageChange)="listProducts()"
+                  class="pagination-rounded"
+                >
+                </ngb-pagination>
+              </div>
+              <div class="flex-grow-1 d-flex justify-content-end">
+                <div class="page-size-selector d-flex align-items-center">
+                  <span class="mr-2">Page Size</span>
+                  <select #myPageSelect (change)="updatePageSize(myPageSelect.value)" class="form-control form-control-sm">
+                    <option selected="true">10</option>
+                    <option>25</option>
+                    <option>100</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
