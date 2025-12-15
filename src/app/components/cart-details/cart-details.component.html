@@ -28,8 +28,10 @@
                   <label>Quantity:</label>
                   <div class="row no-gutters">
                     <div class="col">
-                      <button (click)="decrementItem(tempCartItem)"
-                              class="btn btn-primary btn-sm">
+                      <button
+                        (click)="decrementItem(tempCartItem)"
+                        class="btn btn-primary btn-sm"
+                      >
                         <i class="fas fa-minus"></i>
                       </button>
                     </div>
@@ -39,15 +41,19 @@
                     </div>
 
                     <div class="col">
-                      <button (click)="incrementItem(tempCartItem)"
-                              class="btn btn-primary btn-sm">
+                      <button
+                        (click)="incrementItem(tempCartItem)"
+                        class="btn btn-primary btn-sm"
+                      >
                         <i class="fas fa-plus"></i>
                       </button>
                     </div>
 
                     <div class="col ml-2">
-                      <button (click)="removeItem(tempCartItem)"
-                              class="btn btn-danger btn-sm">
+                      <button
+                        (click)="removeItem(tempCartItem)"
+                        class="btn btn-danger btn-sm"
+                      >
                         Remove
                       </button>
                     </div>
@@ -67,6 +73,9 @@
                 <p>Total Quantity: {{ totalQuantity }}</p>
                 <p>Shipping: FREE</p>
                 <p>Total Price: {{ totalPrice | currency : "USD" }}</p>
+                <a routerLink="/checkout" class="btn btn-success btn-lg"
+                  >Proceed to Checkout</a
+                >
               </td>
             </tr>
           </tbody>
@@ -74,7 +83,11 @@
       </div>
 
       <!-- Display a message when cart is empty -->
-      <div *ngIf="cartItems.length === 0" class="alert alert-warning col-md-12" role="alert">
+      <div
+        *ngIf="cartItems.length === 0"
+        class="alert alert-warning col-md-12"
+        role="alert"
+      >
         Your shopping cart is empty.
       </div>
     </div>

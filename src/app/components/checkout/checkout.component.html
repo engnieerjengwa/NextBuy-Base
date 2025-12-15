@@ -1,0 +1,362 @@
+<div class="main-content page-m">
+  <div class="section-content section-content-p30">
+    <div class="container-fluid">
+      <form [formGroup]="checkoutFormGroup" (ngSubmit)="onSubmit()">
+        <!--  Customer Details -->
+        <div formGroupName="customer" class="form-area">
+          <h3 class="title-1 mb-20">Customer Details</h3>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="firstName">First Name</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="firstName"
+                class="form-control"
+                formControlName="firstName"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="lastName">Last Name</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="lastName"
+                class="form-control"
+                formControlName="lastName"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="email">Email</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="email"
+                id="email"
+                class="form-control"
+                formControlName="email"
+              />
+            </div>
+          </div>
+        </div>
+        <!-- Shipping Address Details-->
+        <div formGroupName="shippingAddress" class="form-area">
+          <h3 class="title-1 mb-20">Shipping Address</h3>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="street">Street</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="street"
+                class="form-control"
+                formControlName="street"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="city">City</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="city"
+                class="form-control"
+                formControlName="city"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="state">State</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="state"
+                class="form-control"
+                formControlName="state"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="country">Country</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="country"
+                class="form-control"
+                formControlName="country"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="zipCode">Zip Code</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="zipCode"
+                class="form-control"
+                formControlName="zipCode"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Checkbox to copy shipping address to billing -->
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="copyShippingToBilling"
+                (change)="copyShippingToBilling($event)"
+              />
+              <label class="form-check-label" for="copyShippingToBilling">
+                Same as shipping address
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Billing Address -->
+        <div formGroupName="billingAddress" class="form-area">
+          <h3 class="title-1 mb-20">Billing Address</h3>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="billingStreet">Street</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="billingStreet"
+                class="form-control"
+                formControlName="street"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="billingCity">City</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="billingCity"
+                class="form-control"
+                formControlName="city"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="billingState">State</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="billingState"
+                class="form-control"
+                formControlName="state"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="billingCountry">Country</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="billingCountry"
+                class="form-control"
+                formControlName="country"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="billingZipCode">Zip Code</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="billingZipCode"
+                class="form-control"
+                formControlName="zipCode"
+              />
+            </div>
+          </div>
+        </div>
+        <!-- Payment Details -->
+        <div formGroupName="cardDetails" class="form-area">
+          <h3 class="title-1 mb-20">Payment Details</h3>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="cardType">Card Type</label>
+            </div>
+            <div class="input-space">
+              <select
+                id="cardType"
+                class="form-control"
+                formControlName="cardType"
+              >
+                <option value="Visa">Visa</option>
+                <option value="MasterCard">MasterCard</option>
+                <option value="AmericanExpress">American Express</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="nameOnCard">Name on Card</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="nameOnCard"
+                class="form-control"
+                formControlName="nameOnCard"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="cardNumber">Card Number</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="cardNumber"
+                class="form-control"
+                formControlName="cardNumber"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="securityCode">Security Code</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="securityCode"
+                class="form-control"
+                formControlName="securityCode"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="expirationMonth">Expiration Month</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="expirationMonth"
+                class="form-control"
+                formControlName="expirationMonth"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label for="expirationYear">Expiration Year</label>
+            </div>
+            <div class="input-space">
+              <input
+                type="text"
+                id="expirationYear"
+                class="form-control"
+                formControlName="expirationYear"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Review Button -->
+        <div class="text-center mb-4">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="toggleOrderReview()"
+          >
+            {{
+              showOrderReview ? "Hide Order Details" : "Review Order Details"
+            }}
+          </button>
+        </div>
+
+        <!-- Order Review Section -->
+        <div *ngIf="showOrderReview" class="form-area">
+          <h3 class="title-1 mb-20">Order Review</h3>
+
+          <!-- Display message if cart is empty -->
+          <div *ngIf="cartItems.length === 0" class="alert alert-warning">
+            Your shopping cart is empty.
+          </div>
+
+          <!-- Display order items if cart is not empty -->
+          <div *ngIf="cartItems.length > 0">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th width="20%">Product Image</th>
+                  <th width="50%">Product Detail</th>
+                  <th width="30%">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let tempCartItem of cartItems">
+                  <td>
+                    <img
+                      src="{{ tempCartItem.imageUrl }}"
+                      class="img-responsive"
+                      width="150px"
+                    />
+                  </td>
+                  <td>
+                    <p>{{ tempCartItem.name }}</p>
+                    <p>Quantity: {{ tempCartItem.quantity }}</p>
+                  </td>
+                  <td>
+                    <p>Price: {{ tempCartItem.unitPrice | currency }}</p>
+                    <p>
+                      Subtotal:
+                      {{ getProductSubtotal(tempCartItem) | currency }}
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2"></td>
+                  <td style="font-weight: bold">
+                    <p>Total Quantity: {{ totalQuantity }}</p>
+                    <p>Shipping: FREE</p>
+                    <p>Total Price: {{ totalPrice | currency }}</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-info">Purchase</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
