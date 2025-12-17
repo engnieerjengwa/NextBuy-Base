@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit, HostListener } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
+import { CardExpiryService } from '../../services/card-expiry.service';
 import { CartItem } from '../../common/cart-item';
-import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe, NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [ReactiveFormsModule, CurrencyPipe, NgFor, NgIf],
+  imports: [ReactiveFormsModule, CurrencyPipe, NgFor, NgIf, NgClass],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css',
 })
@@ -19,9 +20,38 @@ export class CheckoutComponent implements OnInit {
   totalQuantity: number = 0;
   showOrderReview: boolean = false;
 
+  // Credit card form
+  cardYears: number[] = [];
+  cardMonths: number[] = [];
+  selectedYear: number = 0;
+  selectedMonth: number = 0;
+
+  // Month/Year selector
+  showExpirySelector: boolean = false;
+  displayYear: number = 0;
+  monthsGrid: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  formattedExpiryDate: string = '';
+
+  // Click outside listener to close the expiry selector
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: Event) {
+    const target = event.target as HTMLElement;
+    const expirySelector = document.querySelector('.expiry-selector-popup');
+    const expiryDisplay = document.querySelector('.expiry-display');
+
+    if (this.showExpirySelector &&
+        expirySelector &&
+        expiryDisplay &&
+        !expirySelector.contains(target) &&
+        !expiryDisplay.contains(target)) {
+      this.showExpirySelector = false;
+    }
+  }
+
   constructor(
     private formBuilder: FormBuilder,
-    private cartService: CartService
+    private cartService: CartService,
+    private cardExpiryService: CardExpiryService
   ) {}
 
   ngOnInit() {
@@ -50,10 +80,14 @@ export class CheckoutComponent implements OnInit {
         nameOnCard: [''],
         cardNumber: [''],
         securityCode: [''],
-        expirationMonth: [''],
-        expirationYear: [''],
+        cardExpires: ['', [Validators.required]],
+        expiryMonth: ['', [Validators.required]],
+        expiryYear: ['', [Validators.required]],
       }),
     });
+
+    // Initialize credit card form data
+    this.setupCardExpiryData();
 
     // Subscribe to shipping address changes
     this.checkoutFormGroup
@@ -96,5 +130,93 @@ export class CheckoutComponent implements OnInit {
 
   getProductSubtotal(cartItem: CartItem): number {
     return cartItem.quantity * cartItem.unitPrice;
+  }
+
+  // Set up card expiry data (months and years)
+  setupCardExpiryData() {
+    const currentYear: number = this.cardExpiryService.getThisYear();
+    const currentMonth: number = this.cardExpiryService.getCurrentMonth();
+
+    this.displayYear = currentYear;
+    this.selectedYear = currentYear;
+    this.selectedMonth = currentMonth;
+
+    this.cardExpiryService.getCardYear().subscribe(
+      (data: number[]) => {
+        this.cardYears = data;
+      }
+    );
+
+    this.cardExpiryService.getValidMonths(currentYear).subscribe(
+      (data: number[]) => {
+        this.cardMonths = data;
+      }
+    );
+  }
+
+  toggleExpirySelector() {
+    this.showExpirySelector = !this.showExpirySelector;
+    if (this.showExpirySelector) {
+      this.displayYear = this.selectedYear;
+    }
+  }
+
+  navigateYear(direction: number) {
+    this.displayYear += direction;
+  }
+
+  canNavigateToPreviousYear(): boolean {
+    const currentYear = this.cardExpiryService.getThisYear();
+    return this.displayYear > currentYear;
+  }
+
+  selectMonth(month: number) {
+    if (this.isMonthSelectable(month)) {
+      this.selectedMonth = month;
+      this.selectedYear = this.displayYear;
+      this.checkoutFormGroup.get('cardDetails.expiryMonth')?.setValue(month);
+      this.checkoutFormGroup.get('cardDetails.expiryYear')?.setValue(this.displayYear);
+      this.updateCardExpiresValue();
+      this.showExpirySelector = false;
+    }
+  }
+
+  isMonthSelectable(month: number): boolean {
+    const currentYear = this.cardExpiryService.getThisYear();
+    const currentMonth = this.cardExpiryService.getCurrentMonth();
+
+    if (this.displayYear > currentYear) {
+      return true;
+    } else if (this.displayYear === currentYear) {
+      return month >= currentMonth;
+    }
+    return false;
+  }
+
+  // Check if a month is selected
+  isMonthSelected(month: number): boolean {
+    return this.selectedMonth === month && this.selectedYear === this.displayYear;
+  }
+
+  // Get the month name from the month number
+  getMonthName(month: number): string {
+    const monthNames = [
+      'Jan', 'Feb', 'Mar', 'Apr',
+      'May', 'Jun', 'Jul', 'Aug',
+      'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    return monthNames[month - 1];
+  }
+
+  // Update the card expires value and formatted display
+  updateCardExpiresValue() {
+    const month = +this.checkoutFormGroup.get('cardDetails.expiryMonth')?.value;
+    const year = +this.checkoutFormGroup.get('cardDetails.expiryYear')?.value;
+
+    if (month && year) {
+      const formattedDate: string = this.cardExpiryService.formatExpiryDate(month, year);
+      this.checkoutFormGroup.get('cardDetails.cardExpires')?.setValue(formattedDate);
+      this.formattedExpiryDate = formattedDate;
+    }
   }
 }

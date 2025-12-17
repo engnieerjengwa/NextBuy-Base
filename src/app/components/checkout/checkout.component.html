@@ -261,28 +261,60 @@
           </div>
           <div class="row">
             <div class="col-md-2">
-              <label for="expirationMonth">Expiration Month</label>
+              <label>Card Expires</label>
             </div>
             <div class="input-space">
-              <input
-                type="text"
-                id="expirationMonth"
-                class="form-control"
-                formControlName="expirationMonth"
-              />
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-2">
-              <label for="expirationYear">Expiration Year</label>
-            </div>
-            <div class="input-space">
-              <input
-                type="text"
-                id="expirationYear"
-                class="form-control"
-                formControlName="expirationYear"
-              />
+              <div class="expiry-selector-container">
+                <!-- Read-only display field that shows the selected expiry date -->
+                <div class="expiry-display" (click)="toggleExpirySelector()">
+                  <input
+                    type="text"
+                    [value]="formattedExpiryDate"
+                    readonly
+                    class="form-control"
+                    placeholder="MM/YY"
+                    [ngClass]="{'is-invalid': checkoutFormGroup.get('cardDetails.cardExpires')?.invalid &&
+                               (checkoutFormGroup.get('cardDetails.cardExpires')?.dirty ||
+                                checkoutFormGroup.get('cardDetails.cardExpires')?.touched)}"
+                  />
+                  <div *ngIf="checkoutFormGroup.get('cardDetails.cardExpires')?.invalid &&
+                              (checkoutFormGroup.get('cardDetails.cardExpires')?.dirty ||
+                               checkoutFormGroup.get('cardDetails.cardExpires')?.touched)"
+                       class="invalid-feedback">
+                    <div *ngIf="checkoutFormGroup.get('cardDetails.cardExpires')?.errors?.['required']">
+                      Card expiration date is required
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Month/Year selector popup -->
+                <div *ngIf="showExpirySelector" class="expiry-selector-popup">
+                  <div class="selector-header">
+                    <h5>Select Expiry</h5>
+                  </div>
+                  <div class="year-navigation">
+                    <button type="button" class="year-nav-btn" (click)="navigateYear(-1)" [disabled]="!canNavigateToPreviousYear()">
+                      &lt;
+                    </button>
+                    <span class="year-display">{{ displayYear }}</span>
+                    <button type="button" class="year-nav-btn" (click)="navigateYear(1)">
+                      &gt;
+                    </button>
+                  </div>
+                  <div class="month-grid">
+                    <div *ngFor="let month of monthsGrid" class="month-item"
+                         [ngClass]="{'disabled': !isMonthSelectable(month), 'selected': isMonthSelected(month)}"
+                         (click)="selectMonth(month)">
+                      {{ getMonthName(month) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Hidden fields to store the values -->
+              <input type="hidden" formControlName="expiryMonth" />
+              <input type="hidden" formControlName="expiryYear" />
+              <input type="hidden" formControlName="cardExpires" />
             </div>
           </div>
         </div>
