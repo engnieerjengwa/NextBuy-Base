@@ -76,28 +76,26 @@
           </div>
           <div class="row">
             <div class="col-md-2">
-              <label for="state">State</label>
+              <label for="country">Country</label>
             </div>
             <div class="input-space">
-              <input
-                type="text"
-                id="state"
-                class="form-control"
-                formControlName="state"
-              />
+              <select formControlName="country" class="form-control">
+                <option *ngFor="let country of countries" [ngValue]="country">
+                  {{ country.name }}
+                </option>
+              </select>
             </div>
           </div>
           <div class="row">
             <div class="col-md-2">
-              <label for="country">Country</label>
+              <label for="state">State/Province</label>
             </div>
             <div class="input-space">
-              <input
-                type="text"
-                id="country"
-                class="form-control"
-                formControlName="country"
-              />
+              <select formControlName="state" class="form-control">
+                <option *ngFor="let state of shippingAddressStates" [ngValue]="state">
+                  {{ state.name }}
+                </option>
+              </select>
             </div>
           </div>
           <div class="row">
@@ -163,28 +161,26 @@
           </div>
           <div class="row">
             <div class="col-md-2">
-              <label for="billingState">State</label>
+              <label for="billingCountry">Country</label>
             </div>
             <div class="input-space">
-              <input
-                type="text"
-                id="billingState"
-                class="form-control"
-                formControlName="state"
-              />
+              <select formControlName="country" class="form-control">
+                <option *ngFor="let country of countries" [ngValue]="country">
+                  {{ country.name }}
+                </option>
+              </select>
             </div>
           </div>
           <div class="row">
             <div class="col-md-2">
-              <label for="billingCountry">Country</label>
+              <label for="billingState">State/Province</label>
             </div>
             <div class="input-space">
-              <input
-                type="text"
-                id="billingCountry"
-                class="form-control"
-                formControlName="country"
-              />
+              <select formControlName="state" class="form-control">
+                <option *ngFor="let state of billingAddressStates" [ngValue]="state">
+                  {{ state.name }}
+                </option>
+              </select>
             </div>
           </div>
           <div class="row">

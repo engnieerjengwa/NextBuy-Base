@@ -1,11 +1,41 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import { Country } from '../common/country';
+import { State } from '../common/state';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CardExpiryService {
-  constructor() {}
+
+  private countriesUrl = 'http://localhost:8080/api/countries';
+  private provincesUrl = 'http://localhost:8080/api/provinces';
+
+  constructor(private httpClient: HttpClient) {}
+
+  /**
+   * Get all countries from the backend
+   * @returns Observable of Country array
+   */
+  getCountries(): Observable<Country[]> {
+    return this.httpClient.get<GetResponseCountries>(this.countriesUrl).pipe(
+      map(response => response._embedded.countries)
+    );
+  }
+
+  /**
+   * Get provinces/states for a specific country code
+   * @param countryCode The country code to get provinces for
+   * @returns Observable of State array
+   */
+  getProvinces(countryCode: string): Observable<State[]> {
+    const searchUrl = `${this.provincesUrl}/search/findByCountryCode?code=${countryCode}`;
+    return this.httpClient.get<GetResponseStates>(searchUrl).pipe(
+      map(response => response._embedded.provinces)
+    );
+  }
   /**
    * Get the current month (1-12)
    * @returns The current month as a number (1-12)
@@ -75,5 +105,18 @@ export class CardExpiryService {
     const yearStr: string = year.toString().slice(-2);
 
     return `${monthStr}/${yearStr}`;
+  }
+}
+
+// Interfaces for Spring Data REST _embedded responses
+interface GetResponseCountries {
+  _embedded: {
+    countries: Country[];
+  }
+}
+
+interface GetResponseStates {
+  _embedded: {
+    provinces: State[];
   }
 }

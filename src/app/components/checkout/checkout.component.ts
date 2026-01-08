@@ -4,6 +4,8 @@ import { CartService } from '../../services/cart.service';
 import { CardExpiryService } from '../../services/card-expiry.service';
 import { CartItem } from '../../common/cart-item';
 import { CurrencyPipe, NgFor, NgIf, NgClass } from '@angular/common';
+import { Country } from '../../common/country';
+import { State } from '../../common/state';
 
 @Component({
   selector: 'app-checkout',
@@ -31,6 +33,10 @@ export class CheckoutComponent implements OnInit {
   displayYear: number = 0;
   monthsGrid: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   formattedExpiryDate: string = '';
+
+  countries: Country[] = [];
+  shippingAddressStates: State[] = [];
+  billingAddressStates: State[] = [];
 
   // Click outside listener to close the expiry selector
   @HostListener('document:click', ['$event'])
@@ -89,12 +95,31 @@ export class CheckoutComponent implements OnInit {
     // Initialize credit card form data
     this.setupCardExpiryData();
 
+    // Subscribe to shipping address country changes
+    this.checkoutFormGroup
+      .get('shippingAddress.country')
+      ?.valueChanges.subscribe(
+        country => {
+          this.getStates(country.code, this.shippingAddressStates);
+        }
+      );
+
+    // Subscribe to billing address country changes
+    this.checkoutFormGroup
+      .get('billingAddress.country')
+      ?.valueChanges.subscribe(
+        country => {
+          this.getStates(country.code, this.billingAddressStates);
+        }
+      );
+
     // Subscribe to shipping address changes
     this.checkoutFormGroup
       .get('shippingAddress')
       ?.valueChanges.subscribe((value) => {
         if (this.sameAsShipping) {
           this.checkoutFormGroup.get('billingAddress')?.setValue(value);
+          this.billingAddressStates = this.shippingAddressStates;
         }
       });
 
@@ -105,6 +130,14 @@ export class CheckoutComponent implements OnInit {
       (data) => (this.totalQuantity = data)
     );
     this.cartService.computeCartTotals();
+
+    // Populate countries
+    this.cardExpiryService.getCountries().subscribe(
+      data => {
+        this.countries = data;
+        console.log('Retrieved countries: ' + JSON.stringify(data));
+      }
+    );
   }
 
   onSubmit() {
@@ -119,8 +152,11 @@ export class CheckoutComponent implements OnInit {
       this.checkoutFormGroup.controls['billingAddress'].setValue(
         this.checkoutFormGroup.controls['shippingAddress'].value
       );
+      // Copy shipping address states to billing address states
+      this.billingAddressStates = [...this.shippingAddressStates];
     } else {
       this.checkoutFormGroup.controls['billingAddress'].reset();
+      this.billingAddressStates = [];
     }
   }
 
@@ -218,5 +254,23 @@ export class CheckoutComponent implements OnInit {
       this.checkoutFormGroup.get('cardDetails.cardExpires')?.setValue(formattedDate);
       this.formattedExpiryDate = formattedDate;
     }
+  }
+
+  /**
+   * Get states/provinces for the given country code
+   * @param countryCode The country code to get states for
+   * @param stateArray The array to populate with states
+   */
+  getStates(countryCode: string, stateArray: State[]) {
+    this.cardExpiryService.getProvinces(countryCode).subscribe(
+      data => {
+        stateArray.length = 0; // Clear the array
+        data.forEach(state => stateArray.push(state));
+        console.log(`Retrieved states for ${countryCode}: ${JSON.stringify(data)}`);
+      },
+      error => {
+        console.error(`Error retrieving states for ${countryCode}: ${error}`);
+      }
+    );
   }
 }
