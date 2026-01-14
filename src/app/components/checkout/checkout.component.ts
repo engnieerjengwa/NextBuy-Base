@@ -265,12 +265,21 @@ export class CheckoutComponent implements OnInit {
   }
 
   resetCart() {
+    // Reset cart data
     this.cartService.cartItems = [];
     this.cartService.totalPrice.next(0);
     this.cartService.totalQuantity.next(0);
 
+    // Reset form and UI state variables
     this.checkoutFormGroup.reset();
+    this.sameAsShipping = false;
+    this.showOrderReview = false;
+    this.showExpirySelector = false;
+    this.formattedExpiryDate = '';
+    this.shippingAddressStates = [];
+    this.billingAddressStates = [];
 
+    // Navigate back to products page
     this.router.navigateByUrl("/products");
   }
 
