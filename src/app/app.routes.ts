@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Routes, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { CartDetailsComponent } from './components/cart-details/cart-details.component';
@@ -6,7 +6,7 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: 'checkout', component: CheckoutComponent, canActivate: [() => authGuard()] },
+  { path: 'checkout', component: CheckoutComponent, canActivate: [(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => authGuard(route, state)] },
   { path: 'cart-details', component: CartDetailsComponent },
   { path: 'products/:id', component: ProductDetailsComponent },
   { path: 'search/:keyword', component: ProductListComponent },

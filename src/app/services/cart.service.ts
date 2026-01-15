@@ -1,16 +1,20 @@
 import { Injectable } from '@angular/core';
 import { CartItem } from '../common/cart-item';
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
   cartItems: CartItem[] = [];
-  totalPrice: Subject<number> = new Subject<number>();
-  totalQuantity: Subject<number> = new Subject<number>();
+  totalPrice: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  totalQuantity: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
-  constructor() {}
+  storage: Storage = localStorage;
+
+  constructor() {
+    this.loadCartItems();
+  }
 
   addToCart(theCartItem: CartItem) {
     let alreadyExistsInCart: boolean = false;
@@ -69,5 +73,25 @@ export class CartService {
 
     this.totalPrice.next(totalPriceValue);
     this.totalQuantity.next(totalQuantityValue);
+
+    // persist cart data
+    this.persistCartItems();
+  }
+
+  persistCartItems() {
+    this.storage.setItem('cartItems', JSON.stringify(this.cartItems));
+  }
+
+  loadCartItems() {
+    // read data from storage
+    const data = this.storage.getItem('cartItems');
+
+    if (data != null) {
+      this.cartItems = JSON.parse(data);
+
+      // compute totals based on the data that is read from storage
+      this.computeCartTotals();
+    }
+    // No need for else clause as BehaviorSubject already has initial values
   }
 }
