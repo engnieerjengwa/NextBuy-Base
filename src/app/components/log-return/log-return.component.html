@@ -1,0 +1,125 @@
+<div class="main-content">
+  <div class="section-content section-content-p30">
+    <div class="container-fluid">
+
+      <!-- Loading indicator -->
+      <div *ngIf="isLoading" class="text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <p>Loading order details...</p>
+      </div>
+
+      <!-- Error message -->
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+        <div class="mt-3">
+          <button class="btn btn-secondary" (click)="backToOrderDetail()">Back to Order Details</button>
+        </div>
+      </div>
+
+      <!-- Success message -->
+      <div *ngIf="submitSuccess" class="alert alert-success">
+        <h4>Return Request Submitted Successfully!</h4>
+        <p>Your return request has been submitted and is being processed. You will receive updates via email.</p>
+        <div class="mt-3">
+          <button class="btn btn-primary mr-2" (click)="backToOrderDetail()">Back to Order Details</button>
+          <button class="btn btn-secondary" (click)="backToOrderHistory()">View All Orders</button>
+        </div>
+      </div>
+
+      <!-- Return form -->
+      <div *ngIf="!isLoading && !errorMessage && !submitSuccess && order">
+        <div class="row mb-4">
+          <div class="col-md-8">
+            <h3>Log Return Request</h3>
+            <p><strong>Order #:</strong> {{ order.orderTrackingNumber }}</p>
+          </div>
+          <div class="col-md-4 text-right">
+            <button class="btn btn-secondary" (click)="backToOrderDetail()">Back to Order Details</button>
+          </div>
+        </div>
+
+        <form [formGroup]="returnForm" (ngSubmit)="onSubmit()">
+
+          <!-- Return reason and comments -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="returnReason">Return Reason *</label>
+                <select formControlName="returnReason" id="returnReason" class="form-control"
+                        [class.is-invalid]="returnForm.get('returnReason')?.invalid && returnForm.get('returnReason')?.touched">
+                  <option value="">Select a reason</option>
+                  <option *ngFor="let reason of returnReasons" [value]="reason">{{ reason }}</option>
+                </select>
+                <div *ngIf="returnForm.get('returnReason')?.invalid && returnForm.get('returnReason')?.touched" class="invalid-feedback">
+                  Please select a return reason.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="comments">Additional Comments</label>
+                <textarea formControlName="comments" id="comments" class="form-control" rows="3"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Select items to return -->
+          <h4>Select Items to Return</h4>
+          <p class="text-muted">Please select the items you wish to return.</p>
+
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Select</th>
+                  <th>Product</th>
+                  <th>Quantity to Return</th>
+                  <th>Reason</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of returnItemsFormArray.controls; let i = index" [formGroup]="getFormGroup(item)">
+                  <td>
+                    <div class="form-check">
+                      <input type="checkbox" formControlName="selected" class="form-check-input" [id]="'item-' + i">
+                    </div>
+                  </td>
+                  <td>
+                    <label [for]="'item-' + i" class="form-check-label">{{ getFormGroup(item).get('productName')?.value }}</label>
+                  </td>
+                  <td>
+                    <input type="number" formControlName="quantity" class="form-control" min="1" [max]="getFormGroup(item).get('maxQuantity')?.value">
+                    <small class="text-muted">Max: {{ getFormGroup(item).get('maxQuantity')?.value }}</small>
+                  </td>
+                  <td>
+                    <select formControlName="reason" class="form-control" [disabled]="!getFormGroup(item).get('selected')?.value">
+                      <option value="">Select a reason</option>
+                      <option *ngFor="let reason of returnReasons" [value]="reason">{{ reason }}</option>
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div *ngIf="returnItemsFormArray.length === 0" class="alert alert-warning">
+            No items available for return.
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-md-12 text-right">
+              <button type="button" class="btn btn-secondary mr-2" (click)="backToOrderDetail()">Cancel</button>
+              <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || returnForm.invalid">
+                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
+                Submit Return Request
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

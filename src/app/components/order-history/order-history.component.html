@@ -1,0 +1,88 @@
+<div class="main-content">
+    <div class="section-content section-content-p30">
+        <div class="container-fluid">
+            <!-- Page Header -->
+            <div class="orders-header">
+                <h2>Orders</h2>
+                <div class="filter-section">
+                    <label for="orderPeriod">Orders Placed in:</label>
+                    <div class="dropdown-container">
+                        <select id="orderPeriod" [(ngModel)]="selectedPeriod" (change)="onPeriodChange()" class="form-select">
+                            <option *ngFor="let option of filterOptions" [value]="option.value">{{ option.label }}</option>
+                        </select>
+                        <span class="calendar-icon">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders List -->
+            <div *ngIf="orderHistoryList.length > 0" class="orders-container">
+                <div *ngFor="let order of orderHistoryList" class="order-card">
+                    <!-- Order Card Header Section -->
+                    <div class="order-card-header">
+                        <!-- Left: Order Status & Signature -->
+                        <div class="order-status-section">
+                            <!-- Delivery Status -->
+                            <div class="delivery-status" *ngIf="order.status === 'DELIVERED' && order.deliveryDate">
+                                <span class="delivery-status-text">
+                                    <strong>Delivered</strong> {{ order.deliveryDate | date: 'EEE, d MMM yyyy' }}
+                                </span>
+                            </div>
+                            <div class="delivery-status" *ngIf="order.status === 'SHIPPED'">
+                                <span class="delivery-status-text">
+                                    <strong>Shipped</strong> - In Transit
+                                </span>
+                            </div>
+                            <div class="delivery-status" *ngIf="order.status === 'PROCESSING'">
+                                <span class="delivery-status-text">
+                                    <strong>Processing</strong> - Preparing Your Order
+                                </span>
+                            </div>
+
+                            <!-- Proof of Delivery (Optional) -->
+                            <div class="proof-of-delivery" *ngIf="order.status === 'DELIVERED' && order.signedBy">
+                                <span class="signature-icon">
+                                    <i class="fa fa-check-circle"></i>
+                                </span>
+                                <span class="signature-text">
+                                    Signed by: {{ order.signedBy.name }} ({{ order.signedBy.role === 'CUSTOMER' ? 'Customer' : 'Concierge' }})
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Right: Order Action -->
+                        <div class="order-action">
+                            <a [routerLink]="['/orders', order.id]" class="btn btn-outline-secondary">Order Details</a>
+                        </div>
+                    </div>
+
+                    <!-- Product Preview Row -->
+                    <div class="product-preview-row">
+                        <div class="product-thumbnails">
+                            <!-- Display actual product images from order items -->
+                            <div *ngFor="let item of order.orderItems?.slice(0, 4)" class="product-thumbnail">
+                                <a [routerLink]="['/orders', order.id]">
+                                    <img [src]="item.imageUrl" alt="Product thumbnail">
+                                </a>
+                            </div>
+                            <div *ngIf="order.orderItems && order.orderItems.length > 4" class="more-items">
+                                +{{ order.orderItems.length - 4 }}
+                            </div>
+                            <!-- Fallback if no order items -->
+                            <div *ngIf="!order.orderItems || order.orderItems.length === 0" class="no-images">
+                                {{ order.totalQuantity }} item(s)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- No Orders Message -->
+            <div *ngIf="orderHistoryList.length == 0" class="alert alert-warning col-md-12" role="alert">
+                No orders found.
+            </div>
+        </div>
+    </div>
+</div>

@@ -22,10 +22,10 @@ export class AuthInterceptorService implements HttpInterceptor {
       'http://localhost:8080/api/checkout/purchase'
     ];
 
-    if (securedEndpoints.some((url) => request.urlWithParams.includes(url))) {
+    // Check if the URL starts with any of the secured endpoints
+    if (securedEndpoints.some((url) => request.urlWithParams.startsWith(url))) {
       try {
         const token = await lastValueFrom(this.auth.getAccessTokenSilently());
-        console.log('Access Token: ', token);
         request = request.clone({
           setHeaders: {
             Authorization: `Bearer ${token}`,

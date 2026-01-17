@@ -1,18 +1,19 @@
 import { DOCUMENT, NgIf } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-login-status',
   standalone: true,
-  imports: [NgIf],
+  imports: [NgIf, RouterLink],
   templateUrl: './login-status.component.html',
   styleUrl: './login-status.component.css'
 })
 export class LoginStatusComponent implements OnInit {
   isAuthenticated: boolean = false;
-  profileJson: string | undefined;
-  userEmail: string | undefined;
+  userName: string | undefined;
+
   storage: Storage = sessionStorage;
 
   constructor(private auth: AuthService, @Inject(DOCUMENT) private doc: Document) {}
@@ -24,9 +25,14 @@ export class LoginStatusComponent implements OnInit {
     });
 
     this.auth.user$.subscribe((user) => {
-      this.userEmail = user?.email;
-      this.storage.setItem('userEmail', JSON.stringify(this.userEmail));
-      console.log('User ID: ', this.userEmail);
+      this.userName = user?.name || user?.given_name || user?.nickname || user?.email;
+      this.storage.setItem('userName', JSON.stringify(this.userName));
+
+      // Store user email in session storage for order history
+      const userEmail = user?.email;
+      if (userEmail) {
+        this.storage.setItem('userEmail', JSON.stringify(userEmail));
+      }
     });
   }
 

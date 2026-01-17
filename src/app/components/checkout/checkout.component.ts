@@ -77,19 +77,43 @@ export class CheckoutComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Get user details from session storage
+    const storage: Storage = sessionStorage;
+    const userNameJson = storage.getItem('userName');
+    const userEmailJson = storage.getItem('userEmail');
+
+    // Parse user details
+    let firstName = '';
+    let lastName = '';
+    let email = '';
+
+    if (userNameJson) {
+      const userName = JSON.parse(userNameJson);
+      if (userName) {
+        // Check if userName contains a space (indicating first and last name)
+        const nameParts = userName.split(' ');
+        firstName = nameParts[0] || '';
+        lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+      }
+    }
+
+    if (userEmailJson) {
+      email = JSON.parse(userEmailJson) || '';
+    }
+
     this.checkoutFormGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
-        firstName: new FormControl('', [
+        firstName: new FormControl(firstName, [
           Validators.required,
           Validators.minLength(2),
           CustomValidators.whiteSpaceValidator,
         ]),
-        lastName: new FormControl('', [
+        lastName: new FormControl(lastName, [
           Validators.required,
           Validators.minLength(2),
           CustomValidators.whiteSpaceValidator,
         ]),
-        email: new FormControl('', [
+        email: new FormControl(email, [
           Validators.required,
           Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$'),
         ]),
@@ -140,7 +164,7 @@ export class CheckoutComponent implements OnInit {
       // Credit card details are optional, so they're set to optional too'
       cardDetails: this.formBuilder.group({
         cardType: new FormControl('', [Validators.required]),
-        nameOnCard: new FormControl('', [
+        nameOnCard: new FormControl(firstName && lastName ? `${firstName} ${lastName}`.trim() : firstName, [
           Validators.required,
           Validators.minLength(2),
           CustomValidators.whiteSpaceValidator,
@@ -234,19 +258,27 @@ export class CheckoutComponent implements OnInit {
     // Populate purchase - shipping address
     purchase.shippingAddress = this.checkoutFormGroup.controls['shippingAddress'].value;
     if (purchase.shippingAddress) {
-      const shippingState: State = JSON.parse(JSON.stringify(purchase.shippingAddress.state));
-      const shippingCountry: Country = JSON.parse(JSON.stringify(purchase.shippingAddress.country));
-      purchase.shippingAddress.state = shippingState.name;
-      purchase.shippingAddress.country = shippingCountry.name;
+      if (purchase.shippingAddress.state) {
+        const shippingState: State = JSON.parse(JSON.stringify(purchase.shippingAddress.state));
+        purchase.shippingAddress.state = shippingState.name;
+      }
+      if (purchase.shippingAddress.country) {
+        const shippingCountry: Country = JSON.parse(JSON.stringify(purchase.shippingAddress.country));
+        purchase.shippingAddress.country = shippingCountry.name;
+      }
     }
 
     // Populate purchase - billing address
     purchase.billingAddress = this.checkoutFormGroup.controls['billingAddress'].value;
     if (purchase.billingAddress) {
-        const billingState: State = JSON.parse(JSON.stringify(purchase.billingAddress.state));
-        const billingCountry: Country = JSON.parse(JSON.stringify(purchase.billingAddress.country));
-        purchase.billingAddress.state = billingState.name;
-        purchase.billingAddress.country = billingCountry.name;
+        if (purchase.billingAddress.state) {
+            const billingState: State = JSON.parse(JSON.stringify(purchase.billingAddress.state));
+            purchase.billingAddress.state = billingState.name;
+        }
+        if (purchase.billingAddress.country) {
+            const billingCountry: Country = JSON.parse(JSON.stringify(purchase.billingAddress.country));
+            purchase.billingAddress.country = billingCountry.name;
+        }
     }
 
     // Populate purchase - order and orderItems
@@ -259,7 +291,18 @@ export class CheckoutComponent implements OnInit {
         this.resetCart();
       },
       error: err => {
-        alert(`There was an error: ${err.message}`);
+        console.error('Error during checkout:', err);
+
+        let errorMessage = 'An unexpected error occurred during checkout.';
+
+        // Try to extract a more specific error message from the response
+        if (err.error && err.error.message) {
+          errorMessage = err.error.message;
+        } else if (err.message) {
+          errorMessage = err.message;
+        }
+
+        alert(`There was an error processing your order: ${errorMessage}`);
       }
     });
   }
@@ -272,6 +315,14 @@ export class CheckoutComponent implements OnInit {
 
     // Reset form and UI state variables
     this.checkoutFormGroup.reset();
+
+    // Explicitly reset each form group to ensure all controls are reset
+    this.checkoutFormGroup.get('customer')?.reset();
+    this.checkoutFormGroup.get('shippingAddress')?.reset();
+    this.checkoutFormGroup.get('billingAddress')?.reset();
+    this.checkoutFormGroup.get('cardDetails')?.reset();
+
+    // Reset UI state variables
     this.sameAsShipping = false;
     this.showOrderReview = false;
     this.showExpirySelector = false;
