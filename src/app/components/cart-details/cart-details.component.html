@@ -13,15 +13,19 @@
           <tbody>
             <tr *ngFor="let tempCartItem of cartItems">
               <td>
-                <img
-                  src="{{ tempCartItem.imageUrl }}"
-                  class="img-responsive"
-                  width="150px"
-                />
+                <a [routerLink]="['/products', tempCartItem.id]">
+                  <img
+                    src="{{ tempCartItem.imageUrl }}"
+                    class="img-responsive"
+                    width="150px"
+                  />
+                </a>
               </td>
               <td>
-                <p>{{ tempCartItem.name }}</p>
-                <p>{{ tempCartItem.unitPrice | currency }}</p>
+                <a [routerLink]="['/products', tempCartItem.id]">
+                  <p>{{ tempCartItem.name }}</p>
+                  <p>{{ tempCartItem.unitPrice | currency }}</p>
+                </a>
               </td>
               <td>
                 <div class="items">

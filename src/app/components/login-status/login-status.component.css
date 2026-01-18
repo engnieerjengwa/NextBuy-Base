@@ -21,9 +21,18 @@
   border-radius: 43px;
   background: #205b8d;
   cursor: pointer;
+  text-align: center;
 }
 
 .security-btn:hover {
   background: #0a4275;
   border: 10px solid #0a4275;
+}
+
+.order-history a {
+  text-decoration: none;
+}
+
+.order-history a.active-link {
+  text-decoration: underline;
 }
