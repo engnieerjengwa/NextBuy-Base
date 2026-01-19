@@ -47,6 +47,9 @@ export class OrderHistoryComponent implements OnInit {
         data => {
           this.allOrdersList = data._embedded.orders;
 
+          // Sort orders by date in descending order (latest first)
+          this.allOrdersList.sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime());
+
           // Treat all orders as delivered and signed for by the customer
           this.allOrdersList.forEach(order => {
             // Set status to DELIVERED

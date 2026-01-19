@@ -16,6 +16,13 @@ export class CartService {
     this.loadCartItems();
   }
 
+  clearCart() {
+    this.cartItems = [];
+    this.totalPrice.next(0);
+    this.totalQuantity.next(0);
+    this.storage.removeItem('cartItems');
+  }
+
   addToCart(theCartItem: CartItem) {
     let alreadyExistsInCart: boolean = false;
     let existingCartItem: CartItem | undefined = undefined;

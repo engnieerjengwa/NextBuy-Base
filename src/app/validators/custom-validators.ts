@@ -2,7 +2,12 @@ import { FormControl, ValidationErrors } from '@angular/forms';
 
 export class CustomValidators {
   static whiteSpaceValidator(control: FormControl): ValidationErrors | null {
-    if (control.value.trim().length === 0 && control.value.length !== null) {
+    // Check if control.value is null, undefined, or not a string
+    if (control.value === null || control.value === undefined || typeof control.value !== 'string') {
+      return null;
+    }
+
+    if (control.value.trim().length === 0) {
       return { whiteSpace: true };
     } else {
       return null;

@@ -12,14 +12,21 @@ import { from, lastValueFrom, Observable } from 'rxjs';
 export class AuthInterceptorService implements HttpInterceptor {
   constructor(private auth: AuthService) {}
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(
+    request: HttpRequest<any>,
+    next: HttpHandler,
+  ): Observable<HttpEvent<any>> {
     return from(this.handleAccess(request, next));
   }
 
-  private async handleAccess(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
+  private async handleAccess(
+    request: HttpRequest<any>,
+    next: HttpHandler,
+  ): Promise<HttpEvent<any>> {
     const securedEndpoints = [
       'http://localhost:8080/api/orders',
-      'http://localhost:8080/api/checkout/purchase'
+      'http://localhost:8080/api/checkout/purchase',
+      'http://localhost:8080/api/checkout/payment-intent',
     ];
 
     // Check if the URL starts with any of the secured endpoints
