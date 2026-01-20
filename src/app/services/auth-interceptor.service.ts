@@ -7,6 +7,7 @@ import {
 import { Injectable } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { from, lastValueFrom, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthInterceptorService implements HttpInterceptor {
@@ -24,9 +25,9 @@ export class AuthInterceptorService implements HttpInterceptor {
     next: HttpHandler,
   ): Promise<HttpEvent<any>> {
     const securedEndpoints = [
-      'http://localhost:8080/api/orders',
-      'http://localhost:8080/api/checkout/purchase',
-      'http://localhost:8080/api/checkout/payment-intent',
+      `${environment.apiUrl}/orders`,
+      `${environment.apiUrl}/checkout/purchase`,
+      `${environment.apiUrl}/checkout/payment-intent`,
     ];
 
     // Check if the URL starts with any of the secured endpoints

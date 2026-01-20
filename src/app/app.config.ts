@@ -9,6 +9,7 @@ import {
 import { provideHttpClient, withInterceptors, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { provideAuth0, authHttpInterceptorFn } from '@auth0/auth0-angular';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { environment } from '../environments/environment';
 
 // Adapter function to convert class-based interceptor to functional interceptor
 export function authInterceptorFn(req: HttpRequest<unknown>, next: HttpHandlerFn) {
@@ -22,16 +23,16 @@ export function authInterceptorFn(req: HttpRequest<unknown>, next: HttpHandlerFn
 
 // Auth0 configuration
 const auth0Config = {
-  domain: 'dev-tbkwe1ticmyodaoi.us.auth0.com',
-  clientId: 'xt4EDZM5AovUrzYGseQoXtkc880iDpxb',
+  domain: environment.auth0.domain,
+  clientId: environment.auth0.clientId,
   authorizationParams: {
-    redirect_uri: 'http://localhost:4200/login/callback',
-    audience: 'http://localhost:8080',
+    redirect_uri: environment.auth0.redirectUri,
+    audience: environment.auth0.audience,
   },
   httpInterceptor: {
     allowedList: [
-      'http://localhost:8080/api/orders/**',
-      'http://localhost:8080/api/checkout/purchase'
+      `${environment.apiUrl}/orders/**`,
+      `${environment.apiUrl}/checkout/purchase`
     ],
   },
 };
