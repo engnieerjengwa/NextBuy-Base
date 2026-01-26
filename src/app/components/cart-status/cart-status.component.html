@@ -1,7 +1,7 @@
 <div
   class="cart-container"
-  (mouseenter)="isHovering = true"
-  (mouseleave)="isHovering = false"
+  (mouseenter)="handleMouseEnter()"
+  (mouseleave)="handleMouseLeave()"
   (click)="toggleHover()"
 >
   <div class="cart-icon">
@@ -10,7 +10,7 @@
   </div>
 
   <!-- Cart Dropdown -->
-  <div class="cart-dropdown" *ngIf="isHovering">
+  <div class="cart-dropdown" *ngIf="isHovering" (mouseenter)="handleMouseEnter()" (mouseleave)="handleMouseLeave()">
     <div class="cart-header">
       <h4>Shopping Cart</h4>
     </div>
@@ -43,8 +43,8 @@
         <span>{{ totalPrice | currency: "USD" }}</span>
       </div>
       <div class="cart-actions">
-        <a routerLink="/cart-details" class="btn-view-cart">View Cart</a>
-        <a routerLink="/checkout" class="btn-checkout">Checkout</a>
+        <a routerLink="/cart-details" class="btn-view-cart" (click)="$event.stopPropagation()">View Cart</a>
+        <a routerLink="/checkout" class="btn-checkout" (click)="$event.stopPropagation()">Checkout</a>
       </div>
     </div>
   </div>

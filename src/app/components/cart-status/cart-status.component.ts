@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { CartItem } from '../../common/cart-item';
 import { Subscription } from 'rxjs';
 
@@ -19,31 +19,31 @@ export class CartStatusComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
-  constructor(private cartService: CartService) {}
+  constructor(private cartService: CartService, private router: Router) {}
 
   ngOnInit() {
     this.updateCartStatus();
   }
 
   ngOnDestroy() {
-    // Unsubscribe from all subscriptions to prevent memory leaks
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+    if (this.hideDropdownTimer) {
+      clearTimeout(this.hideDropdownTimer);
+      this.hideDropdownTimer = null;
+    }
   }
 
   updateCartStatus(): void {
-    // Subscribe to the cart totalPrice
     this.subscriptions.push(
       this.cartService.totalPrice.subscribe((data) => (this.totalPrice = data)),
     );
 
-    // Subscribe to the cart totalQuantity
     this.subscriptions.push(
       this.cartService.totalQuantity.subscribe(
         (data) => (this.totalQuantity = data),
       ),
     );
 
-    // Subscribe to the cart items
     this.subscriptions.push(
       this.cartService.cartItemsSubject.subscribe(
         (data) => (this.cartItems = data),
@@ -51,8 +51,27 @@ export class CartStatusComponent implements OnInit, OnDestroy {
     );
   }
 
-  // Method to toggle hover state for testing on mobile
   toggleHover(): void {
-    this.isHovering = !this.isHovering;
+    if (this.cartItems.length > 0) {
+      this.router.navigate(['/cart-details']);
+    } else {
+      this.isHovering = !this.isHovering;
+    }
+  }
+
+  private hideDropdownTimer: any;
+
+  handleMouseEnter(): void {
+    if (this.hideDropdownTimer) {
+      clearTimeout(this.hideDropdownTimer);
+      this.hideDropdownTimer = null;
+    }
+    this.isHovering = true;
+  }
+
+  handleMouseLeave(): void {
+    this.hideDropdownTimer = setTimeout(() => {
+      this.isHovering = false;
+    }, 500);
   }
 }
