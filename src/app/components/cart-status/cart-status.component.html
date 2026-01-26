@@ -1,6 +1,51 @@
-<div class="cart-area d-n">
-  <a routerLink="/cart-details">
-    <div class="total">{{totalPrice | currency: 'USD'}}<span>{{totalQuantity}}</span></div>
+<div
+  class="cart-container"
+  (mouseenter)="isHovering = true"
+  (mouseleave)="isHovering = false"
+  (click)="toggleHover()"
+>
+  <div class="cart-icon">
     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-  </a>
+    <span class="badge">{{ totalQuantity }}</span>
+  </div>
+
+  <!-- Cart Dropdown -->
+  <div class="cart-dropdown" *ngIf="isHovering">
+    <div class="cart-header">
+      <h4>Shopping Cart</h4>
+    </div>
+
+    <div class="cart-items" *ngIf="cartItems.length > 0">
+      <div class="cart-item" *ngFor="let item of cartItems">
+        <div class="item-image">
+          <img
+            [src]="item.imageUrl"
+            alt="{{ item.name }}"
+            *ngIf="item.imageUrl"
+          />
+        </div>
+        <div class="item-details">
+          <div class="item-name">{{ item.name }}</div>
+          <div class="item-price">
+            {{ item.unitPrice | currency: "USD" }} x {{ item.quantity }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-empty" *ngIf="cartItems.length === 0">
+      <p>Your cart is empty</p>
+    </div>
+
+    <div class="cart-footer" *ngIf="cartItems.length > 0">
+      <div class="cart-total">
+        <span>Total:</span>
+        <span>{{ totalPrice | currency: "USD" }}</span>
+      </div>
+      <div class="cart-actions">
+        <a routerLink="/cart-details" class="btn-view-cart">View Cart</a>
+        <a routerLink="/checkout" class="btn-checkout">Checkout</a>
+      </div>
+    </div>
+  </div>
 </div>

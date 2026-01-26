@@ -1,15 +1,137 @@
-<div class="menu-sidebar-content js-scrollbar1">
-  <nav class="navbar-sidebar">
-    <ul class="list-unstyled navbar-list">
-      <li *ngFor="let tempProductCategory of productCategories">
-        <a
-          routerLink="/category/{{ tempProductCategory.id }}/{{
-            tempProductCategory.categoryName
-          }}"
-          routerLinkActive="active-link"
-        >
-          {{ tempProductCategory.categoryName }}
+<div class="top-nav-menu">
+  <nav class="main-nav">
+    <ul class="nav-list">
+      <!-- Shop By Department/Category Dropdown -->
+      <li
+        class="nav-item dropdown-container"
+        (mouseenter)="openMainDropdown()"
+        (mouseleave)="closeMainDropdown()"
+      >
+        <a class="nav-link" (click)="toggleMainDropdown()">
+          Shop By Department <span class="dropdown-caret">&#9662;</span>
         </a>
+
+        <!-- Mega Menu -->
+        <div class="mega-menu" [class.show]="isMainDropdownOpen">
+          <div class="mega-menu-container">
+            <!-- Main Categories -->
+            <div class="category-list">
+              <div class="category-list-header">Product Categories</div>
+              <ul class="category-items">
+                <li
+                  class="category-item"
+                  *ngFor="let mainCategory of mainCategories"
+                >
+                  <a
+                    [routerLink]="[
+                      '/category',
+                      mainCategory.id,
+                      mainCategory.slug || mainCategory.categoryName,
+                    ]"
+                    class="category-link"
+                  >
+                    <img
+                      *ngIf="mainCategory.iconUrl"
+                      [src]="mainCategory.iconUrl"
+                      alt="{{ mainCategory.categoryName }}"
+                      class="category-icon"
+                    />
+                    {{ mainCategory.categoryName }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Featured Categories -->
+            <div class="featured-categories">
+              <div class="featured-header">Featured</div>
+              <div class="featured-items">
+                <a
+                  routerLink="/category/new-arrivals"
+                  class="featured-item"
+                  routerLinkActive="active-link"
+                >
+                  <span class="featured-icon">🆕</span>
+                  <span>New Arrivals</span>
+                </a>
+                <a
+                  routerLink="/category/deals"
+                  class="featured-item"
+                  routerLinkActive="active-link"
+                >
+                  <span class="featured-icon">🔥</span>
+                  <span>Deals & Promotions</span>
+                </a>
+                <a
+                  routerLink="/category/brands"
+                  class="featured-item"
+                  routerLinkActive="active-link"
+                >
+                  <span class="featured-icon">🏷️</span>
+                  <span>Brand Store</span>
+                </a>
+                <a
+                  routerLink="/category/clearance"
+                  class="featured-item"
+                  routerLinkActive="active-link"
+                >
+                  <span class="featured-icon">💰</span>
+                  <span>Clearance</span>
+                </a>
+                <a
+                  routerLink="/category/trending"
+                  class="featured-item"
+                  routerLinkActive="active-link"
+                >
+                  <span class="featured-icon">📈</span>
+                  <span>Trending</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <!-- Top-level navigation items -->
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          routerLink="/category/new-arrivals"
+          routerLinkActive="active-link"
+          >New Arrivals</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          routerLink="/category/deals"
+          routerLinkActive="active-link"
+          >Deals</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          routerLink="/category/brands"
+          routerLinkActive="active-link"
+          >Brand Store</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          routerLink="/category/clearance"
+          routerLinkActive="active-link"
+          >Clearance</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          routerLink="/category/trending"
+          routerLinkActive="active-link"
+          >Trending</a
+        >
       </li>
     </ul>
   </nav>

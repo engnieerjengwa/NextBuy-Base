@@ -1,12 +1,23 @@
 <div class="form-header" onsubmit="return false;" method="GET">
-  <input
-    #myInput
-    type="text"
-    class="au-input au-input-xl"
-    placeholder="Search for products"
-    (keyup.enter)="doSearch(myInput.value)"
-  />
-  <button (click)="doSearch(myInput.value)" class="au-btn-submit">
-    Search
+  <div class="input-wrapper">
+    <input
+      #myInput
+      type="text"
+      class="au-input au-input-xl"
+      placeholder="Search for products"
+      (keyup.enter)="doSearch(myInput.value)"
+    />
+    <i
+      class="fas fa-search search-icon"
+      (click)="doSearch(myInput.value)"
+      title="Search"
+    ></i>
+  </div>
+  <button
+    (click)="doSearch(myInput.value)"
+    class="au-btn-submit search-button visually-hidden"
+    title="Search"
+  >
+    <span class="tooltip">Search</span>
   </button>
 </div>

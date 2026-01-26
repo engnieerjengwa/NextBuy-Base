@@ -1,6 +1,41 @@
 <div class="main-content">
+  <!-- Hero Banner Section - Only show on main products page -->
+  <app-hero-banner *ngIf="isHomePage()"></app-hero-banner>
+
+  <!-- Featured Products Section - Only show on main products page -->
+  <div class="section-content section-content-p30" *ngIf="isHomePage()">
+    <h3 class="section-title">Featured Products</h3>
+    <hr />
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3" *ngFor="let product of featuredProducts">
+          <div class="product-box">
+            <a routerLink="/products/{{ product.id }}">
+              <img
+                [src]="product.imageUrl"
+                alt="{{ product.name }}"
+                class="img-responsive"
+              />
+            </a>
+            <a routerLink="/products/{{ product.id }}">
+              <h1>{{ product.name }}</h1>
+            </a>
+            <div class="price">
+              {{ product.unitPrice | currency: "USD" }}
+            </div>
+            <button (click)="addToCart(product)" class="btn btn-primary btn-sm">
+              Add to cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="section-content section-content-p30">
-    <h4>Category: {{ currentCategoryName }}</h4>
+    <!-- Only show category title if not on home page -->
+    <!--    <h4 *ngIf="!isHomePage()">Category: {{ currentCategoryName }}</h4>-->
+    <h4 *ngIf="isHomePage()">Our Products</h4>
     <hr />
     <div class="container-fluid">
       <div class="row">
@@ -17,10 +52,15 @@
               ><h1>{{ tempProduct.name }}</h1></a
             >
             <div class="price">
-              {{ tempProduct.unitPrice | currency : "USD" }}
+              {{ tempProduct.unitPrice | currency: "USD" }}
             </div>
 
-            <button (click)="addToCart(tempProduct)" class="btn btn-primary btn-sm">Add to cart</button>
+            <button
+              (click)="addToCart(tempProduct)"
+              class="btn btn-primary btn-sm"
+            >
+              Add to cart
+            </button>
           </div>
         </div>
         <!-- If products not found -->
@@ -36,7 +76,9 @@
       <div class="footer-pagination">
         <div class="row">
           <div class="col-md-12">
-            <div class="pagination-controls d-flex justify-content-between align-items-center">
+            <div
+              class="pagination-controls d-flex justify-content-between align-items-center"
+            >
               <div class="flex-grow-1"></div>
               <div class="pagination-nav">
                 <ngb-pagination
@@ -53,7 +95,11 @@
               <div class="flex-grow-1 d-flex justify-content-end">
                 <div class="page-size-selector d-flex align-items-center">
                   <span class="mr-2">Page Size</span>
-                  <select #myPageSelect (change)="updatePageSize(myPageSelect.value)" class="form-control form-control-sm">
+                  <select
+                    #myPageSelect
+                    (change)="updatePageSize(myPageSelect.value)"
+                    class="form-control form-control-sm"
+                  >
                     <option selected="true">10</option>
                     <option>25</option>
                     <option>100</option>

@@ -21,7 +21,7 @@ import { PaymentInfo } from '../../common/payment-info';
 import { Router } from '@angular/router';
 import { CustomValidators } from '../../validators/custom-validators';
 import { Subscription } from 'rxjs';
-import {Stripe} from '@stripe/stripe-js';
+import { Stripe } from '@stripe/stripe-js';
 
 @Component({
   selector: 'app-checkout',
@@ -82,7 +82,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private cardExpiryService: CardExpiryService,
     private checkoutService: CheckoutService,
     private stripeService: StripeService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -171,34 +171,33 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       }),
     });
 
-    const shippingAddressCountryValueChanges = this.checkoutFormGroup
-      .get('shippingAddress.country')
-      ?.valueChanges;
+    const shippingAddressCountryValueChanges = this.checkoutFormGroup.get(
+      'shippingAddress.country',
+    )?.valueChanges;
 
     if (shippingAddressCountryValueChanges) {
       this.subscriptions.push(
         shippingAddressCountryValueChanges.subscribe((country) => {
           this.getStates(country.code, this.shippingAddressStates);
-        })
+        }),
       );
     }
 
-    const billingAddressValueChanges = this.checkoutFormGroup
-      .get('billingAddress.country')
-      ?.valueChanges;
+    const billingAddressValueChanges = this.checkoutFormGroup.get(
+      'billingAddress.country',
+    )?.valueChanges;
 
     if (billingAddressValueChanges) {
       this.subscriptions.push(
         billingAddressValueChanges.subscribe((country) => {
           this.getStates(country.code, this.billingAddressStates);
-        })
+        }),
       );
     }
 
     // Subscribe to shipping address changes
-    const shippingAddressValueChanges = this.checkoutFormGroup
-      .get('shippingAddress')
-      ?.valueChanges;
+    const shippingAddressValueChanges =
+      this.checkoutFormGroup.get('shippingAddress')?.valueChanges;
 
     if (shippingAddressValueChanges) {
       this.subscriptions.push(
@@ -207,22 +206,26 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             this.checkoutFormGroup.get('billingAddress')?.setValue(value);
             this.billingAddressStates = this.shippingAddressStates;
           }
-        })
+        }),
       );
     }
 
     // Get cart items and totals
-    this.cartItems = this.cartService.cartItems;
+    this.subscriptions.push(
+      this.cartService.cartItemsSubject.subscribe(
+        (data) => (this.cartItems = data),
+      ),
+    );
     this.subscriptions.push(
       this.cartService.totalPrice.subscribe((data) => {
         this.totalPrice = data;
         this.paymentInfo.amount = Math.round(this.totalPrice * 100);
-      })
+      }),
     );
     this.subscriptions.push(
       this.cartService.totalQuantity.subscribe(
-        (data) => (this.totalQuantity = data)
-      )
+        (data) => (this.totalQuantity = data),
+      ),
     );
     this.cartService.computeCartTotals();
 
@@ -234,13 +237,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
         // Initialize Stripe payment element after form is initialized
         setTimeout(() => this.setupStripePaymentElement(), 1000);
-      })
+      }),
     );
   }
 
   ngOnDestroy(): void {
     // Clean up subscriptions to prevent memory leaks
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   /**
@@ -267,7 +270,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     // Validate payment amount
     if (this.paymentInfo.amount <= 0) {
       console.error('Payment amount must be greater than 0');
-      this.paymentError = 'Invalid payment amount. Please add items to your cart.';
+      this.paymentError =
+        'Invalid payment amount. Please add items to your cart.';
       this.isProcessingPayment = false;
       return;
     }
@@ -287,25 +291,30 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.checkoutService.createPaymentIntent(this.paymentInfo).subscribe({
       next: (paymentIntentResponse) => {
         // Initialize Stripe elements with the client secret
-        this.stripeService.initializePaymentElement(
-          paymentIntentResponse.client_secret,
-          'payment-element'
-        ).then(({ stripe, elements, paymentElement }) => {
-          this.stripe = stripe;
-          this.elements = elements;
-          this.paymentElement = paymentElement;
-          this.isProcessingPayment = false;
-        }).catch(error => {
-          console.error('Error initializing Stripe elements:', error);
-          this.paymentError = 'Failed to initialize payment system. Please try again later.';
-          this.isProcessingPayment = false;
-        });
+        this.stripeService
+          .initializePaymentElement(
+            paymentIntentResponse.client_secret,
+            'payment-element',
+          )
+          .then(({ stripe, elements, paymentElement }) => {
+            this.stripe = stripe;
+            this.elements = elements;
+            this.paymentElement = paymentElement;
+            this.isProcessingPayment = false;
+          })
+          .catch((error) => {
+            console.error('Error initializing Stripe elements:', error);
+            this.paymentError =
+              'Failed to initialize payment system. Please try again later.';
+            this.isProcessingPayment = false;
+          });
       },
       error: (err) => {
         console.error('Error creating payment intent:', err);
-        this.paymentError = 'Failed to initialize payment. Please try again later.';
+        this.paymentError =
+          'Failed to initialize payment. Please try again later.';
         this.isProcessingPayment = false;
-      }
+      },
     });
   }
 
@@ -327,25 +336,33 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.paymentError = '';
 
     // Process payment with Stripe
-    this.processPayment().then(paymentResult => {
-      if (paymentResult.error) {
-        // Show error to customer
-        this.paymentError = paymentResult.error.message || 'An error occurred during payment processing.';
+    this.processPayment()
+      .then((paymentResult) => {
+        if (paymentResult.error) {
+          // Show error to customer
+          this.paymentError =
+            paymentResult.error.message ||
+            'An error occurred during payment processing.';
+          this.isProcessingPayment = false;
+          console.error('Payment failed:', paymentResult.error);
+        } else if (
+          paymentResult.paymentIntent &&
+          paymentResult.paymentIntent.status === 'succeeded'
+        ) {
+          // Payment succeeded, update UI and place the order
+          this.isProcessingPayment = false;
+          this.placeOrder();
+        } else {
+          // Payment requires additional action or is processing
+          this.handlePaymentStatus(paymentResult);
+        }
+      })
+      .catch((error) => {
+        console.error('Error processing payment:', error);
+        this.paymentError =
+          'An unexpected error occurred during payment processing.';
         this.isProcessingPayment = false;
-        console.error('Payment failed:', paymentResult.error);
-      } else if (paymentResult.paymentIntent && paymentResult.paymentIntent.status === 'succeeded') {
-        // Payment succeeded, update UI and place the order
-        this.isProcessingPayment = false;
-        this.placeOrder();
-      } else {
-        // Payment requires additional action or is processing
-        this.handlePaymentStatus(paymentResult);
-      }
-    }).catch(error => {
-      console.error('Error processing payment:', error);
-      this.paymentError = 'An unexpected error occurred during payment processing.';
-      this.isProcessingPayment = false;
-    });
+      });
   }
 
   /**
@@ -364,8 +381,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     return this.stripeService.confirmPayment(
       this.stripe,
       this.elements,
-      '',  // Client secret is already in the elements
-      returnUrl
+      '', // Client secret is already in the elements
+      returnUrl,
     );
   }
 
@@ -384,13 +401,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     switch (status) {
       case 'requires_payment_method':
-        this.paymentError = 'Your payment was not successful. Please try again.';
+        this.paymentError =
+          'Your payment was not successful. Please try again.';
         break;
       case 'requires_action':
-        this.paymentError = 'Additional authentication required. Please follow the instructions.';
+        this.paymentError =
+          'Additional authentication required. Please follow the instructions.';
         break;
       case 'processing':
-        this.paymentError = 'Your payment is processing. We\'ll update you when it completes.';
+        this.paymentError =
+          "Your payment is processing. We'll update you when it completes.";
         break;
       default:
         this.paymentError = 'Payment status: ' + status;
@@ -407,9 +427,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     order.totalPrice = this.totalPrice;
     order.totalQuantity = this.totalQuantity;
 
-    const cartItems = this.cartService.cartItems;
+    const cartItems = this.cartItems;
 
-    let orderItems: OrderItem[] = cartItems.map(cartItem => {
+    let orderItems: OrderItem[] = cartItems.map((cartItem) => {
       return new OrderItem(cartItem);
     });
 
@@ -418,29 +438,39 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     purchase.customer = this.checkoutFormGroup.controls['customer'].value;
 
     // Populate purchase - shipping address
-    purchase.shippingAddress = this.checkoutFormGroup.controls['shippingAddress'].value;
+    purchase.shippingAddress =
+      this.checkoutFormGroup.controls['shippingAddress'].value;
     if (purchase.shippingAddress) {
       if (purchase.shippingAddress.state) {
-        const shippingState: State = JSON.parse(JSON.stringify(purchase.shippingAddress.state));
+        const shippingState: State = JSON.parse(
+          JSON.stringify(purchase.shippingAddress.state),
+        );
         purchase.shippingAddress.state = shippingState.name;
       }
       if (purchase.shippingAddress.country) {
-        const shippingCountry: Country = JSON.parse(JSON.stringify(purchase.shippingAddress.country));
+        const shippingCountry: Country = JSON.parse(
+          JSON.stringify(purchase.shippingAddress.country),
+        );
         purchase.shippingAddress.country = shippingCountry.name;
       }
     }
 
     // Populate purchase - billing address
-    purchase.billingAddress = this.checkoutFormGroup.controls['billingAddress'].value;
+    purchase.billingAddress =
+      this.checkoutFormGroup.controls['billingAddress'].value;
     if (purchase.billingAddress) {
-        if (purchase.billingAddress.state) {
-            const billingState: State = JSON.parse(JSON.stringify(purchase.billingAddress.state));
-            purchase.billingAddress.state = billingState.name;
-        }
-        if (purchase.billingAddress.country) {
-            const billingCountry: Country = JSON.parse(JSON.stringify(purchase.billingAddress.country));
-            purchase.billingAddress.country = billingCountry.name;
-        }
+      if (purchase.billingAddress.state) {
+        const billingState: State = JSON.parse(
+          JSON.stringify(purchase.billingAddress.state),
+        );
+        purchase.billingAddress.state = billingState.name;
+      }
+      if (purchase.billingAddress.country) {
+        const billingCountry: Country = JSON.parse(
+          JSON.stringify(purchase.billingAddress.country),
+        );
+        purchase.billingAddress.country = billingCountry.name;
+      }
     }
 
     // Populate purchase - order and orderItems
@@ -448,16 +478,17 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     purchase.orderItems = orderItems;
 
     this.checkoutService.placeOrder(purchase).subscribe({
-      next: response => {
-        alert(`Your order has been received.\nOrder tracking number: ${response.orderTrackingNumber}`);
+      next: (response) => {
+        alert(
+          `Your order has been received.\nOrder tracking number: ${response.orderTrackingNumber}`,
+        );
         this.resetCart();
       },
-      error: err => {
+      error: (err) => {
         console.error('Error during checkout:', err);
 
         let errorMessage = 'An unexpected error occurred during checkout.';
 
-        // Try to extract a more specific error message from the response
         if (err.error && err.error.message) {
           errorMessage = err.error.message;
         } else if (err.message) {
@@ -466,23 +497,19 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
         alert(`There was an error processing your order: ${errorMessage}`);
         this.isProcessingPayment = false;
-      }
+      },
     });
   }
 
   resetCart() {
-    // Reset cart data
     this.cartService.clearCart();
 
-    // Reset form and UI state variables
     this.checkoutFormGroup.reset();
 
-    // Explicitly reset each form group to ensure all controls are reset
     this.checkoutFormGroup.get('customer')?.reset();
     this.checkoutFormGroup.get('shippingAddress')?.reset();
     this.checkoutFormGroup.get('billingAddress')?.reset();
 
-    // Reset Stripe-related properties
     this.stripe = null as unknown as Stripe;
     this.elements = null;
     this.paymentElement = null;
@@ -490,17 +517,15 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.paymentError = '';
     this.paymentInfo = new PaymentInfo(0, 'USD');
 
-    // Reset UI state variables
     this.sameAsShipping = false;
     this.showOrderReview = false;
     this.showExpirySelector = false;
     this.formattedExpiryDate = '';
     this.shippingAddressStates = [];
     this.billingAddressStates = [];
-    this.sendEmailReceipt = true; // Reset email receipt option to default
+    this.sendEmailReceipt = true;
 
-    // Navigate back to products page
-    this.router.navigateByUrl("/products");
+    this.router.navigateByUrl('/products');
   }
 
   // Customer getters
@@ -570,9 +595,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     if (this.sameAsShipping) {
       this.checkoutFormGroup.controls['billingAddress'].setValue(
-        this.checkoutFormGroup.controls['shippingAddress'].value
+        this.checkoutFormGroup.controls['shippingAddress'].value,
       );
-      // Copy shipping address states to billing address states
       this.billingAddressStates = [...this.shippingAddressStates];
     } else {
       this.checkoutFormGroup.controls['billingAddress'].reset();
@@ -600,42 +624,39 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.cartService.removeFromCart(cartItem);
   }
 
-  /**
-   * Get states/provinces for a country
-   * @param countryCode The country code
-   * @param stateArray The array to populate with states
-   */
   getStates(countryCode: string, stateArray: State[]) {
     this.cardExpiryService.getProvinces(countryCode).subscribe(
       (data) => {
         stateArray.length = 0;
         data.forEach((state) => stateArray.push(state));
         console.log(
-          `Retrieved states for ${countryCode}: ${JSON.stringify(data)}`
+          `Retrieved states for ${countryCode}: ${JSON.stringify(data)}`,
         );
       },
       (error) => {
         console.error(`Error retrieving states for ${countryCode}: ${error}`);
-      }
+      },
     );
   }
 
-  /**
-   * Toggle the expiry selector visibility
-   */
   toggleExpirySelector() {
     this.showExpirySelector = !this.showExpirySelector;
   }
 
-  /**
-   * Get the month name from the month number
-   * @param month The month number (1-12)
-   * @returns The month name
-   */
   getMonthName(month: number): string {
     const monthNames = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return monthNames[month - 1];
   }

@@ -1,0 +1,57 @@
+<div class="hero-banner-container">
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error" class="error-container alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- No banners state -->
+  <div
+    *ngIf="!loading && !error && heroBanners.length === 0"
+    class="no-banners-container"
+  >
+    <!-- This section will be hidden in production -->
+    <div class="placeholder-banner">
+      <div class="placeholder-content">
+        <h2>Welcome to NextBuy</h2>
+        <p>Your one-stop shop for all your needs</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carousel with banners -->
+  <ngb-carousel
+    *ngIf="!loading && !error && heroBanners.length > 0"
+    [interval]="5000"
+    [pauseOnHover]="true"
+    [showNavigationArrows]="true"
+    [showNavigationIndicators]="true"
+  >
+    <ng-template ngbSlide *ngFor="let banner of heroBanners">
+      <div
+        class="hero-slide"
+        [ngStyle]="{ 'background-image': 'url(' + banner.imageUrl + ')' }"
+      >
+        <div class="hero-content">
+          <div class="hero-text">
+            <h1>{{ banner.title }}</h1>
+            <h2 *ngIf="banner.subtitle">{{ banner.subtitle }}</h2>
+            <p *ngIf="banner.disclaimer">{{ banner.disclaimer }}</p>
+            <a
+              *ngIf="banner.ctaText"
+              [routerLink]="banner.ctaLink"
+              class="btn-shop-now"
+              >{{ banner.ctaText }}</a
+            >
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ngb-carousel>
+</div>

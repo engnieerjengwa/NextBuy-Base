@@ -6,16 +6,24 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { CartItem } from '../../common/cart-item';
 import { CartService } from '../../services/cart.service';
+import { HeroBannerComponent } from '../hero-banner/hero-banner.component';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, RouterLink, NgbPagination],
+  imports: [
+    CommonModule,
+    CurrencyPipe,
+    RouterLink,
+    NgbPagination,
+    HeroBannerComponent,
+  ],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
+  featuredProducts: Product[] = [];
   currentCategoryId: number = 1;
   previousCategoryId: number = 1;
   currentCategoryName: string = '';
@@ -30,13 +38,48 @@ export class ProductListComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private cartService: CartService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(() => {
       this.listProducts();
     });
+
+    // Load featured products (random products for now)
+    this.loadFeaturedProducts();
+  }
+
+  /**
+   * Load featured products
+   * TODO: In the future, this should load actual featured products from the backend
+   */
+  loadFeaturedProducts() {
+    this.productService.getRandomProducts().subscribe({
+      next: (products) => {
+        // Randomize the products
+        this.featuredProducts = this.getRandomSubset(products, 4);
+      },
+      error: (err) => {
+        console.error('Error loading featured products:', err);
+        this.featuredProducts = [];
+      },
+    });
+  }
+
+  /**
+   * Get a random subset of products
+   */
+  private getRandomSubset(products: Product[], count: number): Product[] {
+    // Make a copy of the array to avoid modifying the original
+    const shuffled = [...products];
+
+    // Shuffle the array using Fisher-Yates algorithm
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled.slice(0, count);
   }
 
   listProducts() {
@@ -60,7 +103,7 @@ export class ProductListComponent implements OnInit {
       .searchProductsPagenation(
         this.thePageNumber - 1,
         this.thePageSize,
-        theKeyword
+        theKeyword,
       )
       .subscribe({
         next: (data) => {
@@ -107,7 +150,7 @@ export class ProductListComponent implements OnInit {
       .getProductListPagenation(
         this.thePageNumber - 1,
         this.thePageSize,
-        this.currentCategoryId
+        this.currentCategoryId,
       )
       .subscribe({
         next: (data) => {
@@ -120,7 +163,7 @@ export class ProductListComponent implements OnInit {
             this.products = [];
             console.error(
               'No products found for category ID:',
-              this.currentCategoryId
+              this.currentCategoryId,
             );
           }
         },
@@ -141,5 +184,18 @@ export class ProductListComponent implements OnInit {
     const theCartItem = new CartItem(theProduct);
 
     this.cartService.addToCart(theCartItem);
+  }
+
+  /**
+   * Determines if the current view is the home page
+   * Home page is when there's no category ID in the route parameters and no search keyword
+   */
+  isHomePage(): boolean {
+    return (
+      !this.searchMode &&
+      (!this.route.snapshot.paramMap.has('id') ||
+        this.currentCategoryId === 0 ||
+        this.currentCategoryName === 'All Products')
+    );
   }
 }

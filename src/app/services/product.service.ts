@@ -26,7 +26,7 @@ export class ProductService {
   getProductListPagenation(
     thePage: number,
     thePageSize: number,
-    theCategoryId: number
+    theCategoryId: number,
   ): Observable<GetResponseProducts> {
     // Spring Data REST exposes the repository search endpoint as:
     // /api/products/search/findByCategoryId?id={id}&size={size}
@@ -55,15 +55,15 @@ export class ProductService {
       .pipe(
         map(
           (response: { _embedded: { products: any } }) =>
-            response._embedded.products
-        )
+            response._embedded.products,
+        ),
       );
   }
 
   searchProductsPagenation(
     thePage: number,
     thePageSize: number,
-    theKeyword: string
+    theKeyword: string,
   ): Observable<GetResponseProducts> {
     // Spring Data REST exposes the repository search endpoint as:
     // /api/products/search/findByCategoryId?id={id}&size={size}
@@ -95,8 +95,28 @@ export class ProductService {
             console.error('Unexpected API response structure:', response);
             return [];
           }
-        })
+        }),
       );
+  }
+
+  /**
+   * Get random products for featured products section
+   * TODO: In the future, this should be replaced with a proper API endpoint for featured products
+   */
+  getRandomProducts(count: number = 4): Observable<Product[]> {
+    // For now, just get a page of products and we'll randomize them in the component
+    const searchUrl = `${this.baseUrl}?size=20`;
+
+    return this.httpClient.get<GetResponseProducts>(searchUrl).pipe(
+      map((response) => {
+        if (response && response._embedded && response._embedded.products) {
+          return response._embedded.products;
+        } else {
+          console.error('Unexpected API response structure:', response);
+          return [];
+        }
+      }),
+    );
   }
 }
 

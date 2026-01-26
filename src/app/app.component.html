@@ -1,46 +1,103 @@
 <div class="page-wrapper">
-  <!-- MENU SIDEBAR-->
-  <aside class="menu-sidebar d-none d-lg-block">
-    <div class="logo">
-      <a routerLink ="/products">
-        <img src="images/logo.png" alt="luv2shop" class="img-responsive" />
-      </a>
-    </div>
-
-    <app-product-category-menu></app-product-category-menu>
-  </aside>
-  <!-- END MENU SIDEBAR-->
-
   <!-- PAGE CONTAINER-->
   <div class="page-container">
     <!-- HEADER DESKTOP-->
     <header class="header-desktop">
+      <!-- Main Header Row -->
       <div class="section-content section-content-p30">
         <div class="container-fluid">
           <div class="header-wrap">
-            <app-search></app-search>
+            <!-- Logo -->
+            <div class="logo">
+              <a routerLink="/products">
+                <img
+                  src="images/logo.png"
+                  alt="luv2shop"
+                  class="img-responsive"
+                />
+              </a>
+            </div>
 
-            <app-login-status></app-login-status>
+            <!-- Search -->
+            <div class="search-container">
+              <app-search></app-search>
+            </div>
 
-            <app-cart-status></app-cart-status>
+            <!-- User Actions -->
+            <div class="user-actions">
+              <app-login-status></app-login-status>
+              <app-cart-status></app-cart-status>
+            </div>
           </div>
-          <div class="account-wrap"></div>
+        </div>
+      </div>
+
+      <!-- Navigation Bar -->
+      <div class="nav-bar-container">
+        <div class="container-fluid">
+          <app-product-category-menu></app-product-category-menu>
         </div>
       </div>
     </header>
     <!-- END HEADER DESKTOP-->
 
     <!-- MAIN CONTENT-->
-    <!-- <app-product-list></app-product-list> -->
-    <router-outlet></router-outlet>
+    <div class="main-content">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>
 
 <!-- END PAGE CONTAINER-->
-<footer>
-  <ul>
-    <li><a href="#">About Us</a></li>
-    <li><a href="#">Contact Us</a></li>
-    <li><a href="#">Help</a></li>
-  </ul>
+<footer class="footer">
+  <div class="container-fluid">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Customer Service</h4>
+        <ul>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Track Your Order</a></li>
+          <li><a href="#">Returns & Refunds</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>About NextBuy</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Terms & Conditions</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Payment Methods</h4>
+        <ul>
+          <li><a href="#">Credit Cards</a></li>
+          <li><a href="#">Debit Cards</a></li>
+          <li><a href="#">EFT</a></li>
+          <li><a href="#">Gift Cards</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Connect With Us</h4>
+        <div class="social-icons">
+          <a href="#" class="social-icon"><i class="fa fa-facebook"></i></a>
+          <a href="#" class="social-icon"><i class="fa fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fa fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fa fa-youtube"></i></a>
+        </div>
+        <div class="newsletter">
+          <h5>Subscribe to our Newsletter</h5>
+          <div class="newsletter-form">
+            <input type="email" placeholder="Your email address" />
+            <button type="submit">Subscribe</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 NextBuy. All rights reserved.</p>
+    </div>
+  </div>
 </footer>

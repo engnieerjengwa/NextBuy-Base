@@ -17,16 +17,18 @@
   right: 0;
   min-width: 95px;
   color: #fff;
-  border: 10px solid #205b8d;
+  border: 1px solid #205b8d;
   border-radius: 43px;
   background: #205b8d;
   cursor: pointer;
   text-align: center;
+  height: 43px;
+  white-space: nowrap;
 }
 
 .security-btn:hover {
-  background: #0a4275;
-  border: 10px solid #0a4275;
+  background: #05143f;
+  border: 1px solid #05143f;
 }
 
 .order-history a {

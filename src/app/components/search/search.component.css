@@ -1,0 +1,88 @@
+.search-button {
+  position: relative;
+}
+
+/* Input wrapper styles */
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Position the search icon inside the input field */
+.search-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #205b8d;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* Add padding to the right of the input to prevent text from overlapping with the icon */
+.input-wrapper input.au-input.au-input-xl {
+  padding-right: 40px;
+  width: 100%;
+}
+
+/* Visually hide the button but keep it accessible for screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.search-button .tooltip {
+  visibility: hidden;
+  width: 80px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  top: 125%;
+  left: 50%;
+  margin-left: -40px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.search-button .tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #333 transparent;
+}
+
+.search-button:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+  animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
