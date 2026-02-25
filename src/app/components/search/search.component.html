@@ -1,11 +1,15 @@
-<div class="form-header" onsubmit="return false;" method="GET">
+<div class="search-wrapper" onsubmit="return false;" method="GET">
   <div class="input-wrapper">
     <input
       #myInput
       type="text"
       class="au-input au-input-xl"
       placeholder="Search for products"
+      [value]="searchQuery"
+      (input)="onSearchInput(myInput.value)"
       (keyup.enter)="doSearch(myInput.value)"
+      (keydown)="onKeyDown($event)"
+      autocomplete="off"
     />
     <i
       class="fas fa-search search-icon"
@@ -13,11 +17,35 @@
       title="Search"
     ></i>
   </div>
-  <button
-    (click)="doSearch(myInput.value)"
-    class="au-btn-submit search-button visually-hidden"
-    title="Search"
-  >
-    <span class="tooltip">Search</span>
-  </button>
+
+  <!-- Autocomplete dropdown -->
+  <div class="autocomplete-dropdown" *ngIf="showDropdown">
+    <div
+      *ngFor="let suggestion of suggestions; let i = index"
+      class="autocomplete-item"
+      [class.highlighted]="i === highlightedIndex"
+      (click)="selectSuggestion(suggestion)"
+      (mouseenter)="highlightedIndex = i"
+    >
+      <img
+        [src]="suggestion.imageUrl"
+        [alt]="suggestion.name"
+        class="suggestion-image"
+        *ngIf="suggestion.imageUrl"
+      />
+      <div class="suggestion-info">
+        <span class="suggestion-name">{{ suggestion.name }}</span>
+        <span class="suggestion-brand" *ngIf="suggestion.brand">{{
+          suggestion.brand
+        }}</span>
+      </div>
+      <span class="suggestion-price" *ngIf="suggestion.unitPrice">
+        {{ suggestion.unitPrice | currency: "USD" }}
+      </span>
+    </div>
+    <div class="autocomplete-footer" (click)="doSearch(searchQuery)">
+      See all results for "<strong>{{ searchQuery }}</strong
+      >"
+    </div>
+  </div>
 </div>

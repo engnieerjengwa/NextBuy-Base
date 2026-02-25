@@ -1,19 +1,39 @@
 import { Component } from '@angular/core';
-import { Product } from '../../common/product';
+import { Product, ProductImage, ProductVariant } from '../../common/product';
 import { ProductService } from '../../services/product.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { CurrencyPipe, NgIf, NgClass } from '@angular/common';
+import {
+  CurrencyPipe,
+  NgIf,
+  NgClass,
+  NgFor,
+  DecimalPipe,
+} from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { CartItem } from '../../common/cart-item';
+import { ImageGalleryComponent } from '../image-gallery/image-gallery.component';
+import { VariantSelectorComponent } from '../variant-selector/variant-selector.component';
 
 @Component({
   selector: 'app-product-details',
-  imports: [CurrencyPipe, RouterLink, NgIf, NgClass],
+  imports: [
+    CurrencyPipe,
+    DecimalPipe,
+    RouterLink,
+    NgIf,
+    NgClass,
+    NgFor,
+    ImageGalleryComponent,
+    VariantSelectorComponent,
+  ],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css',
 })
 export class ProductDetailsComponent {
   product!: Product;
+  productImages: ProductImage[] = [];
+  productVariants: ProductVariant[] = [];
+  selectedVariant: ProductVariant | null = null;
   quantity: number = 1;
 
   constructor(
@@ -34,11 +54,44 @@ export class ProductDetailsComponent {
     this.productService.getProduct(theProductId).subscribe((data) => {
       this.product = data;
       this.quantity = 1;
+      this.selectedVariant = null;
+
+      // Load product images
+      this.productService.getProductImages(theProductId).subscribe({
+        next: (images) => (this.productImages = images),
+        error: () => (this.productImages = []),
+      });
+
+      // Load product variants
+      this.productService.getProductVariants(theProductId).subscribe({
+        next: (variants) => (this.productVariants = variants),
+        error: () => (this.productVariants = []),
+      });
     });
   }
 
+  onVariantSelected(variant: ProductVariant | null): void {
+    this.selectedVariant = variant;
+  }
+
+  get effectivePrice(): number {
+    if (!this.product) return 0;
+    let price = this.product.unitPrice;
+    if (this.selectedVariant?.priceAdjustment) {
+      price += this.selectedVariant.priceAdjustment;
+    }
+    return price;
+  }
+
+  get effectiveStock(): number {
+    if (this.selectedVariant) {
+      return this.selectedVariant.unitsInStock;
+    }
+    return this.product?.unitsInStock ?? 0;
+  }
+
   incrementQuantity(): void {
-    if (this.quantity < this.product.unitsInStock) {
+    if (this.quantity < this.effectiveStock) {
       this.quantity++;
     }
   }
@@ -50,25 +103,24 @@ export class ProductDetailsComponent {
   }
 
   get isInStock(): boolean {
-    return this.product?.unitsInStock > 0;
+    return this.effectiveStock > 0;
   }
 
   get isLowStock(): boolean {
-    return this.product?.unitsInStock > 0 && this.product.unitsInStock <= 5;
+    return this.effectiveStock > 0 && this.effectiveStock <= 5;
   }
 
   get stockBadgeClass(): string {
     if (!this.product) return '';
-    if (this.product.unitsInStock === 0) return 'badge-out-of-stock';
-    if (this.product.unitsInStock <= 5) return 'badge-low-stock';
+    if (this.effectiveStock === 0) return 'badge-out-of-stock';
+    if (this.effectiveStock <= 5) return 'badge-low-stock';
     return 'badge-in-stock';
   }
 
   get stockLabel(): string {
     if (!this.product) return '';
-    if (this.product.unitsInStock === 0) return 'Out of Stock';
-    if (this.product.unitsInStock <= 5)
-      return `Only ${this.product.unitsInStock} left!`;
+    if (this.effectiveStock === 0) return 'Out of Stock';
+    if (this.effectiveStock <= 5) return `Only ${this.effectiveStock} left!`;
     return 'In Stock';
   }
 

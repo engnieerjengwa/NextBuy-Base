@@ -1,0 +1,88 @@
+<section class="product-carousel-section" *ngIf="products.length > 0">
+  <div class="carousel-header">
+    <h3 class="carousel-title">{{ title }}</h3>
+    <a *ngIf="showViewAll" [routerLink]="viewAllLink" class="view-all-link">
+      View All <i class="fas fa-chevron-right"></i>
+    </a>
+  </div>
+
+  <div class="carousel-wrapper">
+    <button
+      class="carousel-arrow carousel-arrow-left"
+      (click)="scrollLeft(carouselTrack)"
+      [class.hidden]="!canScrollLeft(carouselTrack)"
+      aria-label="Scroll left"
+    >
+      <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <div
+      class="carousel-track"
+      #carouselTrack
+      (scroll)="onScroll(carouselTrack)"
+    >
+      <div class="carousel-card" *ngFor="let product of products">
+        <div class="card-badge" *ngIf="getDiscountBadge(product)">
+          {{ getDiscountBadge(product) }}
+        </div>
+        <a [routerLink]="['/products', product.id]" class="card-image-link">
+          <img
+            [src]="product.imageUrl"
+            [alt]="product.name"
+            class="card-image"
+            loading="lazy"
+          />
+        </a>
+        <div class="card-body">
+          <a [routerLink]="['/products', product.id]" class="card-title-link">
+            <h4 class="card-title">{{ product.name }}</h4>
+          </a>
+          <div class="card-brand" *ngIf="product.brand">
+            {{ product.brand }}
+          </div>
+          <div class="card-pricing">
+            <span class="card-price">{{
+              product.unitPrice | currency: "USD"
+            }}</span>
+            <span
+              class="card-original-price"
+              *ngIf="
+                product.originalPrice &&
+                product.originalPrice > product.unitPrice
+              "
+            >
+              {{ product.originalPrice | currency: "USD" }}
+            </span>
+          </div>
+          <div class="card-rating" *ngIf="product.averageRating">
+            <span class="stars">
+              <i
+                *ngFor="let star of [1, 2, 3, 4, 5]"
+                class="fa-star"
+                [class.fas]="star <= product.averageRating"
+                [class.far]="star > product.averageRating"
+              ></i>
+            </span>
+            <span class="review-count">({{ product.reviewCount }})</span>
+          </div>
+          <button
+            class="btn btn-primary btn-sm btn-add-cart"
+            (click)="addToCart(product)"
+            [disabled]="product.unitsInStock <= 0"
+          >
+            {{ product.unitsInStock > 0 ? "Add to Cart" : "Out of Stock" }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <button
+      class="carousel-arrow carousel-arrow-right"
+      (click)="scrollRight(carouselTrack)"
+      [class.hidden]="!canScrollRight(carouselTrack)"
+      aria-label="Scroll right"
+    >
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+</section>

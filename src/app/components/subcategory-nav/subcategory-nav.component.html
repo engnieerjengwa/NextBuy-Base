@@ -1,0 +1,87 @@
+<div
+  class="subcategory-nav"
+  *ngIf="!loading && (subcategories.length > 0 || parentCategory)"
+>
+  <h5 class="nav-heading"><i class="fa fa-bars"></i> Categories</h5>
+
+  <!-- Parent / Current Category -->
+  <div class="parent-category" *ngIf="parentCategory">
+    <a
+      [routerLink]="[
+        '/category',
+        parentCategory.id,
+        parentCategory.slug || parentCategory.categoryName,
+      ]"
+      class="parent-link"
+      [class.active]="isActive(parentCategory.id)"
+    >
+      <i class="fa fa-folder-open" *ngIf="parentCategory.iconUrl === ''"></i>
+      <img
+        *ngIf="parentCategory.iconUrl"
+        [src]="parentCategory.iconUrl"
+        [alt]="parentCategory.categoryName"
+        class="cat-icon"
+      />
+      {{ parentCategory.categoryName }}
+    </a>
+  </div>
+
+  <!-- Subcategory Tree -->
+  <ul class="subcategory-list" *ngIf="subcategories.length > 0">
+    <li *ngFor="let sub of subcategories" class="subcategory-item">
+      <div class="subcategory-row">
+        <a
+          [routerLink]="['/category', sub.id, sub.slug || sub.categoryName]"
+          class="subcategory-link"
+          [class.active]="isActive(sub.id)"
+        >
+          {{ sub.categoryName }}
+        </a>
+        <button
+          *ngIf="sub.children && sub.children.length > 0"
+          class="expand-btn"
+          (click)="toggleExpand(sub.id)"
+          [attr.aria-label]="isExpanded(sub.id) ? 'Collapse' : 'Expand'"
+        >
+          <i
+            class="fa"
+            [ngClass]="isExpanded(sub.id) ? 'fa-chevron-up' : 'fa-chevron-down'"
+          ></i>
+        </button>
+      </div>
+
+      <!-- Nested children -->
+      <ul
+        class="nested-list"
+        *ngIf="sub.children && sub.children.length > 0 && isExpanded(sub.id)"
+      >
+        <li *ngFor="let child of sub.children" class="nested-item">
+          <a
+            [routerLink]="[
+              '/category',
+              child.id,
+              child.slug || child.categoryName,
+            ]"
+            class="nested-link"
+            [class.active]="isActive(child.id)"
+          >
+            {{ child.categoryName }}
+          </a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <div
+    class="no-subcategories"
+    *ngIf="subcategories.length === 0 && parentCategory"
+  >
+    <p class="text-muted small">No subcategories available</p>
+  </div>
+</div>
+
+<div class="subcategory-nav loading-state" *ngIf="loading">
+  <div class="spinner-border spinner-border-sm text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>

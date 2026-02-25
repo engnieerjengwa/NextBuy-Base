@@ -1,0 +1,116 @@
+<aside class="filter-sidebar" [class.collapsed]="isCollapsed">
+  <div class="filter-header">
+    <h4>Filters</h4>
+    <div class="filter-header-actions">
+      <button
+        *ngIf="hasActiveFilters"
+        class="btn-clear"
+        (click)="clearFilters()"
+      >
+        Clear All
+      </button>
+      <button class="btn-collapse d-md-none" (click)="toggleCollapse()">
+        <i
+          class="fas"
+          [class.fa-chevron-up]="!isCollapsed"
+          [class.fa-chevron-down]="isCollapsed"
+        ></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="filter-body" [class.d-none]="isCollapsed">
+    <!-- Price Range -->
+    <div class="filter-group">
+      <h5 class="filter-group-title">Price Range</h5>
+      <div class="price-inputs">
+        <div class="price-field">
+          <label>Min</label>
+          <input
+            type="number"
+            class="form-control form-control-sm"
+            [(ngModel)]="minPrice"
+            (change)="onPriceChange()"
+            placeholder="$0"
+            min="0"
+          />
+        </div>
+        <span class="price-separator">–</span>
+        <div class="price-field">
+          <label>Max</label>
+          <input
+            type="number"
+            class="form-control form-control-sm"
+            [(ngModel)]="maxPrice"
+            (change)="onPriceChange()"
+            placeholder="Any"
+            min="0"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Brands -->
+    <div class="filter-group" *ngIf="brands.length > 0">
+      <h5 class="filter-group-title">Brand</h5>
+      <div class="brand-list">
+        <label
+          *ngFor="let brand of brands"
+          class="brand-option"
+          [class.selected]="selectedBrand === brand"
+          (click)="selectBrand(brand)"
+        >
+          <span class="brand-checkbox">
+            <i class="fas fa-check" *ngIf="selectedBrand === brand"></i>
+          </span>
+          {{ brand }}
+        </label>
+      </div>
+    </div>
+
+    <!-- Availability -->
+    <div class="filter-group">
+      <h5 class="filter-group-title">Availability</h5>
+      <label class="toggle-option" (click)="toggleInStock()">
+        <span class="toggle-switch" [class.active]="inStockOnly">
+          <span class="toggle-knob"></span>
+        </span>
+        In Stock Only
+      </label>
+    </div>
+
+    <!-- Rating -->
+    <div class="filter-group">
+      <h5 class="filter-group-title">Rating</h5>
+      <div class="rating-options">
+        <label
+          *ngFor="let rating of ratingOptions"
+          class="rating-option"
+          [class.selected]="minRating === rating"
+          (click)="setRating(rating)"
+        >
+          <span class="stars">
+            <i
+              *ngFor="let star of [1, 2, 3, 4, 5]"
+              class="fa-star"
+              [class.fas]="star <= rating"
+              [class.far]="star > rating"
+            ></i>
+          </span>
+          <span class="rating-label">&amp; Up</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- New Arrivals -->
+    <div class="filter-group">
+      <h5 class="filter-group-title">Other</h5>
+      <label class="toggle-option" (click)="toggleNew()">
+        <span class="toggle-switch" [class.active]="isNew">
+          <span class="toggle-knob"></span>
+        </span>
+        New Arrivals
+      </label>
+    </div>
+  </div>
+</aside>

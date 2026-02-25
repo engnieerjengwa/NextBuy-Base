@@ -1,58 +1,155 @@
 <div class="detail-section" *ngIf="product">
   <div class="container-fluid">
-    <img
-      src="{{ product.imageUrl }}"
-      class="detail-img"
-      alt="{{ product.name }}"
-    />
-    <h3>{{ product.name }}</h3>
-    <div class="price">{{ product.unitPrice | currency: "USD" }}</div>
+    <div class="product-detail-layout">
+      <!-- Left: Image Gallery -->
+      <div class="product-images">
+        <app-image-gallery
+          [images]="productImages"
+          [productName]="product.name"
+          [fallbackImageUrl]="product.imageUrl"
+        ></app-image-gallery>
+      </div>
 
-    <!-- Stock Badge (FE-28) -->
-    <div class="stock-badge" [ngClass]="stockBadgeClass">
-      {{ stockLabel }}
-    </div>
+      <!-- Right: Product Info -->
+      <div class="product-info">
+        <div class="product-brand" *ngIf="product.brand">
+          {{ product.brand }}
+        </div>
+        <h3>{{ product.name }}</h3>
 
-    <!-- Urgency Indicator (FE-43) -->
-    <div class="urgency-indicator" *ngIf="isLowStock">
-      <span class="urgency-icon">&#9888;</span>
-      Hurry! Only {{ product.unitsInStock }} left in stock - order soon.
-    </div>
+        <!-- Rating -->
+        <div class="product-rating" *ngIf="product.averageRating">
+          <span class="stars">
+            <i
+              *ngFor="let star of [1, 2, 3, 4, 5]"
+              class="fa-star"
+              [class.fas]="star <= product.averageRating"
+              [class.far]="star > product.averageRating"
+            ></i>
+          </span>
+          <span class="rating-text">
+            {{ product.averageRating | number: "1.1-1" }}
+            <span class="review-count"
+              >({{ product.reviewCount }} reviews)</span
+            >
+          </span>
+        </div>
 
-    <!-- Quantity Selector (FE-27) -->
-    <div class="quantity-selector" *ngIf="isInStock">
-      <label class="qty-label">Qty:</label>
-      <div class="qty-controls">
+        <!-- Pricing -->
+        <div class="pricing-section">
+          <div class="price">{{ effectivePrice | currency: "USD" }}</div>
+          <div
+            class="original-price"
+            *ngIf="
+              product.originalPrice && product.originalPrice > effectivePrice
+            "
+          >
+            <span class="was-price"
+              >Was {{ product.originalPrice | currency: "USD" }}</span
+            >
+            <span class="discount-badge" *ngIf="product.discountPercentage">
+              -{{ product.discountPercentage }}%
+            </span>
+          </div>
+        </div>
+
+        <!-- Stock Badge -->
+        <div class="stock-badge" [ngClass]="stockBadgeClass">
+          {{ stockLabel }}
+        </div>
+
+        <!-- Urgency Indicator -->
+        <div class="urgency-indicator" *ngIf="isLowStock">
+          <span class="urgency-icon">&#9888;</span>
+          Hurry! Only {{ effectiveStock }} left in stock - order soon.
+        </div>
+
+        <!-- Variant Selector -->
+        <app-variant-selector
+          *ngIf="productVariants.length > 0"
+          [variants]="productVariants"
+          (variantSelected)="onVariantSelected($event)"
+        ></app-variant-selector>
+
+        <!-- Quantity Selector -->
+        <div class="quantity-selector" *ngIf="isInStock">
+          <label class="qty-label">Qty:</label>
+          <div class="qty-controls">
+            <button
+              class="qty-btn"
+              (click)="decrementQuantity()"
+              [disabled]="quantity <= 1"
+            >
+              &#8722;
+            </button>
+            <span class="qty-value">{{ quantity }}</span>
+            <button
+              class="qty-btn"
+              (click)="incrementQuantity()"
+              [disabled]="quantity >= effectiveStock"
+            >
+              &#43;
+            </button>
+          </div>
+        </div>
+
         <button
-          class="qty-btn"
-          (click)="decrementQuantity()"
-          [disabled]="quantity <= 1"
+          (click)="addToCart()"
+          class="btn btn-primary btn-sm add-to-cart-btn"
+          [disabled]="!isInStock"
         >
-          &#8722;
+          {{ isInStock ? "Add to Cart" : "Out of Stock" }}
         </button>
-        <span class="qty-value">{{ quantity }}</span>
-        <button
-          class="qty-btn"
-          (click)="incrementQuantity()"
-          [disabled]="quantity >= product.unitsInStock"
+
+        <!-- Product Details Tabs -->
+        <div class="product-details-tabs">
+          <hr />
+          <h4>Description</h4>
+          <p>{{ product.description }}</p>
+
+          <!-- Specifications -->
+          <div *ngIf="product.specifications" class="specifications-section">
+            <h4>Specifications</h4>
+            <p>{{ product.specifications }}</p>
+          </div>
+
+          <!-- Dimensions & Weight -->
+          <div
+            *ngIf="product.weightKg || product.lengthCm"
+            class="dimensions-section"
+          >
+            <h4>Dimensions & Weight</h4>
+            <table class="specs-table">
+              <tr *ngIf="product.weightKg">
+                <td class="spec-label">Weight</td>
+                <td>{{ product.weightKg }} kg</td>
+              </tr>
+              <tr *ngIf="product.lengthCm">
+                <td class="spec-label">Length</td>
+                <td>{{ product.lengthCm }} cm</td>
+              </tr>
+              <tr *ngIf="product.widthCm">
+                <td class="spec-label">Width</td>
+                <td>{{ product.widthCm }} cm</td>
+              </tr>
+              <tr *ngIf="product.heightCm">
+                <td class="spec-label">Height</td>
+                <td>{{ product.heightCm }} cm</td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- Warranty -->
+          <div *ngIf="product.warrantyInfo" class="warranty-section">
+            <h4>Warranty</h4>
+            <p>{{ product.warrantyInfo }}</p>
+          </div>
+        </div>
+
+        <a routerLink="/products" class="mt-5 back-link"
+          >Back to Product List</a
         >
-          &#43;
-        </button>
       </div>
     </div>
-
-    <button
-      (click)="addToCart()"
-      class="btn btn-primary btn-sm add-to-cart-btn"
-      [disabled]="!isInStock"
-    >
-      {{ isInStock ? "Add to Cart" : "Out of Stock" }}
-    </button>
-
-    <hr />
-    <h4>Description</h4>
-    <p>{{ product.description }}</p>
-
-    <a routerLink="/products" class="mt-5">Back to Product List</a>
   </div>
 </div>

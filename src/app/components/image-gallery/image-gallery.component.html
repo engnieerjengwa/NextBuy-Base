@@ -1,0 +1,56 @@
+<div class="image-gallery" *ngIf="displayImages.length > 0">
+  <!-- Thumbnails (left side) -->
+  <div class="thumbnail-strip" *ngIf="displayImages.length > 1">
+    <button
+      *ngFor="let img of displayImages; let i = index"
+      class="thumbnail"
+      [class.active]="i === selectedIndex"
+      (click)="selectImage(i)"
+      (mouseenter)="selectImage(i)"
+    >
+      <img [src]="img.url" [alt]="img.alt" loading="lazy" />
+    </button>
+  </div>
+
+  <!-- Main image with zoom -->
+  <div class="main-image-container">
+    <div
+      class="main-image-wrapper"
+      (mousemove)="onMouseMove($event)"
+      (mouseenter)="onMouseEnter()"
+      (mouseleave)="onMouseLeave()"
+    >
+      <img
+        *ngIf="currentImage"
+        [src]="currentImage.url"
+        [alt]="currentImage.alt"
+        class="main-image"
+        [class.zoomed]="isZoomed"
+        [style.transform-origin]="zoomX + '% ' + zoomY + '%'"
+      />
+    </div>
+
+    <!-- Navigation arrows -->
+    <button
+      *ngIf="displayImages.length > 1"
+      class="nav-arrow nav-arrow-left"
+      (click)="prevImage()"
+      aria-label="Previous image"
+    >
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button
+      *ngIf="displayImages.length > 1"
+      class="nav-arrow nav-arrow-right"
+      (click)="nextImage()"
+      aria-label="Next image"
+    >
+      <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <!-- Image counter -->
+    <div class="image-counter" *ngIf="displayImages.length > 1">
+      {{ selectedIndex + 1 }} / {{ displayImages.length }}
+    </div>
+  </div>
+</div>

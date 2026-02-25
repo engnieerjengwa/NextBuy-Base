@@ -1,0 +1,120 @@
+.department-section {
+  padding: 30px 20px;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.department-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.department-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  padding: 20px 12px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.department-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.department-card:hover .card-icon {
+  transform: scale(1.08);
+}
+
+.card-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  transition: transform 0.3s ease;
+  color: #fff;
+  font-size: 28px;
+}
+
+.dept-image {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.card-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  line-height: 1.3;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.department-card:hover .card-label {
+  color: var(--accent-color, #0da8e4);
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .department-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 12px;
+  }
+
+  .card-icon {
+    width: 56px;
+    height: 56px;
+    font-size: 22px;
+  }
+
+  .dept-image {
+    width: 36px;
+    height: 36px;
+  }
+
+  .card-label {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .department-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .department-card {
+    padding: 14px 8px;
+  }
+}

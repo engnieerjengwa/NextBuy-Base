@@ -1,109 +1,305 @@
 <div class="main-content">
-  <!-- Hero Banner Section - Only show on main products page -->
+  <!-- Hero Banner Section - Only show on home page -->
   <app-hero-banner *ngIf="isHomePage()"></app-hero-banner>
 
-  <!-- Featured Products Section - Only show on main products page -->
-  <div class="section-content section-content-p30" *ngIf="isHomePage()">
-    <h3 class="section-title">Featured Products</h3>
-    <hr />
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-3" *ngFor="let product of featuredProducts">
-          <div class="product-box">
-            <a routerLink="/products/{{ product.id }}">
-              <img
-                [src]="product.imageUrl"
-                alt="{{ product.name }}"
-                class="img-responsive"
-              />
-            </a>
-            <a routerLink="/products/{{ product.id }}">
-              <h1>{{ product.name }}</h1>
-            </a>
-            <div class="price">
-              {{ product.unitPrice | currency: "USD" }}
-            </div>
-            <button (click)="addToCart(product)" class="btn btn-primary btn-sm">
-              Add to cart
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Shop by Department Grid - Home page only -->
+  <app-department-grid *ngIf="isHomePage()"></app-department-grid>
 
+  <!-- Featured Products Carousel - Home page only -->
+  <app-product-carousel
+    *ngIf="isHomePage() && featuredProducts.length > 0"
+    [products]="featuredProducts"
+    [title]="'Featured Products'"
+    [showViewAll]="true"
+    [viewAllLink]="'/products'"
+  ></app-product-carousel>
+
+  <!-- New Arrivals Carousel - Home page only -->
+  <app-product-carousel
+    *ngIf="isHomePage() && newArrivals.length > 0"
+    [products]="newArrivals"
+    [title]="'New Arrivals'"
+    [showViewAll]="true"
+    [viewAllLink]="'/products'"
+  ></app-product-carousel>
+
+  <!-- Product Listing Section -->
   <div class="section-content section-content-p30">
-    <!-- Only show category title if not on home page -->
-    <!--    <h4 *ngIf="!isHomePage()">Category: {{ currentCategoryName }}</h4>-->
-    <h4 *ngIf="isHomePage()">Our Products</h4>
-    <hr />
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-3" *ngFor="let tempProduct of products">
-          <div class="product-box">
-            <a routerLink="/products/{{ tempProduct.id }}"
-              ><img
-                [src]="tempProduct.imageUrl"
-                alt="{{ tempProduct.name }}"
-                class="img-responsive"
-              />
-            </a>
-            <a routerLink="/products/{{ tempProduct.id }}"
-              ><h1>{{ tempProduct.name }}</h1></a
+      <div class="product-listing-layout">
+        <!-- Filter Sidebar - only on browsing/search pages -->
+        <aside class="filter-sidebar-col" *ngIf="!isHomePage()">
+          <app-subcategory-nav
+            *ngIf="currentCategoryId > 0"
+            [categoryId]="currentCategoryId"
+          ></app-subcategory-nav>
+          <app-filter-sidebar
+            [categoryId]="currentCategoryId > 0 ? currentCategoryId : null"
+            (filtersChanged)="onFiltersChanged($event)"
+          ></app-filter-sidebar>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="product-main-col" [class.full-width]="isHomePage()">
+          <!-- Sort Bar + View Toggle -->
+          <div class="toolbar" *ngIf="!isHomePage()">
+            <app-sort-bar
+              [totalResults]="theTotalElements"
+              [searchQuery]="currentKeyword"
+              [currentSort]="currentSort"
+              (sortChanged)="onSortChanged($event)"
+            ></app-sort-bar>
+
+            <div class="view-toggle">
+              <button
+                class="view-btn"
+                [class.active]="viewMode === 'grid'"
+                (click)="viewMode !== 'grid' && toggleViewMode()"
+                title="Grid view"
+              >
+                <i class="fa fa-th"></i>
+              </button>
+              <button
+                class="view-btn"
+                [class.active]="viewMode === 'list'"
+                (click)="viewMode !== 'list' && toggleViewMode()"
+                title="List view"
+              >
+                <i class="fa fa-list"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Category Title -->
+          <h4 *ngIf="isHomePage()" class="section-heading">Our Products</h4>
+          <h4 *ngIf="!isHomePage() && !searchMode" class="section-heading">
+            {{ currentCategoryName }}
+          </h4>
+          <hr />
+
+          <!-- Product Grid / List -->
+          <div
+            class="row"
+            [ngClass]="{ 'list-layout': viewMode === 'list' && !isHomePage() }"
+          >
+            <div
+              *ngFor="let tempProduct of products"
+              [ngClass]="{
+                'col-lg-3 col-md-4 col-sm-6':
+                  viewMode === 'grid' || isHomePage(),
+                'col-12': viewMode === 'list' && !isHomePage(),
+              }"
             >
-            <div class="price">
-              {{ tempProduct.unitPrice | currency: "USD" }}
+              <!-- GRID VIEW CARD -->
+              <div
+                class="product-box"
+                *ngIf="viewMode === 'grid' || isHomePage()"
+              >
+                <div
+                  class="product-badge"
+                  *ngIf="getDiscountBadge(tempProduct)"
+                >
+                  {{ getDiscountBadge(tempProduct) }}
+                </div>
+                <a routerLink="/products/{{ tempProduct.id }}">
+                  <img
+                    [src]="tempProduct.imageUrl"
+                    alt="{{ tempProduct.name }}"
+                    class="img-responsive"
+                  />
+                </a>
+                <div class="product-brand" *ngIf="tempProduct.brand">
+                  {{ tempProduct.brand }}
+                </div>
+                <a routerLink="/products/{{ tempProduct.id }}">
+                  <h1>{{ tempProduct.name }}</h1>
+                </a>
+                <div class="product-rating" *ngIf="tempProduct.averageRating">
+                  <span class="stars">
+                    <i
+                      *ngFor="let star of [1, 2, 3, 4, 5]"
+                      class="fa"
+                      [ngClass]="
+                        star <= tempProduct.averageRating!
+                          ? 'fa-star'
+                          : 'fa-star-o'
+                      "
+                    ></i>
+                  </span>
+                  <span class="review-count"
+                    >({{ tempProduct.reviewCount }})</span
+                  >
+                </div>
+                <div class="price-section">
+                  <span
+                    class="price"
+                    *ngIf="
+                      !tempProduct.originalPrice ||
+                      tempProduct.originalPrice === tempProduct.unitPrice
+                    "
+                  >
+                    {{ tempProduct.unitPrice | currency: "USD" }}
+                  </span>
+                  <span
+                    *ngIf="
+                      tempProduct.originalPrice &&
+                      tempProduct.originalPrice !== tempProduct.unitPrice
+                    "
+                  >
+                    <span class="price sale-price">{{
+                      tempProduct.unitPrice | currency: "USD"
+                    }}</span>
+                    <span class="original-price">{{
+                      tempProduct.originalPrice | currency: "USD"
+                    }}</span>
+                  </span>
+                </div>
+                <button
+                  (click)="addToCart(tempProduct)"
+                  class="btn btn-primary btn-sm"
+                >
+                  Add to cart
+                </button>
+              </div>
+
+              <!-- LIST VIEW CARD -->
+              <div
+                class="product-box-list"
+                *ngIf="viewMode === 'list' && !isHomePage()"
+              >
+                <div class="list-image-col">
+                  <div
+                    class="product-badge"
+                    *ngIf="getDiscountBadge(tempProduct)"
+                  >
+                    {{ getDiscountBadge(tempProduct) }}
+                  </div>
+                  <a routerLink="/products/{{ tempProduct.id }}">
+                    <img
+                      [src]="tempProduct.imageUrl"
+                      alt="{{ tempProduct.name }}"
+                      class="img-responsive"
+                    />
+                  </a>
+                </div>
+                <div class="list-details-col">
+                  <div class="product-brand" *ngIf="tempProduct.brand">
+                    {{ tempProduct.brand }}
+                  </div>
+                  <a routerLink="/products/{{ tempProduct.id }}">
+                    <h2 class="list-product-name">{{ tempProduct.name }}</h2>
+                  </a>
+                  <div class="product-rating" *ngIf="tempProduct.averageRating">
+                    <span class="stars">
+                      <i
+                        *ngFor="let star of [1, 2, 3, 4, 5]"
+                        class="fa"
+                        [ngClass]="
+                          star <= tempProduct.averageRating!
+                            ? 'fa-star'
+                            : 'fa-star-o'
+                        "
+                      ></i>
+                    </span>
+                    <span class="review-count"
+                      >({{ tempProduct.reviewCount }})</span
+                    >
+                  </div>
+                  <p class="list-description" *ngIf="tempProduct.description">
+                    {{ tempProduct.description | slice: 0 : 200
+                    }}{{ tempProduct.description!.length > 200 ? "..." : "" }}
+                  </p>
+                  <div
+                    class="stock-label"
+                    *ngIf="tempProduct.unitsInStock! > 0"
+                  >
+                    <i class="fa fa-check-circle"></i> In Stock
+                  </div>
+                  <div
+                    class="stock-label out-of-stock"
+                    *ngIf="tempProduct.unitsInStock === 0"
+                  >
+                    <i class="fa fa-times-circle"></i> Out of Stock
+                  </div>
+                </div>
+                <div class="list-price-col">
+                  <div class="price-section">
+                    <span
+                      class="price"
+                      *ngIf="
+                        !tempProduct.originalPrice ||
+                        tempProduct.originalPrice === tempProduct.unitPrice
+                      "
+                    >
+                      {{ tempProduct.unitPrice | currency: "USD" }}
+                    </span>
+                    <span
+                      *ngIf="
+                        tempProduct.originalPrice &&
+                        tempProduct.originalPrice !== tempProduct.unitPrice
+                      "
+                    >
+                      <span class="price sale-price">{{
+                        tempProduct.unitPrice | currency: "USD"
+                      }}</span>
+                      <span class="original-price">{{
+                        tempProduct.originalPrice | currency: "USD"
+                      }}</span>
+                    </span>
+                  </div>
+                  <button
+                    (click)="addToCart(tempProduct)"
+                    class="btn btn-primary btn-sm btn-add-list"
+                  >
+                    Add to cart
+                  </button>
+                </div>
+              </div>
             </div>
 
-            <button
-              (click)="addToCart(tempProduct)"
-              class="btn btn-primary btn-sm"
-            >
-              Add to cart
-            </button>
-          </div>
-        </div>
-        <!-- If products not found -->
-        <div
-          *ngIf="products?.length == 0"
-          class="alert alert-warning col-md-12"
-          role="alert"
-        >
-          No products matching your search were found!
-        </div>
-      </div>
-
-      <div class="footer-pagination">
-        <div class="row">
-          <div class="col-md-12">
+            <!-- No products found -->
             <div
-              class="pagination-controls d-flex justify-content-between align-items-center"
+              *ngIf="products?.length === 0"
+              class="alert alert-warning col-12"
+              role="alert"
             >
-              <div class="flex-grow-1"></div>
-              <div class="pagination-nav">
-                <ngb-pagination
-                  [(page)]="thePageNumber"
-                  [pageSize]="thePageSize"
-                  [collectionSize]="theTotalElements"
-                  [maxSize]="5"
-                  [boundaryLinks]="true"
-                  (pageChange)="listProducts()"
-                  class="pagination-rounded"
+              No products matching your search were found!
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div class="footer-pagination">
+            <div class="row">
+              <div class="col-md-12">
+                <div
+                  class="pagination-controls d-flex justify-content-between align-items-center"
                 >
-                </ngb-pagination>
-              </div>
-              <div class="flex-grow-1 d-flex justify-content-end">
-                <div class="page-size-selector d-flex align-items-center">
-                  <span class="mr-2">Page Size</span>
-                  <select
-                    #myPageSelect
-                    (change)="updatePageSize(myPageSelect.value)"
-                    class="form-control form-control-sm"
-                  >
-                    <option selected="true">10</option>
-                    <option>25</option>
-                    <option>100</option>
-                  </select>
+                  <div class="flex-grow-1"></div>
+                  <div class="pagination-nav">
+                    <ngb-pagination
+                      [(page)]="thePageNumber"
+                      [pageSize]="thePageSize"
+                      [collectionSize]="theTotalElements"
+                      [maxSize]="5"
+                      [boundaryLinks]="true"
+                      (pageChange)="listProducts()"
+                      class="pagination-rounded"
+                    ></ngb-pagination>
+                  </div>
+                  <div class="flex-grow-1 d-flex justify-content-end">
+                    <div class="page-size-selector d-flex align-items-center">
+                      <span class="mr-2">Page Size</span>
+                      <select
+                        #myPageSelect
+                        (change)="updatePageSize(myPageSelect.value)"
+                        class="form-control form-control-sm"
+                      >
+                        <option selected="true">10</option>
+                        <option>25</option>
+                        <option>100</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

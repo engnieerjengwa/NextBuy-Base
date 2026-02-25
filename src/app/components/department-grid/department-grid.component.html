@@ -1,0 +1,32 @@
+<section class="department-section" *ngIf="!loading && departments.length > 0">
+  <h3 class="section-title">Shop by Department</h3>
+  <div class="department-grid">
+    <a
+      *ngFor="let dept of departments; let i = index"
+      [routerLink]="['/category', dept.id, dept.slug || dept.categoryName]"
+      class="department-card"
+      [style.--accent-color]="getColor(i)"
+    >
+      <div class="card-icon" [style.background]="getColor(i)">
+        <img
+          *ngIf="hasImage(dept)"
+          [src]="dept.iconUrl"
+          [alt]="dept.categoryName"
+          class="dept-image"
+        />
+        <i
+          *ngIf="!hasImage(dept)"
+          class="fa"
+          [ngClass]="getIconClass(dept)"
+        ></i>
+      </div>
+      <span class="card-label">{{ dept.categoryName }}</span>
+    </a>
+  </div>
+</section>
+
+<section class="department-section loading-state" *ngIf="loading">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading departments...</span>
+  </div>
+</section>

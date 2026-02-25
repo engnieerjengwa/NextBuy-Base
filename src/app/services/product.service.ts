@@ -1,7 +1,12 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { Product } from '../common/product';
+import {
+  Product,
+  ProductImage,
+  ProductVariant,
+  ProductSearchResult,
+} from '../common/product';
 import { ProductCategory } from '../common/product-category';
 import { environment } from '../../environments/environment';
 
@@ -119,7 +124,121 @@ export class ProductService {
       }),
     );
   }
+
+  // ── Phase 2: Advanced Search & Filtering ──
+
+  searchProductsAdvanced(params: {
+    q?: string;
+    brand?: string;
+    categoryId?: number;
+    minPrice?: number;
+    maxPrice?: number;
+    inStock?: boolean;
+    minRating?: number;
+    isNew?: boolean;
+    sort?: string;
+    page?: number;
+    size?: number;
+  }): Observable<SearchResponsePage> {
+    let httpParams = new HttpParams();
+    if (params.q) httpParams = httpParams.set('q', params.q);
+    if (params.brand) httpParams = httpParams.set('brand', params.brand);
+    if (params.categoryId != null)
+      httpParams = httpParams.set('categoryId', params.categoryId.toString());
+    if (params.minPrice != null)
+      httpParams = httpParams.set('minPrice', params.minPrice.toString());
+    if (params.maxPrice != null)
+      httpParams = httpParams.set('maxPrice', params.maxPrice.toString());
+    if (params.inStock != null)
+      httpParams = httpParams.set('inStock', params.inStock.toString());
+    if (params.minRating != null)
+      httpParams = httpParams.set('minRating', params.minRating.toString());
+    if (params.isNew != null)
+      httpParams = httpParams.set('isNew', params.isNew.toString());
+    if (params.sort) httpParams = httpParams.set('sort', params.sort);
+    if (params.page != null)
+      httpParams = httpParams.set('page', params.page.toString());
+    if (params.size != null)
+      httpParams = httpParams.set('size', params.size.toString());
+
+    return this.httpClient.get<SearchResponsePage>(
+      `${environment.apiUrl}/products/search`,
+      { params: httpParams },
+    );
+  }
+
+  autocomplete(
+    query: string,
+    limit: number = 5,
+  ): Observable<ProductSearchResult[]> {
+    const params = new HttpParams()
+      .set('q', query)
+      .set('limit', limit.toString());
+    return this.httpClient.get<ProductSearchResult[]>(
+      `${environment.apiUrl}/products/autocomplete`,
+      { params },
+    );
+  }
+
+  getBrands(categoryId?: number): Observable<string[]> {
+    let params = new HttpParams();
+    if (categoryId != null)
+      params = params.set('categoryId', categoryId.toString());
+    return this.httpClient.get<string[]>(
+      `${environment.apiUrl}/products/brands`,
+      { params },
+    );
+  }
+
+  getProductImages(productId: number): Observable<ProductImage[]> {
+    return this.httpClient.get<ProductImage[]>(
+      `${environment.apiUrl}/products/${productId}/images`,
+    );
+  }
+
+  getProductVariants(productId: number): Observable<ProductVariant[]> {
+    return this.httpClient.get<ProductVariant[]>(
+      `${environment.apiUrl}/products/${productId}/variants`,
+    );
+  }
+
+  getFeaturedProducts(
+    page: number = 0,
+    size: number = 10,
+  ): Observable<SearchResponsePage> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.httpClient.get<SearchResponsePage>(
+      `${environment.apiUrl}/products/featured`,
+      { params },
+    );
+  }
+
+  getNewArrivals(
+    page: number = 0,
+    size: number = 10,
+  ): Observable<SearchResponsePage> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.httpClient.get<SearchResponsePage>(
+      `${environment.apiUrl}/products/new-arrivals`,
+      { params },
+    );
+  }
+
+  validateStock(
+    items: { productId: number; quantity: number }[],
+  ): Observable<StockValidationResult> {
+    return this.httpClient.post<StockValidationResult>(
+      `${environment.apiUrl}/checkout/validate-stock`,
+      { items },
+    );
+  }
 }
+
+// ── Response interfaces ──
 
 interface GetResponseProducts {
   _embedded: {
@@ -137,4 +256,22 @@ interface GetResponseProductCategory {
   _embedded: {
     productCategory: ProductCategory[];
   };
+}
+
+export interface SearchResponsePage {
+  content: Product[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
+
+export interface StockValidationResult {
+  valid: boolean;
+  errors: {
+    productId: number;
+    productName: string;
+    requestedQuantity: number;
+    availableQuantity: number;
+  }[];
 }

@@ -1,0 +1,149 @@
+.subcategory-nav {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.nav-heading {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #0da8e4;
+}
+
+.nav-heading i {
+  margin-right: 8px;
+  color: #0da8e4;
+}
+
+/* Parent category */
+.parent-category {
+  margin-bottom: 12px;
+}
+
+.parent-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+  font-size: 15px;
+  transition: background 0.2s;
+}
+
+.parent-link:hover {
+  background: #f0f8ff;
+  color: #0da8e4;
+}
+
+.parent-link.active {
+  background: #e8f4fd;
+  color: #0da8e4;
+}
+
+.cat-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/* Subcategory list */
+.subcategory-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.subcategory-item {
+  margin-bottom: 2px;
+}
+
+.subcategory-row {
+  display: flex;
+  align-items: center;
+}
+
+.subcategory-link {
+  flex: 1;
+  display: block;
+  padding: 7px 10px 7px 20px;
+  text-decoration: none;
+  color: #555;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.subcategory-link:hover {
+  background: #f0f8ff;
+  color: #0da8e4;
+}
+
+.subcategory-link.active {
+  background: #e8f4fd;
+  color: #0da8e4;
+  font-weight: 600;
+}
+
+.expand-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
+  padding: 4px 8px;
+  font-size: 12px;
+  transition: color 0.2s;
+}
+
+.expand-btn:hover {
+  color: #0da8e4;
+}
+
+/* Nested children */
+.nested-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nested-item {
+  margin-bottom: 1px;
+}
+
+.nested-link {
+  display: block;
+  padding: 6px 10px 6px 36px;
+  text-decoration: none;
+  color: #777;
+  font-size: 13px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.nested-link:hover {
+  background: #f0f8ff;
+  color: #0da8e4;
+}
+
+.nested-link.active {
+  background: #e8f4fd;
+  color: #0da8e4;
+  font-weight: 600;
+}
+
+.no-subcategories {
+  padding: 8px 10px;
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}

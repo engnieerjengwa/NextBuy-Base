@@ -1,0 +1,34 @@
+<div class="variant-selector" *ngIf="variantTypes.length > 0">
+  <div class="variant-group" *ngFor="let type of variantTypes">
+    <label class="variant-label">{{ type }}:</label>
+    <div class="variant-options">
+      <button
+        *ngFor="let variant of variantsByType.get(type)"
+        class="variant-pill"
+        [class.selected]="isSelected(type, variant.variantValue)"
+        [class.out-of-stock]="isOutOfStock(variant)"
+        [disabled]="isOutOfStock(variant)"
+        (click)="selectVariantValue(type, variant.variantValue)"
+        [title]="getVariantStockLabel(variant)"
+      >
+        {{ variant.variantValue }}
+        <span class="price-adjustment" *ngIf="getPriceAdjustmentLabel(variant)">
+          {{ getPriceAdjustmentLabel(variant) }}
+        </span>
+      </button>
+    </div>
+    <div
+      class="variant-stock-info"
+      *ngIf="selectedVariant && selectedVariant.variantType === type"
+    >
+      <span
+        class="stock-hint"
+        [class.low-stock]="
+          selectedVariant.unitsInStock <= 5 && selectedVariant.unitsInStock > 0
+        "
+      >
+        {{ getVariantStockLabel(selectedVariant) }}
+      </span>
+    </div>
+  </div>
+</div>
