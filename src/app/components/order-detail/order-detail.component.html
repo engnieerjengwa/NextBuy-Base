@@ -1,7 +1,6 @@
 <div class="main-content">
   <div class="section-content section-content-p30">
     <div class="container-fluid">
-
       <!-- Loading indicator -->
       <div *ngIf="isLoading" class="text-center">
         <div class="spinner-border text-primary" role="status">
@@ -17,13 +16,20 @@
 
       <!-- Order details -->
       <div *ngIf="!isLoading && !errorMessage && order">
-
         <!-- 1. Order Header Bar -->
         <div class="order-header-bar">
           <div class="order-identifiers">
-            <span class="order-number">Order #{{ order.orderTrackingNumber }}</span>
-            <span class="order-date">ORDERED {{ order.dateCreated | date:'dd MMM yyyy' | uppercase }}</span>
-            <span class="payment-date">PAID {{ order.dateCreated | date:'dd MMM yyyy' | uppercase }}</span>
+            <span class="order-number"
+              >Order #{{ order.orderTrackingNumber }}</span
+            >
+            <span class="order-date"
+              >ORDERED
+              {{ order.dateCreated | date: "dd MMM yyyy" | uppercase }}</span
+            >
+            <span class="payment-date"
+              >PAID
+              {{ order.dateCreated | date: "dd MMM yyyy" | uppercase }}</span
+            >
           </div>
           <div class="header-actions">
             <button class="btn btn-secondary" (click)="backToOrderHistory()">
@@ -41,14 +47,28 @@
           <div class="info-column shipping-address">
             <h3><i class="fa fa-map-marker"></i> Shipping Address</h3>
             <div class="address-content">
-              <p *ngIf="order.customer">{{ order.customer.firstName }} {{ order.customer.lastName }}</p>
-              <p *ngIf="order.shippingAddress">{{ order.shippingAddress.street }}</p>
-              <p *ngIf="order.shippingAddress">{{ order.shippingAddress.city }}</p>
-              <p *ngIf="order.shippingAddress">{{ order.shippingAddress.state }}</p>
-              <p *ngIf="order.shippingAddress">{{ order.shippingAddress.country }}</p>
-              <p *ngIf="order.shippingAddress">{{ order.shippingAddress.zipCode }}</p>
+              <p *ngIf="order.customer">
+                {{ order.customer.firstName }} {{ order.customer.lastName }}
+              </p>
+              <p *ngIf="order.shippingAddress">
+                {{ order.shippingAddress.street }}
+              </p>
+              <p *ngIf="order.shippingAddress">
+                {{ order.shippingAddress.city }}
+              </p>
+              <p *ngIf="order.shippingAddress">
+                {{ order.shippingAddress.state }}
+              </p>
+              <p *ngIf="order.shippingAddress">
+                {{ order.shippingAddress.country }}
+              </p>
+              <p *ngIf="order.shippingAddress">
+                {{ order.shippingAddress.zipCode }}
+              </p>
               <!-- Fallback if no shipping address -->
-              <p *ngIf="!order.shippingAddress" class="text-muted">No shipping address available</p>
+              <p *ngIf="!order.shippingAddress" class="text-muted">
+                No shipping address available
+              </p>
             </div>
           </div>
 
@@ -70,24 +90,32 @@
             <div class="summary-rows">
               <div class="summary-row">
                 <span class="summary-label">Items Count</span>
-                <span class="summary-value">{{ order.totalQuantity }} Items</span>
+                <span class="summary-value"
+                  >{{ order.totalQuantity }} Items</span
+                >
               </div>
               <div class="summary-row">
                 <span class="summary-label">Amount</span>
-                <span class="summary-value">R {{ calculatedTotal }}</span>
+                <span class="summary-value">{{
+                  calculatedTotal | currency: "USD"
+                }}</span>
               </div>
               <div class="summary-row">
                 <span class="summary-label">Delivery</span>
-                <span class="summary-value">R 0</span>
+                <span class="summary-value">{{ 0 | currency: "USD" }}</span>
               </div>
               <div class="summary-row divider"></div>
               <div class="summary-row">
                 <span class="summary-label">Order Total:</span>
-                <span class="summary-value">R {{ calculatedTotal }}</span>
+                <span class="summary-value">{{
+                  calculatedTotal | currency: "USD"
+                }}</span>
               </div>
               <div class="summary-row payment">
                 <span class="summary-label">Paid (Credit / Debit Card)</span>
-                <span class="summary-value negative">-R {{ calculatedTotal }}</span>
+                <span class="summary-value negative"
+                  >-{{ calculatedTotal | currency: "USD" }}</span
+                >
               </div>
             </div>
           </div>
@@ -99,7 +127,8 @@
           <div class="delivery-status-header">
             <div class="delivery-status-info">
               <span class="delivery-status-text">
-                <strong>Delivered</strong> {{ order.deliveryDate | date:'EEE, d MMM yyyy' }}
+                <strong>Delivered</strong>
+                {{ order.deliveryDate | date: "EEE, d MMM yyyy" }}
               </span>
             </div>
             <div class="delivery-actions" *ngIf="order.status === 'DELIVERED'">
@@ -112,7 +141,11 @@
           <!-- Proof of Delivery (Signature Row) -->
           <div class="proof-of-delivery" *ngIf="order.signedBy">
             <i class="fa fa-check-circle text-success"></i>
-            <span>Signed by: {{ order.signedBy.name }} ({{ order.signedBy.role === 'CUSTOMER' ? 'Customer' : 'Concierge' }})</span>
+            <span
+              >Signed by: {{ order.signedBy.name }} ({{
+                order.signedBy.role === "CUSTOMER" ? "Customer" : "Concierge"
+              }})</span
+            >
           </div>
 
           <!-- Order Items List -->
@@ -121,37 +154,41 @@
             <div *ngFor="let item of order.orderItems" class="order-item">
               <div class="item-thumbnail">
                 <a [routerLink]="['/products', item.productId]">
-                  <img [src]="item.imageUrl" alt="Product Image">
+                  <img [src]="item.imageUrl" alt="Product Image" />
                 </a>
               </div>
               <div class="item-details">
                 <div class="item-name">
                   <a [routerLink]="['/products', item.productId]">
-                    {{ item.productName || 'Product #' + item.productId }}
+                    {{ item.productName || "Product #" + item.productId }}
                   </a>
                 </div>
                 <div class="item-quantity">Qty: {{ item.quantity }}</div>
                 <div class="item-seller">Sold by: NexBuy Store</div>
               </div>
               <div class="item-price">
-                R {{ item.unitPrice }}
+                {{ item.unitPrice | currency: "USD" }}
               </div>
             </div>
 
             <!-- Fallback if no order items -->
-            <div *ngIf="!order.orderItems || order.orderItems.length === 0" class="alert alert-info">
+            <div
+              *ngIf="!order.orderItems || order.orderItems.length === 0"
+              class="alert alert-info"
+            >
               No items found for this order.
             </div>
           </div>
         </div>
-
       </div>
 
       <!-- No order found -->
-      <div *ngIf="!isLoading && !errorMessage && !order" class="alert alert-warning">
+      <div
+        *ngIf="!isLoading && !errorMessage && !order"
+        class="alert alert-warning"
+      >
         Order not found.
       </div>
-
     </div>
   </div>
 </div>

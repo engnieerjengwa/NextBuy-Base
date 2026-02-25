@@ -1,0 +1,107 @@
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  z-index: 10000;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.cookie-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.cookie-content p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.cookie-link {
+  color: #4fc3f7;
+  text-decoration: underline;
+}
+
+.cookie-link:hover {
+  color: #81d4fa;
+}
+
+.cookie-actions {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.btn-accept,
+.btn-reject {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    transform 0.1s;
+}
+
+.btn-accept {
+  background: #00b894;
+  color: #fff;
+}
+
+.btn-accept:hover {
+  background: #00a884;
+  transform: translateY(-1px);
+}
+
+.btn-reject {
+  background: transparent;
+  color: #bbb;
+  border: 1px solid #555;
+}
+
+.btn-reject:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .cookie-content {
+    flex-direction: column;
+    text-align: center;
+    padding: 16px;
+    gap: 14px;
+  }
+
+  .cookie-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-accept,
+  .btn-reject {
+    flex: 1;
+    max-width: 160px;
+  }
+}

@@ -1,6 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  FormControl,
+  Validators,
+  ReactiveFormsModule,
+  AbstractControl,
+} from '@angular/forms';
 import { OrderHistoryService } from '../../services/order-history.service';
 import { ReturnService } from '../../services/return.service';
 import { OrderHistory } from '../../common/order-history';
@@ -11,16 +19,20 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './log-return.component.html',
-  styleUrl: './log-return.component.css'
+  styleUrl: './log-return.component.css',
 })
 export class LogReturnComponent implements OnInit {
-
   order: OrderHistory | undefined;
   orderId: string = '';
   isLoading: boolean = true;
   errorMessage: string = '';
   returnForm: FormGroup;
-  returnReasons: string[] = ['Damaged', 'Wrong item', 'Not as described', 'Changed mind'];
+  returnReasons: string[] = [
+    'Damaged',
+    'Wrong item',
+    'Not as described',
+    'Changed mind',
+  ];
   isSubmitting: boolean = false;
   submitSuccess: boolean = false;
 
@@ -29,17 +41,17 @@ export class LogReturnComponent implements OnInit {
     private returnService: ReturnService,
     private route: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {
     this.returnForm = this.formBuilder.group({
       returnReason: ['', Validators.required],
       comments: [''],
-      returnItems: this.formBuilder.array([])
+      returnItems: this.formBuilder.array([]),
     });
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       const id = params.get('orderId');
       if (id) {
         this.orderId = id;
@@ -70,7 +82,7 @@ export class LogReturnComponent implements OnInit {
       error: (err) => {
         this.errorMessage = `Error fetching order: ${err.message}`;
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -84,33 +96,23 @@ export class LogReturnComponent implements OnInit {
   }
 
   initializeReturnItems() {
-    // For now, we'll use placeholder data
-    // In a real implementation, we would iterate through order.orderItems
     const itemsArray = this.returnForm.get('returnItems') as FormArray;
+    itemsArray.clear();
 
-    // Add a placeholder item
-    itemsArray.push(
-      this.formBuilder.group({
-        orderItemId: [1],
-        productName: ['Sample Product'],
-        quantity: [1],
-        maxQuantity: [2],
-        selected: [false],
-        reason: ['']
-      })
-    );
-
-    // Add another placeholder item
-    itemsArray.push(
-      this.formBuilder.group({
-        orderItemId: [2],
-        productName: ['Another Product'],
-        quantity: [1],
-        maxQuantity: [3],
-        selected: [false],
-        reason: ['']
-      })
-    );
+    if (this.order?.orderItems && this.order.orderItems.length > 0) {
+      this.order.orderItems.forEach((item) => {
+        itemsArray.push(
+          this.formBuilder.group({
+            orderItemId: [item.id || item.productId],
+            productName: [item.productName || `Product #${item.productId}`],
+            quantity: [1],
+            maxQuantity: [item.quantity],
+            selected: [false],
+            reason: [''],
+          }),
+        );
+      });
+    }
   }
 
   onSubmit() {
@@ -121,7 +123,7 @@ export class LogReturnComponent implements OnInit {
 
     // Check if at least one item is selected
     const selectedItems = this.returnItemsFormArray.controls.filter(
-      control => (control as FormGroup).get('selected')?.value === true
+      (control) => (control as FormGroup).get('selected')?.value === true,
     );
 
     if (selectedItems.length === 0) {
@@ -131,7 +133,7 @@ export class LogReturnComponent implements OnInit {
 
     // Validate that selected items have a reason
     const invalidItems = selectedItems.filter(
-      control => !(control as FormGroup).get('reason')?.value
+      (control) => !(control as FormGroup).get('reason')?.value,
     );
 
     if (invalidItems.length > 0) {
@@ -146,11 +148,11 @@ export class LogReturnComponent implements OnInit {
       orderId: this.orderId,
       returnReason: this.returnForm.get('returnReason')?.value,
       comments: this.returnForm.get('comments')?.value,
-      returnItems: selectedItems.map(item => ({
+      returnItems: selectedItems.map((item) => ({
         orderItemId: (item as FormGroup).get('orderItemId')?.value,
         quantity: (item as FormGroup).get('quantity')?.value,
-        reason: (item as FormGroup).get('reason')?.value
-      }))
+        reason: (item as FormGroup).get('reason')?.value,
+      })),
     };
 
     // Submit return request
@@ -162,7 +164,7 @@ export class LogReturnComponent implements OnInit {
       error: (err) => {
         this.isSubmitting = false;
         this.errorMessage = `Error submitting return request: ${err.message}`;
-      }
+      },
     });
   }
 

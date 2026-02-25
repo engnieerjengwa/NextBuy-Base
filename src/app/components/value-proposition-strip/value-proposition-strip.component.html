@@ -1,0 +1,11 @@
+<section class="value-proposition-strip">
+  <div class="proposition-container">
+    <div class="proposition-item" *ngFor="let prop of propositions">
+      <span class="proposition-icon" [innerHTML]="prop.icon"></span>
+      <div class="proposition-text">
+        <span class="proposition-title">{{ prop.title }}</span>
+        <span class="proposition-subtitle">{{ prop.subtitle }}</span>
+      </div>
+    </div>
+  </div>
+</section>

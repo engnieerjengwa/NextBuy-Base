@@ -1,4 +1,11 @@
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  HostListener,
+  OnDestroy,
+  Inject,
+  PLATFORM_ID,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -11,7 +18,13 @@ import { CardExpiryService } from '../../services/card-expiry.service';
 import { CheckoutService } from '../../services/checkout.service';
 import { StripeService } from '../../services/stripe.service';
 import { CartItem } from '../../common/cart-item';
-import { CurrencyPipe, NgFor, NgIf, NgClass } from '@angular/common';
+import {
+  CurrencyPipe,
+  NgFor,
+  NgIf,
+  NgClass,
+  isPlatformBrowser,
+} from '@angular/common';
 import { Country } from '../../common/country';
 import { State } from '../../common/state';
 import { Order } from '../../common/order';
@@ -83,13 +96,17 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private checkoutService: CheckoutService,
     private stripeService: StripeService,
     private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
 
   ngOnInit() {
-    // Get user details from session storage
-    const storage: Storage = sessionStorage;
-    const userNameJson = storage.getItem('userName');
-    const userEmailJson = storage.getItem('userEmail');
+    // Get user details from session storage (SSR-safe)
+    let userNameJson: string | null = null;
+    let userEmailJson: string | null = null;
+    if (isPlatformBrowser(this.platformId)) {
+      userNameJson = sessionStorage.getItem('userName');
+      userEmailJson = sessionStorage.getItem('userEmail');
+    }
 
     // Parse user details
     let firstName = '';
@@ -477,11 +494,21 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     purchase.order = order;
     purchase.orderItems = orderItems;
 
+    // Capture email before resetting form
+    const customerEmail =
+      this.checkoutFormGroup.get('customer.email')?.value || '';
+
     this.checkoutService.placeOrder(purchase).subscribe({
       next: (response) => {
-        alert(
-          `Your order has been received.\nOrder tracking number: ${response.orderTrackingNumber}`,
-        );
+        // Navigate to order confirmation page with order details
+        this.router.navigate(['/order-confirmation'], {
+          queryParams: {
+            tracking: response.orderTrackingNumber,
+            total: this.totalPrice,
+            qty: this.totalQuantity,
+            email: customerEmail,
+          },
+        });
         this.resetCart();
       },
       error: (err) => {
@@ -495,7 +522,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           errorMessage = err.message;
         }
 
-        alert(`There was an error processing your order: ${errorMessage}`);
+        this.paymentError = `There was an error processing your order: ${errorMessage}`;
         this.isProcessingPayment = false;
       },
     });
@@ -524,8 +551,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.shippingAddressStates = [];
     this.billingAddressStates = [];
     this.sendEmailReceipt = true;
-
-    this.router.navigateByUrl('/products');
   }
 
   // Customer getters

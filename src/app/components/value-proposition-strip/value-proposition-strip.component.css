@@ -1,0 +1,63 @@
+.value-proposition-strip {
+  background: #1a1a2e;
+  color: #fff;
+  padding: 0.75rem 0;
+  border-bottom: 2px solid #0056b3;
+}
+
+.proposition-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.proposition-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem;
+}
+
+.proposition-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.proposition-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.proposition-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.proposition-subtitle {
+  font-size: 0.7rem;
+  color: #adb5bd;
+  font-weight: 400;
+}
+
+@media (max-width: 768px) {
+  .proposition-container {
+    justify-content: center;
+  }
+
+  .proposition-item {
+    flex: 0 0 45%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .proposition-item {
+    flex: 0 0 100%;
+  }
+}

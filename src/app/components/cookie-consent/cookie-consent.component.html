@@ -1,0 +1,14 @@
+<div class="cookie-banner" *ngIf="showBanner">
+  <div class="cookie-content">
+    <p>
+      We use cookies to enhance your shopping experience, analyse site traffic,
+      and personalise content. By continuing to browse, you agree to our use of
+      cookies.
+      <a href="/privacy-policy" class="cookie-link">Learn more</a>
+    </p>
+    <div class="cookie-actions">
+      <button class="btn-reject" (click)="rejectCookies()">Reject</button>
+      <button class="btn-accept" (click)="acceptCookies()">Accept All</button>
+    </div>
+  </div>
+</div>

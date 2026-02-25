@@ -1,0 +1,20 @@
+<nav
+  class="breadcrumb-nav"
+  aria-label="Breadcrumb"
+  *ngIf="breadcrumbs.length > 0"
+>
+  <ol class="breadcrumb-list">
+    <li class="breadcrumb-item">
+      <a routerLink="/products">Home</a>
+    </li>
+    <li
+      class="breadcrumb-item"
+      *ngFor="let crumb of breadcrumbs; let last = last"
+      [class.active]="last"
+    >
+      <span class="breadcrumb-separator">/</span>
+      <a *ngIf="!last" [routerLink]="crumb.url">{{ crumb.label }}</a>
+      <span *ngIf="last">{{ crumb.label }}</span>
+    </li>
+  </ol>
+</nav>

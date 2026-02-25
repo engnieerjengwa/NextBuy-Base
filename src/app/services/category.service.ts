@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProductCategory } from '../common/product-category';
+import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CategoryService {
-  private baseUrl = 'http://localhost:8080/api/categories';
+  private baseUrl = `${environment.apiUrl}/categories`;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   /**
    * Get all categories
@@ -50,7 +51,9 @@ export class CategoryService {
    * @returns Observable of active top-level categories
    */
   getActiveTopLevelCategories(): Observable<ProductCategory[]> {
-    return this.httpClient.get<ProductCategory[]>(`${this.baseUrl}/top-level/active`);
+    return this.httpClient.get<ProductCategory[]>(
+      `${this.baseUrl}/top-level/active`,
+    );
   }
 
   /**
@@ -59,7 +62,9 @@ export class CategoryService {
    * @returns Observable of subcategories
    */
   getSubcategories(parentId: number): Observable<ProductCategory[]> {
-    return this.httpClient.get<ProductCategory[]>(`${this.baseUrl}/subcategories/${parentId}`);
+    return this.httpClient.get<ProductCategory[]>(
+      `${this.baseUrl}/subcategories/${parentId}`,
+    );
   }
 
   /**
@@ -68,7 +73,9 @@ export class CategoryService {
    * @returns Observable of active subcategories
    */
   getActiveSubcategories(parentId: number): Observable<ProductCategory[]> {
-    return this.httpClient.get<ProductCategory[]>(`${this.baseUrl}/subcategories/${parentId}/active`);
+    return this.httpClient.get<ProductCategory[]>(
+      `${this.baseUrl}/subcategories/${parentId}/active`,
+    );
   }
 
   /**
@@ -94,8 +101,14 @@ export class CategoryService {
    * @param category The updated category data
    * @returns Observable of the updated category
    */
-  updateCategory(id: number, category: ProductCategory): Observable<ProductCategory> {
-    return this.httpClient.put<ProductCategory>(`${this.baseUrl}/${id}`, category);
+  updateCategory(
+    id: number,
+    category: ProductCategory,
+  ): Observable<ProductCategory> {
+    return this.httpClient.put<ProductCategory>(
+      `${this.baseUrl}/${id}`,
+      category,
+    );
   }
 
   /**
@@ -122,6 +135,9 @@ export class CategoryService {
    * @returns Observable of the generated slug
    */
   generateSlug(name: string): Observable<{ slug: string }> {
-    return this.httpClient.post<{ slug: string }>(`${this.baseUrl}/generate-slug`, { name });
+    return this.httpClient.post<{ slug: string }>(
+      `${this.baseUrl}/generate-slug`,
+      { name },
+    );
   }
 }

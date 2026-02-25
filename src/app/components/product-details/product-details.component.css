@@ -1,0 +1,112 @@
+/* Stock Badge */
+.stock-badge {
+  display: inline-block;
+  padding: 0.3rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+}
+
+.badge-in-stock {
+  background: #d4edda;
+  color: #155724;
+}
+
+.badge-low-stock {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.badge-out-of-stock {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Urgency Indicator */
+.urgency-indicator {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  color: #856404;
+  font-weight: 600;
+  margin: 0.75rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.urgency-icon {
+  font-size: 1.1rem;
+}
+
+/* Quantity Selector */
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.qty-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #333;
+  margin: 0;
+}
+
+.qty-controls {
+  display: flex;
+  align-items: center;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.qty-btn {
+  width: 36px;
+  height: 36px;
+  background: #f8f9fa;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.qty-btn:hover:not(:disabled) {
+  background: #e9ecef;
+}
+
+.qty-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.qty-value {
+  width: 48px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1rem;
+  border-left: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
+  padding: 0.25rem 0;
+}
+
+/* Add to cart button */
+.add-to-cart-btn {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+}
+
+.add-to-cart-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

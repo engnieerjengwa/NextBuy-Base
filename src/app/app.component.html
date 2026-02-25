@@ -7,6 +7,26 @@
       <div class="section-content section-content-p30">
         <div class="container-fluid">
           <div class="header-wrap">
+            <!-- Hamburger (mobile only) -->
+            <button
+              class="mobile-hamburger"
+              (click)="toggleMobileMenu()"
+              aria-label="Toggle navigation menu"
+            >
+              <span
+                class="hamburger-line"
+                [class.open]="isMobileMenuOpen"
+              ></span>
+              <span
+                class="hamburger-line"
+                [class.open]="isMobileMenuOpen"
+              ></span>
+              <span
+                class="hamburger-line"
+                [class.open]="isMobileMenuOpen"
+              ></span>
+            </button>
+
             <!-- Logo -->
             <div class="logo">
               <a routerLink="/products">
@@ -33,7 +53,7 @@
       </div>
 
       <!-- Navigation Bar -->
-      <div class="nav-bar-container">
+      <div class="nav-bar-container desktop-nav">
         <div class="container-fluid">
           <app-product-category-menu></app-product-category-menu>
         </div>
@@ -41,8 +61,51 @@
     </header>
     <!-- END HEADER DESKTOP-->
 
+    <!-- VALUE PROPOSITION STRIP -->
+    <app-value-proposition-strip></app-value-proposition-strip>
+
+    <!-- MOBILE SLIDE-OUT MENU -->
+    <div
+      class="mobile-menu-overlay"
+      [class.open]="isMobileMenuOpen"
+      (click)="closeMobileMenu()"
+    ></div>
+    <nav class="mobile-menu" [class.open]="isMobileMenuOpen">
+      <div class="mobile-menu-header">
+        <span class="mobile-menu-title">Menu</span>
+        <button
+          class="mobile-menu-close"
+          (click)="closeMobileMenu()"
+          aria-label="Close menu"
+        >
+          &times;
+        </button>
+      </div>
+      <div class="mobile-menu-search">
+        <app-search></app-search>
+      </div>
+      <ul class="mobile-menu-links">
+        <li>
+          <a routerLink="/products" (click)="closeMobileMenu()">All Products</a>
+        </li>
+        <li>
+          <a routerLink="/cart-details" (click)="closeMobileMenu()">Cart</a>
+        </li>
+        <li>
+          <a routerLink="/orders" (click)="closeMobileMenu()">My Orders</a>
+        </li>
+      </ul>
+      <div class="mobile-menu-categories">
+        <app-product-category-menu></app-product-category-menu>
+      </div>
+      <div class="mobile-menu-actions">
+        <app-login-status></app-login-status>
+      </div>
+    </nav>
+
     <!-- MAIN CONTENT-->
     <div class="main-content">
+      <app-breadcrumb></app-breadcrumb>
       <router-outlet></router-outlet>
     </div>
   </div>
@@ -101,3 +164,6 @@
     </div>
   </div>
 </footer>
+
+<!-- COOKIE CONSENT BANNER -->
+<app-cookie-consent></app-cookie-consent>

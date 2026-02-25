@@ -1,0 +1,66 @@
+<div class="order-confirmation-wrapper">
+  <div class="confirmation-card">
+    <!-- Success Icon -->
+    <div class="success-icon">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="64"
+        height="64"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#28a745"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+        <polyline points="22 4 12 14.01 9 11.01" />
+      </svg>
+    </div>
+
+    <h1 class="confirmation-title">Order Confirmed!</h1>
+    <p class="confirmation-subtitle">Thank you for your purchase</p>
+
+    <!-- Order Details -->
+    <div class="order-details">
+      <div class="detail-row">
+        <span class="detail-label">Tracking Number</span>
+        <span class="detail-value tracking-number">{{
+          orderTrackingNumber
+        }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Items Ordered</span>
+        <span class="detail-value">{{ totalQuantity }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Total Paid</span>
+        <span class="detail-value total-price">{{
+          totalPrice | currency: "USD"
+        }}</span>
+      </div>
+      <div class="detail-row" *ngIf="customerEmail">
+        <span class="detail-label">Confirmation Sent To</span>
+        <span class="detail-value">{{ customerEmail }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Estimated Delivery</span>
+        <span class="detail-value">{{ estimatedDelivery }}</span>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="order-status">
+      <span class="status-badge">PROCESSING</span>
+      <p class="status-text">Your order is being prepared for shipment.</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="confirmation-actions">
+      <a routerLink="/order-history" class="btn btn-primary">View My Orders</a>
+      <a routerLink="/products" class="btn btn-outline-secondary"
+        >Continue Shopping</a
+      >
+    </div>
+  </div>
+</div>

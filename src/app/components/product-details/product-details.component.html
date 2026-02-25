@@ -1,10 +1,53 @@
-<div class="detail-section">
+<div class="detail-section" *ngIf="product">
   <div class="container-fluid">
-    <img src="{{ product.imageUrl }}" class="detail-img" />
+    <img
+      src="{{ product.imageUrl }}"
+      class="detail-img"
+      alt="{{ product.name }}"
+    />
     <h3>{{ product.name }}</h3>
-    <div class="price">{{ product.unitPrice | currency : "USD" }}</div>
+    <div class="price">{{ product.unitPrice | currency: "USD" }}</div>
 
-    <button (click)="addToCart()" class="btn btn-primary btn-sm">Add to cart</button>
+    <!-- Stock Badge (FE-28) -->
+    <div class="stock-badge" [ngClass]="stockBadgeClass">
+      {{ stockLabel }}
+    </div>
+
+    <!-- Urgency Indicator (FE-43) -->
+    <div class="urgency-indicator" *ngIf="isLowStock">
+      <span class="urgency-icon">&#9888;</span>
+      Hurry! Only {{ product.unitsInStock }} left in stock - order soon.
+    </div>
+
+    <!-- Quantity Selector (FE-27) -->
+    <div class="quantity-selector" *ngIf="isInStock">
+      <label class="qty-label">Qty:</label>
+      <div class="qty-controls">
+        <button
+          class="qty-btn"
+          (click)="decrementQuantity()"
+          [disabled]="quantity <= 1"
+        >
+          &#8722;
+        </button>
+        <span class="qty-value">{{ quantity }}</span>
+        <button
+          class="qty-btn"
+          (click)="incrementQuantity()"
+          [disabled]="quantity >= product.unitsInStock"
+        >
+          &#43;
+        </button>
+      </div>
+    </div>
+
+    <button
+      (click)="addToCart()"
+      class="btn btn-primary btn-sm add-to-cart-btn"
+      [disabled]="!isInStock"
+    >
+      {{ isInStock ? "Add to Cart" : "Out of Stock" }}
+    </button>
 
     <hr />
     <h4>Description</h4>

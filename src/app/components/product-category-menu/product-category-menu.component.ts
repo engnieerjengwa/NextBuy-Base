@@ -52,10 +52,9 @@ export class ProductCategoryMenuComponent implements OnInit, OnDestroy {
           console.log('Categories received from ProductService:', data);
           this.mainCategories = data;
           console.log('mainCategories set:', this.mainCategories);
-          // Since we're using the old API, we don't have subcategories
-          // So we'll just set an empty array for each category
+          // Load subcategories for each category
           this.mainCategories.forEach((category) => {
-            this.subcategoriesMap.set(category.id, []);
+            this.loadSubcategories(category.id);
           });
         },
         (error) => {

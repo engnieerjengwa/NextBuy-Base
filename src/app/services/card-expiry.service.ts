@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Country } from '../common/country';
 import { State } from '../common/state';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CardExpiryService {
-
-  private countriesUrl = 'http://localhost:8080/api/countries';
-  private provincesUrl = 'http://localhost:8080/api/provinces';
+  private countriesUrl = `${environment.apiUrl}/countries`;
+  private provincesUrl = `${environment.apiUrl}/provinces`;
 
   constructor(private httpClient: HttpClient) {}
 
@@ -20,9 +20,9 @@ export class CardExpiryService {
    * @returns Observable of Country array
    */
   getCountries(): Observable<Country[]> {
-    return this.httpClient.get<GetResponseCountries>(this.countriesUrl).pipe(
-      map(response => response._embedded.countries)
-    );
+    return this.httpClient
+      .get<GetResponseCountries>(this.countriesUrl)
+      .pipe(map((response) => response._embedded.countries));
   }
 
   /**
@@ -32,9 +32,9 @@ export class CardExpiryService {
    */
   getProvinces(countryCode: string): Observable<State[]> {
     const searchUrl = `${this.provincesUrl}/search/findByCountryCode?code=${countryCode}`;
-    return this.httpClient.get<GetResponseStates>(searchUrl).pipe(
-      map(response => response._embedded.provinces)
-    );
+    return this.httpClient
+      .get<GetResponseStates>(searchUrl)
+      .pipe(map((response) => response._embedded.provinces));
   }
   /**
    * Get the current month (1-12)
@@ -89,7 +89,7 @@ export class CardExpiryService {
   getValidMonths(selectedYear: number): Observable<number[]> {
     const currentYear: number = this.getThisYear();
     const currentMonth: number = this.getCurrentMonth();
-    const startMonth: number = (selectedYear === currentYear) ? currentMonth : 1;
+    const startMonth: number = selectedYear === currentYear ? currentMonth : 1;
 
     return this.getCardMonth(startMonth);
   }
@@ -112,11 +112,11 @@ export class CardExpiryService {
 interface GetResponseCountries {
   _embedded: {
     countries: Country[];
-  }
+  };
 }
 
 interface GetResponseStates {
   _embedded: {
     provinces: State[];
-  }
+  };
 }

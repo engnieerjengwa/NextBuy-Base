@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CartItem } from '../common/cart-item';
 import { BehaviorSubject } from 'rxjs';
 
@@ -13,14 +14,17 @@ export class CartService {
   totalPrice: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   totalQuantity: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
-  storage: Storage = localStorage;
+  storage: Storage | null = null;
 
   // Getter for cartItems to maintain backward compatibility
   get cartItems(): CartItem[] {
     return this._cartItems;
   }
 
-  constructor() {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.storage = localStorage;
+    }
     this.loadCartItems();
   }
 
@@ -29,7 +33,7 @@ export class CartService {
     this.cartItemsSubject.next([]);
     this.totalPrice.next(0);
     this.totalQuantity.next(0);
-    this.storage.removeItem('cartItems');
+    this.storage?.removeItem('cartItems');
   }
 
   addToCart(theCartItem: CartItem) {
@@ -101,12 +105,12 @@ export class CartService {
   }
 
   persistCartItems() {
-    this.storage.setItem('cartItems', JSON.stringify(this._cartItems));
+    this.storage?.setItem('cartItems', JSON.stringify(this._cartItems));
   }
 
   loadCartItems() {
     // read data from storage
-    const data = this.storage.getItem('cartItems');
+    const data = this.storage?.getItem('cartItems') ?? null;
 
     if (data != null) {
       this._cartItems = JSON.parse(data);

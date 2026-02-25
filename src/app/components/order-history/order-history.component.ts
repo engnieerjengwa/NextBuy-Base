@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { OrderHistoryService } from '../../services/order-history.service';
 import { OrderHistory, OrderHistoryItem } from '../../common/order-history';
 import { CommonModule } from '@angular/common';
@@ -11,73 +12,79 @@ import { ProductService } from '../../services/product.service';
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './order-history.component.html',
-  styleUrl: './order-history.component.css'
+  styleUrl: './order-history.component.css',
 })
 export class OrderHistoryComponent implements OnInit {
-
   orderHistoryList: OrderHistory[] = [];
   allOrdersList: OrderHistory[] = [];
-  storage: Storage = sessionStorage;
+  storage: Storage | null = null;
   isFiltered: boolean = false;
   selectedPeriod: number = 3;
   filterOptions = [
     { value: 1, label: 'Last 30 days' },
     { value: 3, label: 'Last 3 months' },
     { value: 6, label: 'Last 6 months' },
-    { value: 12, label: 'Last year' }
+    { value: 12, label: 'Last year' },
   ];
 
   constructor(
     private orderHistoryService: OrderHistoryService,
-    private productService: ProductService
-  ) { }
+    private productService: ProductService,
+    @Inject(PLATFORM_ID) private platformId: Object,
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.storage = sessionStorage;
+    }
+  }
 
   ngOnInit(): void {
     this.handleOrderHistory();
   }
 
   handleOrderHistory() {
-    const theEmail = JSON.parse(this.storage.getItem('userEmail')!);
-    const userName = JSON.parse(this.storage.getItem('userName')!);
+    const theEmail = this.storage
+      ? JSON.parse(this.storage.getItem('userEmail')!)
+      : null;
+    const userName = this.storage
+      ? JSON.parse(this.storage.getItem('userName')!)
+      : null;
 
     // Only fetch order history if email is available
     if (theEmail) {
       // Retrieve data from the service
-      this.orderHistoryService.getOrderHistory(theEmail).subscribe(
-        data => {
-          this.allOrdersList = data._embedded.orders;
+      this.orderHistoryService.getOrderHistory(theEmail).subscribe((data) => {
+        this.allOrdersList = data._embedded.orders;
 
-          // Sort orders by date in descending order (latest first)
-          this.allOrdersList.sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime());
+        // Sort orders by date in descending order (latest first)
+        this.allOrdersList.sort(
+          (a, b) =>
+            new Date(b.dateCreated).getTime() -
+            new Date(a.dateCreated).getTime(),
+        );
 
-          // Treat all orders as delivered and signed for by the customer
-          this.allOrdersList.forEach(order => {
-            // Set status to DELIVERED
-            order.status = 'DELIVERED';
+        // Use actual order statuses from API — set delivery date if delivered
+        this.allOrdersList.forEach((order) => {
+          // Set delivery date if delivered and not already set
+          if (order.status === 'DELIVERED' && !order.deliveryDate) {
+            const deliveryDate = new Date(order.dateCreated);
+            deliveryDate.setDate(deliveryDate.getDate() + 3);
+            order.deliveryDate = deliveryDate;
+          }
 
-            // Set delivery date (using order creation date if not already set)
-            if (!order.deliveryDate) {
-              // Set delivery date to 3 days after order creation
-              const deliveryDate = new Date(order.dateCreated);
-              deliveryDate.setDate(deliveryDate.getDate() + 3);
-              order.deliveryDate = deliveryDate;
-            }
+          // Set signed by information with the customer's real name
+          order.signedBy = {
+            name: userName || theEmail.split('@')[0],
+            role: 'CUSTOMER',
+          };
 
-            // Set signed by information with the customer's real name
-            order.signedBy = {
-              name: userName || theEmail.split('@')[0], // Use username or first part of email if name not available
-              role: 'CUSTOMER'
-            };
+          // Fetch product details for each order if it has order items
+          if (order.orderItems && order.orderItems.length > 0) {
+            this.fetchProductDetails(order);
+          }
+        });
 
-            // Fetch product details for each order if it has order items
-            if (order.orderItems && order.orderItems.length > 0) {
-              this.fetchProductDetails(order);
-            }
-          });
-
-          this.filterOrdersByPeriod();
-        }
-      );
+        this.filterOrdersByPeriod();
+      });
     }
   }
 
@@ -95,14 +102,17 @@ export class OrderHistoryComponent implements OnInit {
       this.productService.getProduct(item.productId).subscribe({
         next: (product) => {
           // Find the item in the original array and update its productName
-          const index = order.orderItems!.findIndex(i => i.id === item.id);
+          const index = order.orderItems!.findIndex((i) => i.id === item.id);
           if (index !== -1) {
             order.orderItems![index].productName = product.name;
           }
         },
         error: (err) => {
-          console.error(`Error fetching product details for product ID ${item.productId}:`, err);
-        }
+          console.error(
+            `Error fetching product details for product ID ${item.productId}:`,
+            err,
+          );
+        },
       });
     });
   }
@@ -116,7 +126,7 @@ export class OrderHistoryComponent implements OnInit {
     cutoffDate.setMonth(cutoffDate.getMonth() - this.selectedPeriod);
 
     // Filter orders based on the selected period
-    this.orderHistoryList = this.allOrdersList.filter(order => {
+    this.orderHistoryList = this.allOrdersList.filter((order) => {
       const orderDate = new Date(order.dateCreated);
       return orderDate >= cutoffDate;
     });
@@ -145,7 +155,7 @@ export class OrderHistoryComponent implements OnInit {
   getStatusClass(status: string): string {
     if (!status) return 'status-default';
 
-    switch(status.toUpperCase()) {
+    switch (status.toUpperCase()) {
       case 'DELIVERED':
         return 'status-success';
       case 'SHIPPED':
