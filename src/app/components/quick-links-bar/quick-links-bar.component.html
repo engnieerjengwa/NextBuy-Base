@@ -1,0 +1,13 @@
+<div class="quick-links-bar">
+  <div class="quick-links-container">
+    <a
+      *ngFor="let link of quickLinks"
+      [routerLink]="link.route"
+      class="quick-link-pill"
+      [ngClass]="link.cssClass || ''"
+    >
+      <i *ngIf="link.icon" [class]="link.icon"></i>
+      {{ link.label }}
+    </a>
+  </div>
+</div>

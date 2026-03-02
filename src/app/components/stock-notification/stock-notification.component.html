@@ -1,0 +1,38 @@
+<div class="stock-notification" *ngIf="isOutOfStock">
+  <div *ngIf="!subscribed" class="notify-form">
+    <div class="notify-icon">
+      <i class="fa fa-bell"></i>
+    </div>
+    <h4>Out of Stock</h4>
+    <p>Get notified when this product is back in stock</p>
+    <div class="email-input-group">
+      <input
+        type="email"
+        class="form-control"
+        [(ngModel)]="email"
+        placeholder="Enter your email address"
+      />
+      <button
+        class="btn btn-primary btn-sm"
+        (click)="subscribe()"
+        [disabled]="submitting"
+      >
+        {{ submitting ? "Subscribing..." : "Notify Me" }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="subscribed" class="subscribed-message">
+    <i class="fa fa-check-circle"></i>
+    <span>We'll email you when this item is back in stock!</span>
+  </div>
+
+  <div
+    *ngIf="message"
+    class="notification-message"
+    [class.error]="isError"
+    [class.success]="!isError"
+  >
+    {{ message }}
+  </div>
+</div>

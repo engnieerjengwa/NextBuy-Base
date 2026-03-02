@@ -1,0 +1,27 @@
+<section class="promo-banner-grid-section">
+  <h3 class="promo-section-title" *ngIf="title">{{ title }}</h3>
+  <div class="promo-grid">
+    <a
+      *ngFor="let banner of displayBanners"
+      [routerLink]="banner.linkUrl"
+      class="promo-banner-card"
+      [style.backgroundColor]="banner.backgroundColor || '#f5f5f5'"
+    >
+      <div class="promo-banner-image">
+        <img
+          [src]="banner.imageUrl"
+          [alt]="banner.title"
+          loading="lazy"
+          (error)="onImageError($event)"
+        />
+      </div>
+      <div class="promo-banner-overlay">
+        <h4 class="promo-banner-title">{{ banner.title }}</h4>
+        <p class="promo-banner-subtitle" *ngIf="banner.subtitle">
+          {{ banner.subtitle }}
+        </p>
+        <span class="promo-shop-link">Shop Now →</span>
+      </div>
+    </a>
+  </div>
+</section>

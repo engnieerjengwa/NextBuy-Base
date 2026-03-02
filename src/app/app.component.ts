@@ -6,8 +6,8 @@ import { CartStatusComponent } from './components/cart-status/cart-status.compon
 import { LoginStatusComponent } from './components/login-status/login-status.component';
 import { CommonModule } from '@angular/common';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
-import { ValuePropositionStripComponent } from './components/value-proposition-strip/value-proposition-strip.component';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
+import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
 
 @Component({
   selector: 'app-root',
@@ -20,8 +20,8 @@ import { CookieConsentComponent } from './components/cookie-consent/cookie-conse
     CartStatusComponent,
     LoginStatusComponent,
     BreadcrumbComponent,
-    ValuePropositionStripComponent,
     CookieConsentComponent,
+    ScrollToTopComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',

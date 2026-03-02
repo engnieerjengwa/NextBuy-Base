@@ -123,16 +123,66 @@
 
         <!-- Delivery & Items Section -->
         <div class="delivery-items-container">
+          <!-- Order Tracking Timeline -->
+          <app-order-tracking-timeline
+            *ngIf="statusHistory.length > 0 || order.status"
+            [statusHistory]="statusHistory"
+            [currentStatus]="order.status || 'PROCESSING'"
+          ></app-order-tracking-timeline>
+
           <!-- Delivery Status Header -->
           <div class="delivery-status-header">
             <div class="delivery-status-info">
-              <span class="delivery-status-text">
+              <span
+                class="delivery-status-text"
+                *ngIf="order.status === 'DELIVERED'"
+              >
                 <strong>Delivered</strong>
                 {{ order.deliveryDate | date: "EEE, d MMM yyyy" }}
               </span>
+              <span
+                class="delivery-status-text"
+                *ngIf="order.status === 'SHIPPED'"
+              >
+                <strong>Shipped</strong> - In Transit
+              </span>
+              <span
+                class="delivery-status-text"
+                *ngIf="order.status === 'PROCESSING'"
+              >
+                <strong>Processing</strong> - Preparing Your Order
+              </span>
+              <span
+                class="delivery-status-text"
+                *ngIf="order.status === 'CANCELLED'"
+              >
+                <strong>Cancelled</strong>
+              </span>
             </div>
-            <div class="delivery-actions" *ngIf="order.status === 'DELIVERED'">
-              <button class="btn btn-secondary" (click)="logReturn()">
+            <div class="delivery-actions">
+              <button
+                class="btn btn-buy-again"
+                (click)="buyAgain()"
+                [disabled]="reorderLoading"
+                *ngIf="order.status === 'DELIVERED'"
+              >
+                <i class="fa fa-redo"></i>
+                {{ reorderLoading ? "Ordering..." : "Buy Again" }}
+              </button>
+              <button
+                class="btn btn-cancel-order"
+                (click)="cancelOrder()"
+                [disabled]="cancelLoading"
+                *ngIf="canCancel()"
+              >
+                <i class="fa fa-times"></i>
+                {{ cancelLoading ? "Cancelling..." : "Cancel Order" }}
+              </button>
+              <button
+                class="btn btn-secondary"
+                (click)="logReturn()"
+                *ngIf="isEligibleForReturn()"
+              >
                 <i class="fa fa-box"></i> Log Return
               </button>
             </div>

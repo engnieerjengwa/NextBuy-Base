@@ -1,24 +1,24 @@
 import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { AuthService } from '@auth0/auth0-angular';
-import { map } from 'rxjs/operators';
+import {
+  ActivatedRouteSnapshot,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
-export const authGuard = (route?: ActivatedRouteSnapshot, state?: RouterStateSnapshot) => {
-  const auth = inject(AuthService);
+export const authGuard = (
+  route?: ActivatedRouteSnapshot,
+  state?: RouterStateSnapshot,
+) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-  // Store the attempted URL for redirecting
-  const url = state?.url || '/checkout';
+  if (authService.isLoggedIn()) {
+    return true;
+  }
 
-  return auth.isAuthenticated$.pipe(
-    map(isAuthenticated => {
-      if (!isAuthenticated) {
-        console.log('User is not authenticated, redirecting to login');
-        auth.loginWithRedirect({
-          appState: { target: url }
-        });
-        return false;
-      }
-      return true;
-    })
-  );
+  // Store the attempted URL for redirecting after login
+  const returnUrl = state?.url || '/';
+  router.navigate(['/login'], { queryParams: { returnUrl } });
+  return false;
 };

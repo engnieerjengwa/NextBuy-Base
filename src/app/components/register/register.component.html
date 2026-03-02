@@ -1,0 +1,175 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2>Create Account</h2>
+      <p>Join NexBuy and start shopping today!</p>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input
+            type="text"
+            id="firstName"
+            formControlName="firstName"
+            class="form-control"
+            placeholder="Enter first name"
+            [class.is-invalid]="firstName?.invalid && firstName?.touched"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="firstName?.invalid && firstName?.touched"
+          >
+            <span *ngIf="firstName?.errors?.['required']"
+              >First name is required.</span
+            >
+            <span *ngIf="firstName?.errors?.['minlength']"
+              >Minimum 2 characters.</span
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            formControlName="lastName"
+            class="form-control"
+            placeholder="Enter last name"
+            [class.is-invalid]="lastName?.invalid && lastName?.touched"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="lastName?.invalid && lastName?.touched"
+          >
+            <span *ngIf="lastName?.errors?.['required']"
+              >Last name is required.</span
+            >
+            <span *ngIf="lastName?.errors?.['minlength']"
+              >Minimum 2 characters.</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          placeholder="Enter your email"
+          [class.is-invalid]="email?.invalid && email?.touched"
+        />
+        <div class="invalid-feedback" *ngIf="email?.invalid && email?.touched">
+          <span *ngIf="email?.errors?.['required']">Email is required.</span>
+          <span *ngIf="email?.errors?.['email']"
+            >Please enter a valid email.</span
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="mobileNumber">Mobile Number (Optional)</label>
+        <input
+          type="tel"
+          id="mobileNumber"
+          formControlName="mobileNumber"
+          class="form-control"
+          placeholder="e.g. +263 77 123 4567"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-control"
+          placeholder="Create a password"
+          [class.is-invalid]="password?.invalid && password?.touched"
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="password?.invalid && password?.touched"
+        >
+          <span *ngIf="password?.errors?.['required']"
+            >Password is required.</span
+          >
+          <span *ngIf="password?.errors?.['minlength']"
+            >Minimum 8 characters.</span
+          >
+          <span *ngIf="password?.errors?.['pattern']"
+            >Must include uppercase, lowercase, number, and special
+            character.</span
+          >
+        </div>
+        <div
+          class="password-hint"
+          *ngIf="password?.pristine || password?.valid"
+        >
+          Must be 8+ characters with uppercase, lowercase, number, and special
+          character.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          class="form-control"
+          placeholder="Confirm your password"
+          [class.is-invalid]="
+            confirmPassword?.invalid && confirmPassword?.touched
+          "
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="confirmPassword?.invalid && confirmPassword?.touched"
+        >
+          <span *ngIf="confirmPassword?.errors?.['required']"
+            >Please confirm your password.</span
+          >
+          <span *ngIf="confirmPassword?.errors?.['passwordMismatch']"
+            >Passwords do not match.</span
+          >
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+        [disabled]="isLoading"
+      >
+        <span *ngIf="!isLoading">Create Account</span>
+        <span *ngIf="isLoading">Creating Account...</span>
+      </button>
+    </form>
+
+    <div class="divider">
+      <span>or</span>
+    </div>
+
+    <div class="google-signin-wrapper">
+      <div id="google-signin-btn-register"></div>
+    </div>
+
+    <div class="auth-footer">
+      <p>Already have an account? <a routerLink="/login">Sign In</a></p>
+    </div>
+  </div>
+</div>

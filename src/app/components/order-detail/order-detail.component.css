@@ -21,7 +21,8 @@
   font-size: 16px;
 }
 
-.order-date, .payment-date {
+.order-date,
+.payment-date {
   font-size: 14px;
   color: #555;
 }
@@ -74,11 +75,13 @@
   line-height: 1.4;
 }
 
-.delivery-method, .payment-method {
+.delivery-method,
+.payment-method {
   margin-bottom: 20px;
 }
 
-.delivery-method p, .payment-method p {
+.delivery-method p,
+.payment-method p {
   margin: 5px 0;
 }
 
@@ -200,7 +203,8 @@
   line-height: 1.4;
 }
 
-.item-quantity, .item-seller {
+.item-quantity,
+.item-seller {
   font-size: 14px;
   color: #666;
   margin-top: 5px;
@@ -215,7 +219,6 @@
   min-width: 80px;
   justify-content: flex-end;
 }
-
 
 /* Status Badges */
 .status-badge {
@@ -306,11 +309,13 @@
   border: 0.25em solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
-  animation: spinner-border .75s linear infinite;
+  animation: spinner-border 0.75s linear infinite;
 }
 
 @keyframes spinner-border {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .sr-only {
@@ -404,4 +409,59 @@
     margin-top: 10px;
     align-self: flex-start;
   }
+}
+
+/* Buy Again Button */
+.btn-buy-again {
+  background-color: #0b79bf;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.2s;
+}
+
+.btn-buy-again:hover:not(:disabled) {
+  background-color: #095d93;
+}
+
+.btn-buy-again:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Cancel Order Button */
+.btn-cancel-order {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.2s;
+}
+
+.btn-cancel-order:hover:not(:disabled) {
+  background-color: #b02a37;
+}
+
+.btn-cancel-order:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.delivery-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
 }

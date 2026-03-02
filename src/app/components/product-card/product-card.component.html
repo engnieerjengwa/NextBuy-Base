@@ -1,0 +1,85 @@
+<div class="product-card">
+  <!-- Badge Stack -->
+  <div class="badge-stack">
+    <span class="badge badge-more-deals" *ngIf="showMoreDealsBadge"
+      >MORE deals</span
+    >
+    <span class="badge badge-fire-sale" *ngIf="showFireSaleBadge"
+      >FIRE SALE</span
+    >
+    <span class="badge badge-alot-for-less" *ngIf="showAlotForLessBadge"
+      >ALOT FOR LESS</span
+    >
+    <span class="badge badge-discount" *ngIf="hasDiscount">{{
+      discountBadgeText
+    }}</span>
+  </div>
+
+  <!-- Wishlist Heart -->
+  <button
+    class="btn-wishlist-card"
+    [class.active]="isInWishlist"
+    [class.loading]="wishlistLoading"
+    (click)="toggleWishlist($event)"
+    title="{{ isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist' }}"
+  >
+    <i
+      class="fa"
+      [class.fa-heart]="isInWishlist"
+      [class.fa-heart-o]="!isInWishlist"
+    ></i>
+  </button>
+
+  <!-- Product Image -->
+  <a [routerLink]="['/products', product.id]" class="card-image-link">
+    <img
+      [src]="product.imageUrl"
+      [alt]="product.name"
+      class="card-image"
+      loading="lazy"
+    />
+  </a>
+
+  <!-- Card Body -->
+  <div class="card-body">
+    <!-- Product Title -->
+    <a [routerLink]="['/products', product.id]" class="card-title-link">
+      <h4 class="card-title">{{ product.name }}</h4>
+    </a>
+
+    <!-- Brand -->
+    <div class="card-brand" *ngIf="product.brand">{{ product.brand }}</div>
+
+    <!-- Pricing -->
+    <div class="card-pricing">
+      <span class="card-price-current">
+        {{ currencyPrefix }} {{ product.unitPrice | number: "1.0-0" }}
+      </span>
+      <span class="card-price-original" *ngIf="hasOriginalPrice">
+        {{ currencyPrefix }} {{ product.originalPrice | number: "1.0-0" }}
+      </span>
+    </div>
+
+    <!-- Rating -->
+    <div class="card-rating" *ngIf="product.averageRating">
+      <i class="fa fa-star star-icon"></i>
+      <span class="rating-score">{{ ratingDisplay }}</span>
+      <span class="rating-count">({{ product.reviewCount }})</span>
+    </div>
+
+    <!-- Low Stock Warning -->
+    <div class="card-urgency" *ngIf="isLowStock">
+      Only {{ product.unitsInStock }} left
+    </div>
+
+    <!-- Add to Cart (optional) -->
+    <button
+      *ngIf="showAddToCart"
+      class="btn-add-to-cart"
+      (click)="onAddToCart()"
+      [disabled]="product.unitsInStock <= 0"
+    >
+      {{ product.unitsInStock > 0 ? "Add to Cart" : "Out of Stock" }}
+    </button>
+  </div>
+</div>

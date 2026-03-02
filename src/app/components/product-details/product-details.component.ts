@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Product, ProductImage, ProductVariant } from '../../common/product';
 import { ProductService } from '../../services/product.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -13,6 +14,11 @@ import { CartService } from '../../services/cart.service';
 import { CartItem } from '../../common/cart-item';
 import { ImageGalleryComponent } from '../image-gallery/image-gallery.component';
 import { VariantSelectorComponent } from '../variant-selector/variant-selector.component';
+import { BrowsingHistoryService } from '../../services/browsing-history.service';
+import { WishlistService } from '../../services/wishlist.service';
+import { ReviewListComponent } from '../review-list/review-list.component';
+import { ProductQaComponent } from '../product-qa/product-qa.component';
+import { StockNotificationComponent } from '../stock-notification/stock-notification.component';
 
 @Component({
   selector: 'app-product-details',
@@ -25,6 +31,9 @@ import { VariantSelectorComponent } from '../variant-selector/variant-selector.c
     NgFor,
     ImageGalleryComponent,
     VariantSelectorComponent,
+    ReviewListComponent,
+    ProductQaComponent,
+    StockNotificationComponent,
   ],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css',
@@ -35,11 +44,16 @@ export class ProductDetailsComponent {
   productVariants: ProductVariant[] = [];
   selectedVariant: ProductVariant | null = null;
   quantity: number = 1;
+  isInWishlist: boolean = false;
+  wishlistLoading: boolean = false;
 
   constructor(
     private productService: ProductService,
     private cartService: CartService,
+    private browsingHistoryService: BrowsingHistoryService,
+    private wishlistService: WishlistService,
     private route: ActivatedRoute,
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
 
   ngOnInit() {
@@ -56,6 +70,9 @@ export class ProductDetailsComponent {
       this.quantity = 1;
       this.selectedVariant = null;
 
+      // Track browsing history
+      this.browsingHistoryService.addToHistory(theProductId);
+
       // Load product images
       this.productService.getProductImages(theProductId).subscribe({
         next: (images) => (this.productImages = images),
@@ -67,6 +84,17 @@ export class ProductDetailsComponent {
         next: (variants) => (this.productVariants = variants),
         error: () => (this.productVariants = []),
       });
+
+      // Check wishlist status
+      if (
+        isPlatformBrowser(this.platformId) &&
+        sessionStorage.getItem('userEmail')
+      ) {
+        this.wishlistService.isInWishlist(theProductId).subscribe({
+          next: (res) => (this.isInWishlist = res.inWishlist),
+          error: () => (this.isInWishlist = false),
+        });
+      }
     });
   }
 
@@ -129,6 +157,29 @@ export class ProductDetailsComponent {
     const theCartItem = new CartItem(this.product);
     for (let i = 0; i < this.quantity; i++) {
       this.cartService.addToCart(theCartItem);
+    }
+  }
+
+  toggleWishlist(): void {
+    if (this.wishlistLoading) return;
+    this.wishlistLoading = true;
+
+    if (this.isInWishlist) {
+      this.wishlistService.removeFromWishlist(this.product.id).subscribe({
+        next: () => {
+          this.isInWishlist = false;
+          this.wishlistLoading = false;
+        },
+        error: () => (this.wishlistLoading = false),
+      });
+    } else {
+      this.wishlistService.addToWishlist(this.product.id).subscribe({
+        next: () => {
+          this.isInWishlist = true;
+          this.wishlistLoading = false;
+        },
+        error: () => (this.wishlistLoading = false),
+      });
     }
   }
 }

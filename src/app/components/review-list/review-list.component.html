@@ -1,0 +1,173 @@
+<div class="reviews-section">
+  <h3 class="section-title">Customer Reviews</h3>
+
+  <!-- Rating Distribution -->
+  <app-rating-distribution
+    *ngIf="distribution"
+    [distribution]="distribution"
+    [activeRating]="filterRating"
+    (ratingClicked)="onRatingFilter($event)"
+  ></app-rating-distribution>
+
+  <!-- Sort & Filter Controls -->
+  <div class="review-controls">
+    <div class="sort-control">
+      <label for="sortReviews">Sort by:</label>
+      <select
+        id="sortReviews"
+        [(ngModel)]="sortBy"
+        (ngModelChange)="onSortChange()"
+      >
+        <option *ngFor="let opt of sortOptions" [value]="opt.value">
+          {{ opt.label }}
+        </option>
+      </select>
+    </div>
+    <div *ngIf="filterRating" class="active-filter">
+      Showing {{ filterRating }}-star reviews
+      <button class="btn-clear-filter" (click)="onRatingFilter(filterRating)">
+        <i class="fa fa-times"></i> Clear
+      </button>
+    </div>
+  </div>
+
+  <!-- Write Review Button -->
+  <div class="review-actions">
+    <button
+      *ngIf="isLoggedIn && !showReviewForm"
+      class="btn btn-primary btn-sm"
+      (click)="toggleReviewForm()"
+    >
+      <i class="fa fa-pen"></i> Write a Review
+    </button>
+    <p *ngIf="!isLoggedIn" class="login-prompt">
+      <a href="/login">Sign in</a> to write a review
+    </p>
+  </div>
+
+  <!-- Success / Error Messages -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <!-- Review Form -->
+  <div *ngIf="showReviewForm" class="review-form">
+    <h4>{{ editingReviewId ? "Edit Your Review" : "Write a Review" }}</h4>
+
+    <div class="star-selector">
+      <label>Your Rating:</label>
+      <div class="star-input">
+        <i
+          *ngFor="let star of stars"
+          class="fa-star"
+          [class.fas]="star <= (hoverRating || reviewRating)"
+          [class.far]="star > (hoverRating || reviewRating)"
+          (click)="setRating(star)"
+          (mouseenter)="hoverRating = star"
+          (mouseleave)="hoverRating = 0"
+        >
+        </i>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="reviewTitle">Title</label>
+      <input
+        type="text"
+        id="reviewTitle"
+        class="form-control"
+        [(ngModel)]="reviewTitle"
+        placeholder="Summarize your experience"
+        maxlength="255"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="reviewComment">Your Review</label>
+      <textarea
+        id="reviewComment"
+        class="form-control"
+        [(ngModel)]="reviewComment"
+        rows="4"
+        placeholder="What did you like or dislike about this product?"
+      ></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button
+        class="btn btn-primary btn-sm"
+        (click)="submitReview()"
+        [disabled]="submitting"
+      >
+        {{
+          submitting
+            ? "Submitting..."
+            : editingReviewId
+              ? "Update Review"
+              : "Submit Review"
+        }}
+      </button>
+      <button class="btn btn-secondary btn-sm" (click)="toggleReviewForm()">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <!-- Reviews List -->
+  <div class="reviews-list" *ngIf="reviews.length > 0">
+    <div *ngFor="let review of reviews" class="review-card">
+      <div class="review-header">
+        <div class="review-stars">
+          <i
+            *ngFor="let star of getStarArray()"
+            class="fa-star"
+            [class.fas]="star <= review.rating"
+            [class.far]="star > review.rating"
+          ></i>
+        </div>
+        <span class="review-title">{{ review.title }}</span>
+      </div>
+      <div class="review-meta">
+        <span class="reviewer-name"
+          >{{ review.customerFirstName }} {{ review.customerLastName }}</span
+        >
+        <span class="review-date">{{ getTimeAgo(review.dateCreated) }}</span>
+        <span *ngIf="review.verifiedPurchase" class="verified-badge">
+          <i class="fa fa-check-circle"></i> Verified Purchase
+        </span>
+      </div>
+      <p class="review-comment">{{ review.comment }}</p>
+      <div class="review-footer">
+        <button class="btn-helpful" (click)="markHelpful(review.id)">
+          <i class="far fa-thumbs-up"></i> Helpful ({{ review.helpfulCount }})
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="reviews.length === 0 && !showReviewForm" class="no-reviews">
+    <p>No reviews yet. Be the first to review this product!</p>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="totalPages > 1" class="pagination">
+    <button
+      class="btn btn-sm"
+      (click)="goToPage(currentPage - 1)"
+      [disabled]="currentPage === 0"
+    >
+      &laquo; Previous
+    </button>
+    <span class="page-info"
+      >Page {{ currentPage + 1 }} of {{ totalPages }}</span
+    >
+    <button
+      class="btn btn-sm"
+      (click)="goToPage(currentPage + 1)"
+      [disabled]="currentPage >= totalPages - 1"
+    >
+      Next &raquo;
+    </button>
+  </div>
+</div>

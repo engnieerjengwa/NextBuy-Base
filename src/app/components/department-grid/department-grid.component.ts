@@ -14,38 +14,8 @@ import { ProductCategory } from '../../common/product-category';
 export class DepartmentGridComponent implements OnInit {
   departments: ProductCategory[] = [];
   loading = true;
-
-  // Default category icons when iconUrl is not available
-  private defaultIcons: Record<string, string> = {
-    books: 'fa-book',
-    'coffee mugs': 'fa-coffee',
-    'mouse pads': 'fa-mouse-pointer',
-    'luggage tags': 'fa-tag',
-    electronics: 'fa-laptop',
-    clothing: 'fa-tshirt',
-    sports: 'fa-futbol',
-    toys: 'fa-puzzle-piece',
-    home: 'fa-home',
-    garden: 'fa-tree',
-    beauty: 'fa-magic',
-    food: 'fa-utensils',
-  };
-
-  // Default category colors
-  private categoryColors: string[] = [
-    '#0da8e4',
-    '#e74c3c',
-    '#2ecc71',
-    '#f39c12',
-    '#9b59b6',
-    '#1abc9c',
-    '#e67e22',
-    '#3498db',
-    '#e91e63',
-    '#00bcd4',
-    '#ff9800',
-    '#8bc34a',
-  ];
+  activeDepartment: ProductCategory | null = null;
+  private hoverTimeout: any = null;
 
   constructor(private productService: ProductService) {}
 
@@ -66,19 +36,16 @@ export class DepartmentGridComponent implements OnInit {
     });
   }
 
-  getIconClass(category: ProductCategory): string {
-    const name = category.categoryName.toLowerCase();
-    for (const [key, icon] of Object.entries(this.defaultIcons)) {
-      if (name.includes(key)) return icon;
+  onDeptHover(dept: ProductCategory): void {
+    if (this.hoverTimeout) {
+      clearTimeout(this.hoverTimeout);
     }
-    return 'fa-th-large';
+    this.activeDepartment = dept;
   }
 
-  getColor(index: number): string {
-    return this.categoryColors[index % this.categoryColors.length];
-  }
-
-  hasImage(category: ProductCategory): boolean {
-    return !!(category.iconUrl && category.iconUrl.trim().length > 0);
+  onDeptLeave(): void {
+    this.hoverTimeout = setTimeout(() => {
+      this.activeDepartment = null;
+    }, 200);
   }
 }

@@ -1,0 +1,194 @@
+.qa-section {
+  padding: 24px 0;
+  border-top: 1px solid #e8e8e8;
+}
+
+.section-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.qa-actions {
+  margin-bottom: 16px;
+}
+
+.login-prompt {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.login-prompt a {
+  color: #0b79bf;
+}
+
+/* Question Form */
+.question-form {
+  background: #f9f9f9;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #e0e0e0;
+}
+
+.question-form h4 {
+  margin-bottom: 12px;
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-group .form-control {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Question Cards */
+.questions-list {
+  margin-top: 16px;
+}
+
+.question-card {
+  padding: 16px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.question-header,
+.answer-header {
+  display: flex;
+  gap: 12px;
+}
+
+.question-icon {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #0b79bf;
+  min-width: 24px;
+}
+
+.answer-icon {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #2e7d32;
+  min-width: 24px;
+}
+
+.question-content,
+.answer-content {
+  flex: 1;
+}
+
+.question-text,
+.answer-text {
+  margin: 0 0 6px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.question-meta,
+.answer-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: #888;
+  flex-wrap: wrap;
+}
+
+.separator {
+  color: #ccc;
+}
+
+.seller-badge {
+  background: #0b79bf;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Answer Cards */
+.answer-card {
+  margin-left: 36px;
+  padding: 10px 0;
+  border-left: 2px solid #e0e0e0;
+  padding-left: 16px;
+  margin-top: 8px;
+}
+
+.answer-action {
+  margin-left: 36px;
+  margin-top: 8px;
+}
+
+.btn-answer {
+  background: none;
+  border: none;
+  color: #0b79bf;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0;
+}
+
+.btn-answer:hover {
+  text-decoration: underline;
+}
+
+.answer-form {
+  margin-top: 8px;
+}
+
+.answer-form textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.btn-helpful {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 0.8rem;
+  color: #555;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.btn-helpful:hover {
+  background: #f0f0f0;
+}
+
+/* No questions */
+.no-questions {
+  text-align: center;
+  padding: 30px;
+  color: #888;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.page-info {
+  font-size: 0.9rem;
+  color: #666;
+}

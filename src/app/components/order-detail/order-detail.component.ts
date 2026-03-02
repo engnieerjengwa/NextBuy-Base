@@ -2,13 +2,20 @@ import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { OrderHistoryService } from '../../services/order-history.service';
 import { OrderHistory, OrderHistoryItem } from '../../common/order-history';
+import { OrderStatusHistory } from '../../common/order-status-history';
 import { CommonModule, CurrencyPipe, isPlatformBrowser } from '@angular/common';
 import { ProductService } from '../../services/product.service';
+import { OrderTrackingTimelineComponent } from '../order-tracking-timeline/order-tracking-timeline.component';
 
 @Component({
   selector: 'app-order-detail',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, RouterLink],
+  imports: [
+    CommonModule,
+    CurrencyPipe,
+    RouterLink,
+    OrderTrackingTimelineComponent,
+  ],
   templateUrl: './order-detail.component.html',
   styleUrl: './order-detail.component.css',
 })
@@ -18,6 +25,9 @@ export class OrderDetailComponent implements OnInit {
   isLoading: boolean = true;
   errorMessage: string = '';
   calculatedTotal: number = 0;
+  statusHistory: OrderStatusHistory[] = [];
+  cancelLoading: boolean = false;
+  reorderLoading: boolean = false;
 
   constructor(
     private orderHistoryService: OrderHistoryService,
@@ -74,6 +84,9 @@ export class OrderDetailComponent implements OnInit {
             this.fetchProductDetails();
             this.calculateOrderTotal();
           }
+
+          // Fetch tracking history
+          this.fetchTrackingHistory();
         }
 
         this.isLoading = false;
@@ -172,5 +185,80 @@ export class OrderDetailComponent implements OnInit {
     this.calculatedTotal = this.order.orderItems.reduce((total, item) => {
       return total + item.unitPrice * item.quantity;
     }, 0);
+  }
+
+  /**
+   * Fetch order tracking / status history
+   */
+  fetchTrackingHistory() {
+    const id = Number(this.orderId);
+    if (isNaN(id)) return;
+
+    this.orderHistoryService.getOrderTracking(id).subscribe({
+      next: (history) => {
+        this.statusHistory = history;
+      },
+      error: (err) => {
+        console.error('Error fetching tracking history:', err);
+      },
+    });
+  }
+
+  /**
+   * Cancel the order
+   */
+  cancelOrder() {
+    if (!confirm('Are you sure you want to cancel this order?')) return;
+
+    this.cancelLoading = true;
+    const id = Number(this.orderId);
+
+    this.orderHistoryService.cancelOrder(id).subscribe({
+      next: () => {
+        this.cancelLoading = false;
+        if (this.order) {
+          this.order.status = 'CANCELLED';
+        }
+        this.fetchTrackingHistory();
+      },
+      error: (err) => {
+        this.cancelLoading = false;
+        console.error('Error cancelling order:', err);
+        alert(err.error?.message || 'Failed to cancel order.');
+      },
+    });
+  }
+
+  /**
+   * Re-order with same items
+   */
+  buyAgain() {
+    this.reorderLoading = true;
+    const id = Number(this.orderId);
+
+    this.orderHistoryService.reorder(id).subscribe({
+      next: (response) => {
+        this.reorderLoading = false;
+        this.router.navigate(['/order-confirmation'], {
+          queryParams: { tracking: response.orderTrackingNumber },
+        });
+      },
+      error: (err) => {
+        this.reorderLoading = false;
+        console.error('Error reordering:', err);
+        alert('Failed to reorder. Please try again.');
+      },
+    });
+  }
+
+  /**
+   * Check if order can be cancelled
+   */
+  canCancel(): boolean {
+    if (!this.order) return false;
+    const status = this.order.status?.toUpperCase();
+    return (
+      status === 'PROCESSING' || status === 'CONFIRMED' || status === 'PENDING'
+    );
   }
 }

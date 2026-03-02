@@ -1,10 +1,21 @@
 <div class="page-wrapper">
   <!-- PAGE CONTAINER-->
   <div class="page-container">
+    <!-- TOP UTILITY BAR -->
+    <div class="top-utility-bar">
+      <div class="container-fluid">
+        <div class="utility-bar-content">
+          <a href="#" class="utility-link">Help Centre</a>
+          <span class="utility-divider">|</span>
+          <a href="#" class="utility-link">Sell on NexBuy</a>
+        </div>
+      </div>
+    </div>
+
     <!-- HEADER DESKTOP-->
     <header class="header-desktop">
       <!-- Main Header Row -->
-      <div class="section-content section-content-p30">
+      <div class="header-main">
         <div class="container-fluid">
           <div class="header-wrap">
             <!-- Hamburger (mobile only) -->
@@ -32,7 +43,7 @@
               <a routerLink="/products">
                 <img
                   src="images/logo.png"
-                  alt="luv2shop"
+                  alt="NexBuy"
                   class="img-responsive"
                 />
               </a>
@@ -46,6 +57,14 @@
             <!-- User Actions -->
             <div class="user-actions">
               <app-login-status></app-login-status>
+              <a
+                routerLink="/account/wishlist"
+                class="header-action-link wishlist-link"
+                title="Wishlist"
+              >
+                <i class="fa fa-heart-o"></i>
+                <span class="action-label">Wishlist</span>
+              </a>
               <app-cart-status></app-cart-status>
             </div>
           </div>
@@ -60,9 +79,6 @@
       </div>
     </header>
     <!-- END HEADER DESKTOP-->
-
-    <!-- VALUE PROPOSITION STRIP -->
-    <app-value-proposition-strip></app-value-proposition-strip>
 
     <!-- MOBILE SLIDE-OUT MENU -->
     <div
@@ -114,56 +130,116 @@
 <!-- END PAGE CONTAINER-->
 <footer class="footer">
   <div class="container-fluid">
-    <div class="footer-content">
-      <div class="footer-section">
-        <h4>Customer Service</h4>
+    <!-- Footer Links - 5 Columns -->
+    <div class="footer-columns">
+      <div class="footer-column">
+        <h4>Shop</h4>
         <ul>
-          <li><a href="#">Help Center</a></li>
-          <li><a href="#">Track Your Order</a></li>
-          <li><a href="#">Returns & Refunds</a></li>
-          <li><a href="#">Contact Us</a></li>
+          <li><a routerLink="/products">Deals</a></li>
+          <li><a routerLink="/products">New Arrivals</a></li>
+          <li><a routerLink="/products">Fire Sale</a></li>
+          <li><a routerLink="/products">Gift Cards</a></li>
+          <li><a routerLink="/products">Clearance</a></li>
         </ul>
       </div>
-      <div class="footer-section">
-        <h4>About NextBuy</h4>
+      <div class="footer-column">
+        <h4>My Account</h4>
+        <ul>
+          <li><a routerLink="/orders">My Account</a></li>
+          <li><a routerLink="/orders">Track Order</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">Invoices</a></li>
+          <li><a href="#">Coupons</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Help</h4>
+        <ul>
+          <li><a href="#">Help Centre</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Returns & Refunds</a></li>
+          <li><a href="#">Shipping Info</a></li>
+          <li><a href="#">Delivery Info</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Company</h4>
         <ul>
           <li><a href="#">About Us</a></li>
           <li><a href="#">Careers</a></li>
-          <li><a href="#">Terms & Conditions</a></li>
-          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Sell on NexBuy</a></li>
+          <li><a href="#">Press</a></li>
         </ul>
       </div>
-      <div class="footer-section">
-        <h4>Payment Methods</h4>
+      <div class="footer-column">
+        <h4>Terms &amp; Policies</h4>
         <ul>
-          <li><a href="#">Credit Cards</a></li>
-          <li><a href="#">Debit Cards</a></li>
-          <li><a href="#">EFT</a></li>
-          <li><a href="#">Gift Cards</a></li>
+          <li><a href="#">Platform Terms</a></li>
+          <li><a href="#">Returns Policy</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms & Conditions</a></li>
         </ul>
-      </div>
-      <div class="footer-section">
-        <h4>Connect With Us</h4>
-        <div class="social-icons">
-          <a href="#" class="social-icon"><i class="fa fa-facebook"></i></a>
-          <a href="#" class="social-icon"><i class="fa fa-twitter"></i></a>
-          <a href="#" class="social-icon"><i class="fa fa-instagram"></i></a>
-          <a href="#" class="social-icon"><i class="fa fa-youtube"></i></a>
-        </div>
-        <div class="newsletter">
-          <h5>Subscribe to our Newsletter</h5>
-          <div class="newsletter-form">
-            <input type="email" placeholder="Your email address" />
-            <button type="submit">Subscribe</button>
-          </div>
-        </div>
       </div>
     </div>
-    <div class="footer-bottom">
-      <p>&copy; 2026 NextBuy. All rights reserved.</p>
+
+    <!-- App Store & Social -->
+    <div class="footer-apps-social">
+      <div class="footer-apps">
+        <span class="footer-apps-label">Download Our Apps</span>
+        <a href="#" class="app-badge" aria-label="App Store">
+          <i class="fa fa-apple"></i> App Store
+        </a>
+        <a href="#" class="app-badge" aria-label="Google Play">
+          <i class="fa fa-android"></i> Google Play
+        </a>
+      </div>
+      <div class="footer-social">
+        <span class="footer-social-label">Follow Us</span>
+        <a href="#" class="social-icon" aria-label="Facebook"
+          ><i class="fa fa-facebook"></i
+        ></a>
+        <a href="#" class="social-icon" aria-label="Twitter"
+          ><i class="fa fa-twitter"></i
+        ></a>
+        <a href="#" class="social-icon" aria-label="Instagram"
+          ><i class="fa fa-instagram"></i
+        ></a>
+        <a href="#" class="social-icon" aria-label="YouTube"
+          ><i class="fa fa-youtube"></i
+        ></a>
+      </div>
+    </div>
+
+    <!-- SEO Category Links -->
+    <div class="footer-seo-links">
+      <a routerLink="/category/1">Books</a>
+      <a routerLink="/category/2">Electronics</a>
+      <a routerLink="/category/3">Clothing</a>
+      <a routerLink="/category/4">Baby & Toddler</a>
+      <a routerLink="/category/5">Beauty</a>
+      <a routerLink="/category/6">Home & Kitchen</a>
+      <a routerLink="/category/7">Sports</a>
+      <a routerLink="/category/8">Toys</a>
+    </div>
+
+    <!-- Payment Methods Bar -->
+    <div class="footer-payment-bar">
+      <div class="payment-methods">
+        <span class="payment-label">We accept:</span>
+        <span class="payment-icon">VISA</span>
+        <span class="payment-icon">MasterCard</span>
+        <span class="payment-icon">Amex</span>
+        <span class="payment-icon">PayFast</span>
+        <span class="payment-icon">Ozow</span>
+        <span class="payment-icon">eBucks</span>
+      </div>
+      <p class="footer-copyright">&copy; 2026 NexBuy. All rights reserved.</p>
     </div>
   </div>
 </footer>
+
+<!-- SCROLL-TO-TOP FAB -->
+<app-scroll-to-top></app-scroll-to-top>
 
 <!-- COOKIE CONSENT BANNER -->
 <app-cookie-consent></app-cookie-consent>

@@ -1,0 +1,87 @@
+<div class="main-content">
+  <div class="section-content section-content-p30">
+    <div class="container-fluid">
+      <!-- Profile Section -->
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <i class="fa fa-user-circle"></i>
+        </div>
+        <div class="profile-info">
+          <h2>Hi, {{ userName }}</h2>
+          <p class="email">{{ userEmail }}</p>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="text-center loading-section">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+
+      <!-- Dashboard Grid -->
+      <div *ngIf="!loading" class="dashboard-grid">
+        <!-- Quick Links -->
+        <div class="dashboard-card">
+          <h3><i class="fa fa-th-large"></i> Quick Links</h3>
+          <div class="quick-links">
+            <a routerLink="/orders" class="quick-link">
+              <i class="fa fa-box"></i>
+              <span>My Orders</span>
+            </a>
+            <a routerLink="/account/wishlist" class="quick-link">
+              <i class="fa fa-heart"></i>
+              <span>Wishlist ({{ wishlistCount }})</span>
+            </a>
+            <a routerLink="/account/addresses" class="quick-link">
+              <i class="fa fa-map-marker-alt"></i>
+              <span>Addresses ({{ addressCount }})</span>
+            </a>
+            <a routerLink="/products" class="quick-link">
+              <i class="fa fa-store"></i>
+              <span>Continue Shopping</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="dashboard-card">
+          <div class="card-header-row">
+            <h3><i class="fa fa-box"></i> Recent Orders</h3>
+            <a routerLink="/orders" class="view-all">View All</a>
+          </div>
+
+          <div *ngIf="recentOrders.length === 0" class="empty-state">
+            <p>No orders yet</p>
+            <a routerLink="/products" class="btn btn-primary btn-sm"
+              >Start Shopping</a
+            >
+          </div>
+
+          <div *ngFor="let order of recentOrders" class="order-row">
+            <div class="order-row-info">
+              <span class="order-tracking"
+                >#{{ order.orderTrackingNumber }}</span
+              >
+              <span class="order-date">{{
+                order.dateCreated | date: "mediumDate"
+              }}</span>
+            </div>
+            <div class="order-row-actions">
+              <span
+                class="status-badge"
+                [ngClass]="getStatusClass(order.status)"
+              >
+                {{ order.status }}
+              </span>
+              <a
+                [routerLink]="['/orders', order.id]"
+                class="btn btn-outline-secondary btn-sm"
+              >
+                View
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

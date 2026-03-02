@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DOCUMENT } from '@angular/common';
-import { of } from 'rxjs';
+import { RouterTestingModule } from '@angular/router/testing';
+import { BehaviorSubject } from 'rxjs';
 
 import { LoginStatusComponent } from './login-status.component';
-import { AuthService } from '@auth0/auth0-angular';
+import { AuthService } from '../../services/auth.service';
 
 describe('LoginStatusComponent', () => {
   let component: LoginStatusComponent;
@@ -11,20 +11,16 @@ describe('LoginStatusComponent', () => {
 
   beforeEach(async () => {
     const mockAuthService = {
-      isAuthenticated$: of(false),
-      user$: of(null),
-      loginWithRedirect: jasmine.createSpy('loginWithRedirect'),
-      logout: jasmine.createSpy('logout')
+      isAuthenticated$: new BehaviorSubject<boolean>(false),
+      currentUser$: new BehaviorSubject<any>(null),
+      isLoggedIn: jasmine.createSpy('isLoggedIn').and.returnValue(false),
+      logout: jasmine.createSpy('logout'),
     };
 
     await TestBed.configureTestingModule({
-      imports: [LoginStatusComponent],
-      providers: [
-        { provide: AuthService, useValue: mockAuthService },
-        { provide: DOCUMENT, useValue: document }
-      ]
-    })
-    .compileComponents();
+      imports: [LoginStatusComponent, RouterTestingModule],
+      providers: [{ provide: AuthService, useValue: mockAuthService }],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LoginStatusComponent);
     component = fixture.componentInstance;
@@ -35,16 +31,9 @@ describe('LoginStatusComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call loginWithRedirect when login is called', () => {
+  it('should call logout when logout is called', () => {
     const authService = TestBed.inject(AuthService);
-    component.login();
-    expect(authService.loginWithRedirect).toHaveBeenCalled();
-  });
-
-  it('should call logout with correct parameters when logout is called', () => {
-    const authService = TestBed.inject(AuthService);
-    const document = TestBed.inject(DOCUMENT);
     component.logout();
-    expect(authService.logout).toHaveBeenCalledWith({ logoutParams: { returnTo: document.location.origin } });
+    expect(authService.logout).toHaveBeenCalled();
   });
 });

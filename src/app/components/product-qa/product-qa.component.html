@@ -1,0 +1,145 @@
+<div class="qa-section">
+  <h3 class="section-title">Questions & Answers</h3>
+
+  <!-- Ask Question Button -->
+  <div class="qa-actions">
+    <button
+      *ngIf="isLoggedIn && !showQuestionForm"
+      class="btn btn-primary btn-sm"
+      (click)="toggleQuestionForm()"
+    >
+      <i class="fa fa-question-circle"></i> Ask a Question
+    </button>
+    <p *ngIf="!isLoggedIn" class="login-prompt">
+      <a href="/login">Sign in</a> to ask a question
+    </p>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <!-- Question Form -->
+  <div *ngIf="showQuestionForm" class="question-form">
+    <h4>Ask a Question</h4>
+    <div class="form-group">
+      <textarea
+        class="form-control"
+        [(ngModel)]="newQuestion"
+        rows="3"
+        placeholder="What would you like to know about this product?"
+      ></textarea>
+    </div>
+    <div class="form-actions">
+      <button
+        class="btn btn-primary btn-sm"
+        (click)="askQuestion()"
+        [disabled]="submittingQuestion"
+      >
+        {{ submittingQuestion ? "Submitting..." : "Submit Question" }}
+      </button>
+      <button class="btn btn-secondary btn-sm" (click)="toggleQuestionForm()">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <!-- Questions List -->
+  <div class="questions-list" *ngIf="questions.length > 0">
+    <div *ngFor="let question of questions" class="question-card">
+      <div class="question-header">
+        <span class="question-icon">Q:</span>
+        <div class="question-content">
+          <p class="question-text">{{ question.question }}</p>
+          <div class="question-meta">
+            <span>{{ question.customerName }}</span>
+            <span class="separator">·</span>
+            <span>{{ getTimeAgo(question.dateCreated) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Answers -->
+      <div *ngFor="let answer of question.answers" class="answer-card">
+        <div class="answer-header">
+          <span class="answer-icon">A:</span>
+          <div class="answer-content">
+            <p class="answer-text">{{ answer.answer }}</p>
+            <div class="answer-meta">
+              <span [class.seller-badge]="answer.answeredBySeller">
+                {{ answer.answeredBySeller ? "Seller" : answer.answeredByName }}
+              </span>
+              <span class="separator">·</span>
+              <span>{{ getTimeAgo(answer.dateCreated) }}</span>
+              <button
+                class="btn-helpful"
+                (click)="markAnswerHelpful(answer.id)"
+              >
+                <i class="far fa-thumbs-up"></i> Helpful ({{
+                  answer.helpfulCount
+                }})
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Answer Form -->
+      <div *ngIf="isLoggedIn" class="answer-action">
+        <button
+          *ngIf="answeringQuestionId !== question.id"
+          class="btn-answer"
+          (click)="toggleAnswerForm(question.id)"
+        >
+          Answer this question
+        </button>
+        <div *ngIf="answeringQuestionId === question.id" class="answer-form">
+          <textarea
+            class="form-control"
+            [(ngModel)]="newAnswer"
+            rows="2"
+            placeholder="Write your answer..."
+          ></textarea>
+          <div class="form-actions">
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="submitAnswer(question.id)"
+              [disabled]="submittingAnswer"
+            >
+              {{ submittingAnswer ? "Submitting..." : "Submit Answer" }}
+            </button>
+            <button
+              class="btn btn-secondary btn-sm"
+              (click)="toggleAnswerForm(question.id)"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="questions.length === 0 && !showQuestionForm" class="no-questions">
+    <p>No questions yet. Be the first to ask a question about this product!</p>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="totalPages > 1" class="pagination">
+    <button
+      class="btn btn-sm"
+      (click)="goToPage(currentPage - 1)"
+      [disabled]="currentPage === 0"
+    >
+      &laquo; Previous
+    </button>
+    <span class="page-info"
+      >Page {{ currentPage + 1 }} of {{ totalPages }}</span
+    >
+    <button
+      class="btn btn-sm"
+      (click)="goToPage(currentPage + 1)"
+      [disabled]="currentPage >= totalPages - 1"
+    >
+      Next &raquo;
+    </button>
+  </div>
+</div>

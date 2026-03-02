@@ -1,0 +1,152 @@
+.timeline-container {
+  padding: 20px 0;
+}
+
+.cancelled-banner {
+  background: #ffebee;
+  color: #c62828;
+  padding: 12px 20px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.cancelled-banner i {
+  font-size: 1.2rem;
+}
+
+/* Timeline */
+.timeline {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.timeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.step-marker {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.step-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e0e0e0;
+  color: #999;
+  font-size: 0.9rem;
+  z-index: 1;
+  flex-shrink: 0;
+  margin: 0 auto;
+  transition: all 0.3s;
+}
+
+.timeline-step.reached .step-icon {
+  background: #0b79bf;
+  color: #fff;
+}
+
+.timeline-step.active .step-icon {
+  background: #0b79bf;
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(11, 121, 191, 0.2);
+}
+
+.step-line {
+  position: absolute;
+  top: 50%;
+  left: calc(50% + 20px);
+  right: calc(-50% + 20px);
+  height: 3px;
+  background: #e0e0e0;
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.step-line.filled {
+  background: #0b79bf;
+}
+
+.step-content {
+  text-align: center;
+  margin-top: 10px;
+  min-width: 80px;
+}
+
+.step-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #999;
+}
+
+.timeline-step.reached .step-label {
+  color: #333;
+}
+
+.timeline-step.active .step-label {
+  color: #0b79bf;
+}
+
+.step-date {
+  font-size: 0.7rem;
+  color: #888;
+  margin-top: 2px;
+}
+
+.step-notes {
+  font-size: 0.7rem;
+  color: #666;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+@media (max-width: 576px) {
+  .timeline {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .timeline-step {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .step-marker {
+    flex-direction: column;
+    width: 40px;
+    align-items: center;
+  }
+
+  .step-line {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    width: 3px;
+    height: 30px;
+    transform: none;
+    margin: 0 auto;
+  }
+
+  .step-content {
+    text-align: left;
+    margin-top: 0;
+    padding-top: 8px;
+    padding-bottom: 16px;
+  }
+}

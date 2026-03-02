@@ -1,0 +1,187 @@
+<div class="main-content">
+  <div class="section-content section-content-p30">
+    <div class="container-fluid">
+      <div class="page-header">
+        <h2>My Addresses</h2>
+        <button
+          *ngIf="!showForm"
+          class="btn btn-primary btn-sm"
+          (click)="openAddForm()"
+        >
+          <i class="fa fa-plus"></i> Add New Address
+        </button>
+      </div>
+
+      <div *ngIf="successMessage" class="alert alert-success">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage && !showForm" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="text-center" style="padding: 40px 0">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+
+      <!-- Address Form -->
+      <div *ngIf="showForm" class="address-form-card">
+        <h3>{{ editingAddress ? "Edit Address" : "Add New Address" }}</h3>
+
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Label *</label>
+            <select class="form-control" [(ngModel)]="formData.label">
+              <option *ngFor="let l of labels" [value]="l">{{ l }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Street Address *</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="formData.street"
+            placeholder="123 Main St"
+          />
+        </div>
+
+        <div class="form-row-2col">
+          <div class="form-group">
+            <label>City *</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="formData.city"
+              placeholder="City"
+            />
+          </div>
+          <div class="form-group">
+            <label>State / Province</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="formData.province"
+              placeholder="State"
+            />
+          </div>
+        </div>
+
+        <div class="form-row-2col">
+          <div class="form-group">
+            <label>Country *</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="formData.country"
+              placeholder="Country"
+            />
+          </div>
+          <div class="form-group">
+            <label>Zip / Postal Code *</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="formData.zipCode"
+              placeholder="Zip Code"
+            />
+          </div>
+        </div>
+
+        <div class="form-check">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            [(ngModel)]="formData.isDefault"
+            id="isDefault"
+          />
+          <label class="form-check-label" for="isDefault"
+            >Set as default address</label
+          >
+        </div>
+
+        <div class="form-actions">
+          <button
+            class="btn btn-primary"
+            (click)="saveAddress()"
+            [disabled]="submitting"
+          >
+            {{
+              submitting
+                ? "Saving..."
+                : editingAddress
+                  ? "Update Address"
+                  : "Save Address"
+            }}
+          </button>
+          <button class="btn btn-secondary" (click)="cancelForm()">
+            Cancel
+          </button>
+        </div>
+      </div>
+
+      <!-- Address Cards -->
+      <div
+        *ngIf="!loading && !showForm && addresses.length > 0"
+        class="address-grid"
+      >
+        <div
+          *ngFor="let address of addresses"
+          class="address-card"
+          [class.default-card]="address.isDefault"
+        >
+          <div class="card-top">
+            <div class="address-label">
+              <i class="fa" [ngClass]="getLabelIcon(address.label)"></i>
+              {{ address.label }}
+            </div>
+            <span *ngIf="address.isDefault" class="default-badge">Default</span>
+          </div>
+
+          <div class="address-content">
+            <p>{{ address.street }}</p>
+            <p>
+              {{ address.city
+              }}<span *ngIf="address.province">, {{ address.province }}</span>
+            </p>
+            <p>{{ address.country }}, {{ address.zipCode }}</p>
+          </div>
+
+          <div class="card-actions">
+            <button class="btn-action" (click)="openEditForm(address)">
+              <i class="fa fa-edit"></i> Edit
+            </button>
+            <button
+              *ngIf="!address.isDefault"
+              class="btn-action"
+              (click)="setDefault(address.id)"
+            >
+              <i class="fa fa-check-circle"></i> Set Default
+            </button>
+            <button
+              class="btn-action btn-delete"
+              (click)="deleteAddress(address.id)"
+            >
+              <i class="fa fa-trash"></i> Delete
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div
+        *ngIf="!loading && !showForm && addresses.length === 0"
+        class="empty-state"
+      >
+        <i class="fa fa-map-marker-alt empty-icon"></i>
+        <h3>No saved addresses</h3>
+        <p>Add an address for faster checkout</p>
+      </div>
+    </div>
+  </div>
+</div>

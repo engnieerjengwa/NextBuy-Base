@@ -1,14 +1,15 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../common/product';
 import { CartItem } from '../../common/cart-item';
 import { CartService } from '../../services/cart.service';
+import { ProductCardComponent } from '../product-card/product-card.component';
 
 @Component({
   selector: 'app-product-carousel',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, RouterLink],
+  imports: [CommonModule, RouterLink, ProductCardComponent],
   templateUrl: './product-carousel.component.html',
   styleUrls: ['./product-carousel.component.css'],
 })
@@ -17,6 +18,11 @@ export class ProductCarouselComponent {
   @Input() title: string = '';
   @Input() showViewAll: boolean = false;
   @Input() viewAllLink: string = '/products';
+  @Input() showFireSale: boolean = false;
+  @Input() showMoreDeals: boolean = false;
+  @Input() showAlotForLess: boolean = false;
+  @Input() actionLabel: string = '';
+  @Input() actionLink: string = '';
 
   scrollPosition = 0;
   private readonly scrollAmount = 300;
@@ -45,15 +51,8 @@ export class ProductCarouselComponent {
     this.scrollPosition = container.scrollLeft;
   }
 
-  addToCart(product: Product): void {
+  onAddToCart(product: Product): void {
     const cartItem = new CartItem(product);
     this.cartService.addToCart(cartItem);
-  }
-
-  getDiscountBadge(product: Product): string | null {
-    if (product.discountPercentage && product.discountPercentage > 0) {
-      return `-${product.discountPercentage}%`;
-    }
-    return null;
   }
 }

@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { OrderHistoryService } from '../../services/order-history.service';
 import { OrderHistory, OrderHistoryItem } from '../../common/order-history';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 
@@ -27,9 +27,12 @@ export class OrderHistoryComponent implements OnInit {
     { value: 12, label: 'Last year' },
   ];
 
+  reorderLoading: { [orderId: string]: boolean } = {};
+
   constructor(
     private orderHistoryService: OrderHistoryService,
     private productService: ProductService,
+    private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object,
   ) {
     if (isPlatformBrowser(this.platformId)) {
@@ -147,6 +150,26 @@ export class OrderHistoryComponent implements OnInit {
    */
   onPeriodChange() {
     this.filterOrdersByPeriod();
+  }
+
+  /**
+   * Re-order: creates a new order with the same items
+   */
+  buyAgain(orderId: string) {
+    this.reorderLoading[orderId] = true;
+    this.orderHistoryService.reorder(+orderId).subscribe({
+      next: (response) => {
+        this.reorderLoading[orderId] = false;
+        this.router.navigate(['/order-confirmation'], {
+          queryParams: { tracking: response.orderTrackingNumber },
+        });
+      },
+      error: (err) => {
+        this.reorderLoading[orderId] = false;
+        console.error('Error reordering:', err);
+        alert('Failed to reorder. Please try again.');
+      },
+    });
   }
 
   /**

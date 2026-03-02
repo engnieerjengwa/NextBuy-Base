@@ -1,0 +1,65 @@
+.stock-notification {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 16px 0;
+  text-align: center;
+}
+
+.notify-icon i {
+  font-size: 2rem;
+  color: #f5a623;
+  margin-bottom: 8px;
+}
+
+.notify-form h4 {
+  margin: 0 0 4px;
+  color: #333;
+}
+
+.notify-form p {
+  color: #666;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+.email-input-group {
+  display: flex;
+  gap: 8px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.email-input-group .form-control {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.subscribed-message {
+  color: #2e7d32;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.subscribed-message i {
+  font-size: 1.2rem;
+}
+
+.notification-message {
+  margin-top: 10px;
+  font-size: 0.85rem;
+}
+
+.notification-message.error {
+  color: #d32f2f;
+}
+
+.notification-message.success {
+  color: #2e7d32;
+}

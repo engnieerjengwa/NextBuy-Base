@@ -1,37 +1,59 @@
 .login-status-header {
   display: flex;
   align-items: center;
+  gap: 6px;
 }
 
 .login-status-user-info {
-  line-height: 43px;
-  border: 1px;
-  padding: 0 17px;
-  border-radius: 3px;
-  transition: all 0.5s ease;
-  margin-right: 15px;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0 8px;
+  white-space: nowrap;
 }
 
 .security-btn {
   position: relative;
   right: 0;
-  min-width: 95px;
   color: #fff;
-  border: 1px solid #205b8d;
-  border-radius: 43px;
-  background: #205b8d;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  background: transparent;
   cursor: pointer;
   text-align: center;
-  height: 43px;
   white-space: nowrap;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  font-size: 0.78rem;
+  height: 30px;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
 }
 
 .security-btn:hover {
-  background: #05143f;
-  border: 1px solid #05143f;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
 }
 
-.order-history a {
+.register-btn {
+  background: #fff;
+  color: #0b79bf;
+  border: 1px solid #fff;
+  font-weight: 600;
+}
+
+.register-btn:hover {
+  background: #e8e8e8;
+  color: #096a9e;
+}
+
+.order-history a,
+.my-account-link a {
   text-decoration: none;
 }
 

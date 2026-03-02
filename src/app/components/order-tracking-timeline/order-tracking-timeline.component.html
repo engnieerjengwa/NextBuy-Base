@@ -1,0 +1,35 @@
+<div class="timeline-container">
+  <!-- Cancelled Banner -->
+  <div *ngIf="isCancelled()" class="cancelled-banner">
+    <i class="fa fa-times-circle"></i>
+    <span>This order has been cancelled</span>
+  </div>
+
+  <!-- Timeline Steps -->
+  <div *ngIf="!isCancelled()" class="timeline">
+    <div
+      *ngFor="let step of steps; let i = index; let last = last"
+      class="timeline-step"
+      [class.reached]="step.reached"
+      [class.active]="step.active"
+    >
+      <div class="step-marker">
+        <div class="step-icon">
+          <i class="fa" [ngClass]="step.icon"></i>
+        </div>
+        <div
+          *ngIf="!last"
+          class="step-line"
+          [class.filled]="step.reached && steps[i + 1].reached"
+        ></div>
+      </div>
+      <div class="step-content">
+        <div class="step-label">{{ step.label }}</div>
+        <div *ngIf="step.date" class="step-date">
+          {{ step.date | date: "d MMM yyyy, h:mm a" }}
+        </div>
+        <div *ngIf="step.notes" class="step-notes">{{ step.notes }}</div>
+      </div>
+    </div>
+  </div>
+</div>

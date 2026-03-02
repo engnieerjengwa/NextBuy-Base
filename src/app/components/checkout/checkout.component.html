@@ -1,551 +1,807 @@
 <div class="main-content page-m">
   <div class="section-content section-content-p30">
     <div class="container-fluid">
+      <!-- Guest Checkout Banner -->
+      <div *ngIf="isGuestMode" class="guest-banner">
+        <div class="guest-banner-content">
+          <i class="fa fa-info-circle"></i>
+          <span
+            >You are checking out as a <strong>guest</strong>.
+            <a routerLink="/login" [queryParams]="{ returnUrl: '/checkout' }"
+              >Sign in</a
+            >
+            or <a routerLink="/register">create an account</a> to save your
+            details and track orders.</span
+          >
+        </div>
+      </div>
+
+      <!-- Checkout Stepper -->
+      <div class="checkout-stepper">
+        <div
+          *ngFor="let label of stepLabels; let i = index"
+          class="step"
+          [class.active]="currentStep === i + 1"
+          [class.completed]="isStepComplete(i + 1)"
+          (click)="goToStep(i + 1)"
+        >
+          <div class="step-number">
+            <span *ngIf="!isStepComplete(i + 1)">{{ i + 1 }}</span>
+            <i *ngIf="isStepComplete(i + 1)" class="fa fa-check"></i>
+          </div>
+          <div class="step-label">{{ label }}</div>
+        </div>
+      </div>
+
       <form [formGroup]="checkoutFormGroup" (ngSubmit)="onSubmit()">
-        <!--  Customer Details -->
-        <div formGroupName="customer" class="form-area">
-          <h3 class="title-1 mb-20">Customer Details</h3>
-          <div class="row">
-            <div class="col-md-2">
-              <label for="firstName">First Name</label>
-            </div>
-            <div class="input-space">
-              <input
-                type="text"
-                id="firstName"
-                class="form-control"
-                formControlName="firstName"
-              />
-              <div
-                *ngIf="
-                  firstName.invalid && (firstName.dirty || firstName.touched)
-                "
-                class="alert alert-danger mt-1"
-              >
+        <!-- ===== STEP 1: ADDRESS ===== -->
+        <div *ngIf="currentStep === 1" class="wizard-step">
+          <!-- Customer Details -->
+          <div formGroupName="customer" class="form-area">
+            <h3 class="title-1 mb-20">Customer Details</h3>
+            <div class="row">
+              <div class="col-md-2">
+                <label for="firstName">First Name</label>
+              </div>
+              <div class="input-space">
+                <input
+                  type="text"
+                  id="firstName"
+                  class="form-control"
+                  formControlName="firstName"
+                />
                 <div
                   *ngIf="
-                    firstName.errors?.['required'] ||
-                    firstName.errors?.['whiteSpaceValidator']
+                    firstName.invalid && (firstName.dirty || firstName.touched)
                   "
+                  class="alert alert-danger mt-1"
                 >
-                  First name is required
-                </div>
-                <div *ngIf="firstName.errors?.['minlength']">
-                  First name must be at least 2 characters long
+                  <div
+                    *ngIf="
+                      firstName.errors?.['required'] ||
+                      firstName.errors?.['whiteSpaceValidator']
+                    "
+                  >
+                    First name is required
+                  </div>
+                  <div *ngIf="firstName.errors?.['minlength']">
+                    First name must be at least 2 characters long
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-2">
-              <label for="lastName">Last Name</label>
-            </div>
-            <div class="input-space">
-              <input
-                type="text"
-                id="lastName"
-                class="form-control"
-                formControlName="lastName"
-              />
-              <div
-                *ngIf="
-                  lastName.errors?.['required'] &&
-                  (lastName.dirty || lastName.touched)
-                "
-                class="alert alert-danger mt-1"
-              >
+            <div class="row">
+              <div class="col-md-2">
+                <label for="lastName">Last Name</label>
+              </div>
+              <div class="input-space">
+                <input
+                  type="text"
+                  id="lastName"
+                  class="form-control"
+                  formControlName="lastName"
+                />
                 <div
                   *ngIf="
-                    lastName.errors?.['required'] ||
-                    lastName.errors?.['whiteSpaceValidator']
+                    lastName.errors?.['required'] &&
+                    (lastName.dirty || lastName.touched)
                   "
+                  class="alert alert-danger mt-1"
                 >
-                  Last name is required
+                  <div
+                    *ngIf="
+                      lastName.errors?.['required'] ||
+                      lastName.errors?.['whiteSpaceValidator']
+                    "
+                  >
+                    Last name is required
+                  </div>
+                  <div *ngIf="lastName.errors?.['minlength']">
+                    Last name must be at least 2 characters long
+                  </div>
                 </div>
-                <div *ngIf="lastName.errors?.['minlength']">
-                  Last name must be at least 2 characters long
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2">
+                <label for="email">Email</label>
+              </div>
+              <div class="input-space">
+                <input
+                  type="email"
+                  id="email"
+                  class="form-control"
+                  formControlName="email"
+                />
+                <div
+                  *ngIf="
+                    email.errors?.['required'] && (email.dirty || email.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div *ngIf="email.errors?.['required']">
+                    Email is required
+                  </div>
+                  <div *ngIf="email.errors?.['pattern']">
+                    Email must be a valid email address
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-2">
-              <label for="email">Email</label>
-            </div>
-            <div class="input-space">
-              <input
-                type="email"
-                id="email"
-                class="form-control"
-                formControlName="email"
-              />
-              <div
-                *ngIf="
-                  email.errors?.['required'] && (email.dirty || email.touched)
-                "
-                class="alert alert-danger mt-1"
-              >
-                <div *ngIf="email.errors?.['required']">Email is required</div>
-                <div *ngIf="email.errors?.['pattern']">
-                  Email must be a valid email address
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <!-- Shipping Address Details-->
-        <div formGroupName="shippingAddress" class="form-area">
-          <h3 class="title-1 mb-20">Shipping Address</h3>
-          <div class="row">
-            <div class="col-md-2">
-              <label for="street">Street</label>
-            </div>
-            <div class="input-space">
-              <input
-                type="text"
-                id="street"
-                class="form-control"
-                formControlName="street"
-              />
+          <!-- Saved Addresses (logged-in users only) -->
+          <div
+            *ngIf="!isGuestMode && savedAddresses.length > 0"
+            class="form-area"
+          >
+            <h3 class="title-1 mb-20">Saved Addresses</h3>
+            <div class="saved-addresses-grid">
               <div
-                *ngIf="
-                  shippingAddressStreet.invalid &&
-                  (shippingAddressStreet.dirty || shippingAddressStreet.touched)
-                "
-                class="alert alert-danger mt-1"
+                *ngFor="let addr of savedAddresses"
+                class="saved-address-card"
+                [class.selected]="selectedSavedAddressId === addr.id"
+                (click)="selectSavedAddress(addr)"
               >
-                <div
-                  *ngIf="
-                    shippingAddressStreet.errors?.['required'] ||
-                    shippingAddressStreet.errors?.['whiteSpace']
-                  "
-                >
-                  Street is required
+                <div class="address-label-badge" *ngIf="addr.label">
+                  {{ addr.label }}
                 </div>
-                <div *ngIf="shippingAddressStreet.errors?.['minlength']">
-                  Street must be at least 2 characters long
-                </div>
+                <div *ngIf="addr.isDefault" class="default-badge">Default</div>
+                <p>{{ addr.street }}</p>
+                <p>{{ addr.city }}, {{ addr.province }}</p>
+                <p>{{ addr.country }} {{ addr.zipCode }}</p>
+              </div>
+              <div
+                class="saved-address-card new-address"
+                [class.selected]="useNewAddress"
+                (click)="useManualAddress()"
+              >
+                <i class="fa fa-plus"></i>
+                <p>Enter New Address</p>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-2">
-              <label for="city">City</label>
-            </div>
-            <div class="input-space">
-              <input
-                type="text"
-                id="city"
-                class="form-control"
-                formControlName="city"
-              />
-              <div
-                *ngIf="
-                  shippingAddressCity.invalid &&
-                  (shippingAddressCity.dirty || shippingAddressCity.touched)
-                "
-                class="alert alert-danger mt-1"
-              >
-                <div
-                  *ngIf="
-                    shippingAddressCity.errors?.['required'] ||
-                    shippingAddressCity.errors?.['whiteSpace']
-                  "
-                >
-                  City is required
-                </div>
-                <div *ngIf="shippingAddressCity.errors?.['minlength']">
-                  City must be at least 2 characters long
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-2">
-              <label for="country">Country</label>
-            </div>
-            <div class="input-space">
-              <select formControlName="country" class="form-control">
-                <option *ngFor="let country of countries" [ngValue]="country">
-                  {{ country.name }}
-                </option>
-              </select>
-              <div
-                *ngIf="
-                  shippingAddressCountry.invalid &&
-                  (shippingAddressCountry.dirty ||
-                    shippingAddressCountry.touched)
-                "
-                class="alert alert-danger mt-1"
-              >
-                <div *ngIf="shippingAddressCountry.errors?.['required']">
-                  Country is required
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-2">
-              <label for="state">State/Province</label>
-            </div>
-            <div class="input-space">
-              <select formControlName="state" class="form-control">
-                <option
-                  *ngFor="let state of shippingAddressStates"
-                  [ngValue]="state"
-                >
-                  {{ state.name }}
-                </option>
-              </select>
-              <div
-                *ngIf="
-                  shippingAddressState.invalid &&
-                  (shippingAddressState.dirty || shippingAddressState.touched)
-                "
-                class="alert alert-danger mt-1"
-              >
-                <div *ngIf="shippingAddressState.errors?.['required']">
-                  State/Province is required
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-2">
-              <label for="zipCode">Zip Code</label>
-            </div>
-            <div class="input-space">
-              <input
-                type="text"
-                id="zipCode"
-                class="form-control"
-                formControlName="zipCode"
-              />
-              <div
-                *ngIf="
-                  shippingAddressZipCode.invalid &&
-                  (shippingAddressZipCode.dirty ||
-                    shippingAddressZipCode.touched)
-                "
-                class="alert alert-danger mt-1"
-              >
-                <div
-                  *ngIf="
-                    shippingAddressZipCode.errors?.['required'] ||
-                    shippingAddressZipCode.errors?.['whiteSpace']
-                  "
-                >
-                  Zip Code is required
-                </div>
-                <div *ngIf="shippingAddressZipCode.errors?.['minlength']">
-                  Zip Code must be at least 2 characters long
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <!-- Checkbox to copy shipping address to billing -->
-        <div class="row mb-3">
-          <div class="col-md-12">
-            <div class="form-check">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="copyShippingToBilling"
-                (change)="copyShippingToBilling($event)"
-              />
-              <label class="form-check-label" for="copyShippingToBilling">
-                Same as shipping address
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Billing Address -->
-        <div formGroupName="billingAddress" class="form-area">
-          <h3 class="title-1 mb-20">Billing Address</h3>
-          <div class="row">
-            <div class="col-md-2">
-              <label for="billingStreet">Street</label>
-            </div>
-            <div class="input-space">
-              <input
-                type="text"
-                id="billingStreet"
-                class="form-control"
-                formControlName="street"
-              />
-              <div
-                *ngIf="
-                  billingAddressStreet.invalid &&
-                  (billingAddressStreet.dirty || billingAddressStreet.touched)
-                "
-                class="alert alert-danger mt-1"
-              >
+          <!-- Shipping Address -->
+          <div formGroupName="shippingAddress" class="form-area">
+            <h3 class="title-1 mb-20">Shipping Address</h3>
+            <div class="row">
+              <div class="col-md-2">
+                <label for="street">Street</label>
+              </div>
+              <div class="input-space">
+                <input
+                  type="text"
+                  id="street"
+                  class="form-control"
+                  formControlName="street"
+                />
                 <div
                   *ngIf="
-                    billingAddressStreet.errors?.['required'] ||
-                    billingAddressStreet.errors?.['whiteSpace']
+                    shippingAddressStreet.invalid &&
+                    (shippingAddressStreet.dirty ||
+                      shippingAddressStreet.touched)
                   "
+                  class="alert alert-danger mt-1"
                 >
-                  Street is required
-                </div>
-                <div *ngIf="billingAddressStreet.errors?.['minlength']">
-                  Street must be at least 2 characters long
+                  <div
+                    *ngIf="
+                      shippingAddressStreet.errors?.['required'] ||
+                      shippingAddressStreet.errors?.['whiteSpace']
+                    "
+                  >
+                    Street is required
+                  </div>
+                  <div *ngIf="shippingAddressStreet.errors?.['minlength']">
+                    Street must be at least 2 characters long
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-2">
-              <label for="billingCity">City</label>
-            </div>
-            <div class="input-space">
-              <input
-                type="text"
-                id="billingCity"
-                class="form-control"
-                formControlName="city"
-              />
-              <div
-                *ngIf="
-                  billingAddressCity.invalid &&
-                  (billingAddressCity.dirty || billingAddressCity.touched)
-                "
-                class="alert alert-danger mt-1"
-              >
+            <div class="row">
+              <div class="col-md-2">
+                <label for="city">City</label>
+              </div>
+              <div class="input-space">
+                <input
+                  type="text"
+                  id="city"
+                  class="form-control"
+                  formControlName="city"
+                />
                 <div
                   *ngIf="
-                    billingAddressCity.errors?.['required'] ||
-                    billingAddressCity.errors?.['whiteSpace']
+                    shippingAddressCity.invalid &&
+                    (shippingAddressCity.dirty || shippingAddressCity.touched)
                   "
+                  class="alert alert-danger mt-1"
                 >
-                  City is required
-                </div>
-                <div *ngIf="billingAddressCity.errors?.['minlength']">
-                  City must be at least 2 characters long
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-2">
-              <label for="billingCountry">Country</label>
-            </div>
-            <div class="input-space">
-              <select formControlName="country" class="form-control">
-                <option *ngFor="let country of countries" [ngValue]="country">
-                  {{ country.name }}
-                </option>
-              </select>
-              <div
-                *ngIf="
-                  billingAddressCountry.invalid &&
-                  (billingAddressCountry.dirty || billingAddressCountry.touched)
-                "
-                class="alert alert-danger mt-1"
-              >
-                <div *ngIf="billingAddressCountry.errors?.['required']">
-                  Country is required
+                  <div
+                    *ngIf="
+                      shippingAddressCity.errors?.['required'] ||
+                      shippingAddressCity.errors?.['whiteSpace']
+                    "
+                  >
+                    City is required
+                  </div>
+                  <div *ngIf="shippingAddressCity.errors?.['minlength']">
+                    City must be at least 2 characters long
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-2">
-              <label for="billingState">State/Province</label>
-            </div>
-            <div class="input-space">
-              <select formControlName="state" class="form-control">
-                <option
-                  *ngFor="let state of billingAddressStates"
-                  [ngValue]="state"
-                >
-                  {{ state.name }}
-                </option>
-              </select>
-              <div
-                *ngIf="
-                  billingAddressState.invalid &&
-                  (billingAddressState.dirty || billingAddressState.touched)
-                "
-                class="alert alert-danger mt-1"
-              >
-                <div *ngIf="billingAddressState.errors?.['required']">
-                  State/Province is required
-                </div>
+            <div class="row">
+              <div class="col-md-2">
+                <label for="country">Country</label>
               </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-2">
-              <label for="billingZipCode">Zip Code</label>
-            </div>
-            <div class="input-space">
-              <input
-                type="text"
-                id="billingZipCode"
-                class="form-control"
-                formControlName="zipCode"
-              />
-              <div
-                *ngIf="
-                  billingAddressZipCode.invalid &&
-                  (billingAddressZipCode.dirty || billingAddressZipCode.touched)
-                "
-                class="alert alert-danger mt-1"
-              >
+              <div class="input-space">
+                <select formControlName="country" class="form-control">
+                  <option *ngFor="let country of countries" [ngValue]="country">
+                    {{ country.name }}
+                  </option>
+                </select>
                 <div
                   *ngIf="
-                    billingAddressZipCode.errors?.['required'] ||
-                    billingAddressZipCode.errors?.['whiteSpace']
+                    shippingAddressCountry.invalid &&
+                    (shippingAddressCountry.dirty ||
+                      shippingAddressCountry.touched)
                   "
+                  class="alert alert-danger mt-1"
                 >
-                  Zip Code is required
+                  <div *ngIf="shippingAddressCountry.errors?.['required']">
+                    Country is required
+                  </div>
                 </div>
-                <div *ngIf="billingAddressZipCode.errors?.['minlength']">
-                  Zip Code must be at least 2 characters long
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2">
+                <label for="state">State/Province</label>
+              </div>
+              <div class="input-space">
+                <select formControlName="state" class="form-control">
+                  <option
+                    *ngFor="let state of shippingAddressStates"
+                    [ngValue]="state"
+                  >
+                    {{ state.name }}
+                  </option>
+                </select>
+                <div
+                  *ngIf="
+                    shippingAddressState.invalid &&
+                    (shippingAddressState.dirty || shippingAddressState.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div *ngIf="shippingAddressState.errors?.['required']">
+                    State/Province is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2">
+                <label for="zipCode">Zip Code</label>
+              </div>
+              <div class="input-space">
+                <input
+                  type="text"
+                  id="zipCode"
+                  class="form-control"
+                  formControlName="zipCode"
+                />
+                <div
+                  *ngIf="
+                    shippingAddressZipCode.invalid &&
+                    (shippingAddressZipCode.dirty ||
+                      shippingAddressZipCode.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div
+                    *ngIf="
+                      shippingAddressZipCode.errors?.['required'] ||
+                      shippingAddressZipCode.errors?.['whiteSpace']
+                    "
+                  >
+                    Zip Code is required
+                  </div>
+                  <div *ngIf="shippingAddressZipCode.errors?.['minlength']">
+                    Zip Code must be at least 2 characters long
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Payment Details -->
-        <div class="form-area">
-          <h3 class="title-1 mb-20">Payment Details</h3>
-
-          <!-- Email receipt option -->
+          <!-- Same as Shipping Checkbox -->
           <div class="row mb-3">
             <div class="col-md-12">
               <div class="form-check">
                 <input
                   type="checkbox"
                   class="form-check-input"
-                  id="sendReceipt"
-                  (change)="toggleEmailReceipt($event)"
-                  [checked]="sendEmailReceipt"
+                  id="copyShippingToBilling"
+                  (change)="copyShippingToBilling($event)"
                 />
-                <label class="form-check-label" for="sendReceipt">
-                  Send receipt to my email
+                <label class="form-check-label" for="copyShippingToBilling">
+                  Same as shipping address
                 </label>
               </div>
             </div>
           </div>
 
-          <!-- Stripe Payment Element will be mounted here -->
-          <div id="payment-element" class="mb-3"></div>
-
-          <!-- Payment processing status and errors -->
-          <div *ngIf="isProcessingPayment" class="alert alert-info">
-            Processing payment... Please wait.
-          </div>
-          <div *ngIf="paymentError" class="alert alert-danger">
-            {{ paymentError }}
-          </div>
-        </div>
-
-        <!-- Order Review Button -->
-        <div class="text-center mb-4">
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="toggleOrderReview()"
-            [disabled]="isProcessingPayment"
+          <!-- Billing Address -->
+          <div
+            formGroupName="billingAddress"
+            class="form-area"
+            *ngIf="!sameAsShipping"
           >
-            {{
-              showOrderReview ? "Hide Order Details" : "Review Order Details"
-            }}
-          </button>
-        </div>
-
-        <!-- Order Review Section -->
-        <div *ngIf="showOrderReview" class="form-area">
-          <h3 class="title-1 mb-20">Order Review</h3>
-
-          <!-- Display message if cart is empty -->
-          <div *ngIf="cartItems.length === 0" class="alert alert-warning">
-            Your shopping cart is empty.
+            <h3 class="title-1 mb-20">Billing Address</h3>
+            <div class="row">
+              <div class="col-md-2">
+                <label for="billingStreet">Street</label>
+              </div>
+              <div class="input-space">
+                <input
+                  type="text"
+                  id="billingStreet"
+                  class="form-control"
+                  formControlName="street"
+                />
+                <div
+                  *ngIf="
+                    billingAddressStreet.invalid &&
+                    (billingAddressStreet.dirty || billingAddressStreet.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div
+                    *ngIf="
+                      billingAddressStreet.errors?.['required'] ||
+                      billingAddressStreet.errors?.['whiteSpace']
+                    "
+                  >
+                    Street is required
+                  </div>
+                  <div *ngIf="billingAddressStreet.errors?.['minlength']">
+                    Street must be at least 2 characters long
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2">
+                <label for="billingCity">City</label>
+              </div>
+              <div class="input-space">
+                <input
+                  type="text"
+                  id="billingCity"
+                  class="form-control"
+                  formControlName="city"
+                />
+                <div
+                  *ngIf="
+                    billingAddressCity.invalid &&
+                    (billingAddressCity.dirty || billingAddressCity.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div
+                    *ngIf="
+                      billingAddressCity.errors?.['required'] ||
+                      billingAddressCity.errors?.['whiteSpace']
+                    "
+                  >
+                    City is required
+                  </div>
+                  <div *ngIf="billingAddressCity.errors?.['minlength']">
+                    City must be at least 2 characters long
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2">
+                <label for="billingCountry">Country</label>
+              </div>
+              <div class="input-space">
+                <select formControlName="country" class="form-control">
+                  <option *ngFor="let country of countries" [ngValue]="country">
+                    {{ country.name }}
+                  </option>
+                </select>
+                <div
+                  *ngIf="
+                    billingAddressCountry.invalid &&
+                    (billingAddressCountry.dirty ||
+                      billingAddressCountry.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div *ngIf="billingAddressCountry.errors?.['required']">
+                    Country is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2">
+                <label for="billingState">State/Province</label>
+              </div>
+              <div class="input-space">
+                <select formControlName="state" class="form-control">
+                  <option
+                    *ngFor="let state of billingAddressStates"
+                    [ngValue]="state"
+                  >
+                    {{ state.name }}
+                  </option>
+                </select>
+                <div
+                  *ngIf="
+                    billingAddressState.invalid &&
+                    (billingAddressState.dirty || billingAddressState.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div *ngIf="billingAddressState.errors?.['required']">
+                    State/Province is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2">
+                <label for="billingZipCode">Zip Code</label>
+              </div>
+              <div class="input-space">
+                <input
+                  type="text"
+                  id="billingZipCode"
+                  class="form-control"
+                  formControlName="zipCode"
+                />
+                <div
+                  *ngIf="
+                    billingAddressZipCode.invalid &&
+                    (billingAddressZipCode.dirty ||
+                      billingAddressZipCode.touched)
+                  "
+                  class="alert alert-danger mt-1"
+                >
+                  <div
+                    *ngIf="
+                      billingAddressZipCode.errors?.['required'] ||
+                      billingAddressZipCode.errors?.['whiteSpace']
+                    "
+                  >
+                    Zip Code is required
+                  </div>
+                  <div *ngIf="billingAddressZipCode.errors?.['minlength']">
+                    Zip Code must be at least 2 characters long
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <!-- Display order items if cart is not empty -->
-          <div *ngIf="cartItems.length > 0">
-            <table class="table table-bordered">
-              <thead>
-                <tr>
-                  <th width="20%">Product Image</th>
-                  <th width="50%">Product Detail</th>
-                  <th width="30%">Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let tempCartItem of cartItems">
-                  <td>
-                    <img
-                      src="{{ tempCartItem.imageUrl }}"
-                      class="img-responsive"
-                      width="150px"
-                    />
-                  </td>
-                  <td>
-                    <p>{{ tempCartItem.name }}</p>
-                    <div class="d-flex align-items-center">
-                      <p class="mb-0 mr-3">
-                        Quantity: {{ tempCartItem.quantity }}
-                      </p>
-                      <div class="btn-group ml-2">
-                        <button
-                          type="button"
-                          class="btn btn-sm btn-primary"
-                          (click)="incrementQuantity(tempCartItem)"
-                          [disabled]="isProcessingPayment"
-                        >
-                          +
-                        </button>
-                        <button
-                          type="button"
-                          class="btn btn-sm btn-primary"
-                          (click)="decrementQuantity(tempCartItem)"
-                          [disabled]="tempCartItem.quantity === 1 || isProcessingPayment"
-                        >
-                          -
-                        </button>
-                        <button
-                          type="button"
-                          class="btn btn-sm btn-danger"
-                          (click)="removeFromCart(tempCartItem)"
-                          [disabled]="isProcessingPayment"
-                        >
-                          Remove
-                        </button>
+          <!-- Step 1 Navigation -->
+          <div class="wizard-nav">
+            <div></div>
+            <button type="button" class="btn btn-primary" (click)="nextStep()">
+              Continue to Delivery <i class="fa fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 2: DELIVERY METHOD ===== -->
+        <div *ngIf="currentStep === 2" class="wizard-step">
+          <div class="form-area">
+            <h3 class="title-1 mb-20">Delivery Method</h3>
+            <div class="delivery-options">
+              <div
+                class="delivery-option"
+                [class.selected]="selectedDeliveryMethod === 'standard'"
+                (click)="selectedDeliveryMethod = 'standard'"
+              >
+                <div class="delivery-radio">
+                  <input
+                    type="radio"
+                    name="deliveryMethod"
+                    value="standard"
+                    [checked]="selectedDeliveryMethod === 'standard'"
+                    (change)="selectedDeliveryMethod = 'standard'"
+                  />
+                </div>
+                <div class="delivery-info">
+                  <strong>Standard Delivery</strong>
+                  <p>Estimated 3–5 business days</p>
+                </div>
+                <div class="delivery-price">FREE</div>
+              </div>
+              <div
+                class="delivery-option"
+                [class.selected]="selectedDeliveryMethod === 'express'"
+                (click)="selectedDeliveryMethod = 'express'"
+              >
+                <div class="delivery-radio">
+                  <input
+                    type="radio"
+                    name="deliveryMethod"
+                    value="express"
+                    [checked]="selectedDeliveryMethod === 'express'"
+                    (change)="selectedDeliveryMethod = 'express'"
+                  />
+                </div>
+                <div class="delivery-info">
+                  <strong>Express Delivery</strong>
+                  <p>Estimated 1–2 business days</p>
+                </div>
+                <div class="delivery-price">$9.99</div>
+              </div>
+            </div>
+
+            <!-- Order Summary Sidebar -->
+            <div class="step-order-summary">
+              <h4>Order Summary</h4>
+              <div class="summary-line">
+                <span>Items ({{ totalQuantity }})</span>
+                <span>{{ totalPrice | currency }}</span>
+              </div>
+              <div class="summary-line">
+                <span>Delivery</span>
+                <span>{{
+                  selectedDeliveryMethod === "express" ? "$9.99" : "FREE"
+                }}</span>
+              </div>
+              <div class="summary-line total">
+                <span>Total</span>
+                <span>{{
+                  totalPrice + (selectedDeliveryMethod === "express" ? 9.99 : 0)
+                    | currency
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 Navigation -->
+          <div class="wizard-nav">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="prevStep()"
+            >
+              <i class="fa fa-arrow-left"></i> Back
+            </button>
+            <button type="button" class="btn btn-primary" (click)="nextStep()">
+              Continue to Payment <i class="fa fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 3: PAYMENT ===== -->
+        <div *ngIf="currentStep === 3" class="wizard-step">
+          <div class="form-area">
+            <h3 class="title-1 mb-20">Payment Details</h3>
+
+            <!-- Email receipt option -->
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <div class="form-check">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="sendReceipt"
+                    (change)="toggleEmailReceipt($event)"
+                    [checked]="sendEmailReceipt"
+                  />
+                  <label class="form-check-label" for="sendReceipt">
+                    Send receipt to my email
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stripe Payment Element -->
+            <div id="payment-element" class="mb-3"></div>
+
+            <!-- Payment status and errors -->
+            <div *ngIf="isProcessingPayment" class="alert alert-info">
+              Processing payment... Please wait.
+            </div>
+            <div *ngIf="paymentError" class="alert alert-danger">
+              {{ paymentError }}
+            </div>
+          </div>
+
+          <!-- Step 3 Navigation -->
+          <div class="wizard-nav">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="prevStep()"
+            >
+              <i class="fa fa-arrow-left"></i> Back
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="nextStep()"
+              [disabled]="isProcessingPayment"
+            >
+              Review Order <i class="fa fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 4: REVIEW & PLACE ORDER ===== -->
+        <div *ngIf="currentStep === 4" class="wizard-step">
+          <div class="form-area">
+            <h3 class="title-1 mb-20">Order Review</h3>
+
+            <!-- Shipping Address Summary -->
+            <div class="review-section">
+              <h4><i class="fa fa-map-marker"></i> Shipping Address</h4>
+              <p>
+                {{ checkoutFormGroup.get("shippingAddress.street")?.value }}
+              </p>
+              <p>{{ checkoutFormGroup.get("shippingAddress.city")?.value }}</p>
+              <p>
+                {{
+                  checkoutFormGroup.get("shippingAddress.state")?.value?.name ||
+                    checkoutFormGroup.get("shippingAddress.state")?.value
+                }},
+                {{
+                  checkoutFormGroup.get("shippingAddress.country")?.value
+                    ?.name ||
+                    checkoutFormGroup.get("shippingAddress.country")?.value
+                }}
+              </p>
+              <p>
+                {{ checkoutFormGroup.get("shippingAddress.zipCode")?.value }}
+              </p>
+              <button
+                type="button"
+                class="btn btn-link btn-sm"
+                (click)="goToStep(1)"
+              >
+                Edit
+              </button>
+            </div>
+
+            <!-- Delivery Summary -->
+            <div class="review-section">
+              <h4><i class="fa fa-truck"></i> Delivery Method</h4>
+              <p>
+                {{
+                  selectedDeliveryMethod === "express"
+                    ? "Express Delivery (1–2 days) — $9.99"
+                    : "Standard Delivery (3–5 days) — FREE"
+                }}
+              </p>
+              <button
+                type="button"
+                class="btn btn-link btn-sm"
+                (click)="goToStep(2)"
+              >
+                Edit
+              </button>
+            </div>
+
+            <!-- Order Items -->
+            <div *ngIf="cartItems.length === 0" class="alert alert-warning">
+              Your shopping cart is empty.
+            </div>
+
+            <div *ngIf="cartItems.length > 0">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th width="20%">Product Image</th>
+                    <th width="50%">Product Detail</th>
+                    <th width="30%">Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let tempCartItem of cartItems">
+                    <td>
+                      <img
+                        src="{{ tempCartItem.imageUrl }}"
+                        class="img-responsive"
+                        width="150px"
+                      />
+                    </td>
+                    <td>
+                      <p>{{ tempCartItem.name }}</p>
+                      <div class="d-flex align-items-center">
+                        <p class="mb-0 mr-3">
+                          Quantity: {{ tempCartItem.quantity }}
+                        </p>
+                        <div class="btn-group ml-2">
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-primary"
+                            (click)="incrementQuantity(tempCartItem)"
+                            [disabled]="isProcessingPayment"
+                          >
+                            +
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-primary"
+                            (click)="decrementQuantity(tempCartItem)"
+                            [disabled]="
+                              tempCartItem.quantity === 1 || isProcessingPayment
+                            "
+                          >
+                            -
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-danger"
+                            (click)="removeFromCart(tempCartItem)"
+                            [disabled]="isProcessingPayment"
+                          >
+                            Remove
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td>
-                    <p>Price: {{ tempCartItem.unitPrice | currency }}</p>
-                    <p>
-                      Subtotal:
-                      {{ getProductSubtotal(tempCartItem) | currency }}
-                    </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2"></td>
-                  <td style="font-weight: bold">
-                    <p>Total Quantity: {{ totalQuantity }}</p>
-                    <p>Shipping: FREE</p>
-                    <p>Total Price: {{ totalPrice | currency }}</p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    </td>
+                    <td>
+                      <p>Price: {{ tempCartItem.unitPrice | currency }}</p>
+                      <p>
+                        Subtotal:
+                        {{ getProductSubtotal(tempCartItem) | currency }}
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2"></td>
+                    <td style="font-weight: bold">
+                      <p>Total Quantity: {{ totalQuantity }}</p>
+                      <p>
+                        Shipping:
+                        {{
+                          selectedDeliveryMethod === "express"
+                            ? "$9.99"
+                            : "FREE"
+                        }}
+                      </p>
+                      <p>
+                        Total Price:
+                        {{
+                          totalPrice +
+                            (selectedDeliveryMethod === "express" ? 9.99 : 0)
+                            | currency
+                        }}
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
 
-        <div class="text-center mt-4">
-          <button type="submit" class="btn btn-info" [disabled]="isProcessingPayment">Purchase</button>
+          <!-- Step 4 Navigation -->
+          <div class="wizard-nav">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="prevStep()"
+            >
+              <i class="fa fa-arrow-left"></i> Back
+            </button>
+            <button
+              type="submit"
+              class="btn btn-success btn-lg"
+              [disabled]="isProcessingPayment"
+            >
+              <i class="fa fa-lock"></i> Place Order &amp; Pay
+            </button>
+          </div>
         </div>
       </form>
     </div>

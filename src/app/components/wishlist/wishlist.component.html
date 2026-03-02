@@ -1,0 +1,92 @@
+<div class="main-content">
+  <div class="section-content section-content-p30">
+    <div class="container-fluid">
+      <h2 class="page-title">My Wishlist</h2>
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="text-center loading-section">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <p>Loading your wishlist...</p>
+      </div>
+
+      <!-- Empty Wishlist -->
+      <div *ngIf="!loading && items.length === 0" class="empty-wishlist">
+        <i class="far fa-heart empty-icon"></i>
+        <h3>Your wishlist is empty</h3>
+        <p>Save items you love to your wishlist and revisit them anytime.</p>
+        <a routerLink="/products" class="btn btn-primary">Start Shopping</a>
+      </div>
+
+      <!-- Wishlist Items -->
+      <div *ngIf="!loading && items.length > 0" class="wishlist-container">
+        <p class="item-count">
+          {{ items.length }} item{{ items.length > 1 ? "s" : "" }} in your
+          wishlist
+        </p>
+
+        <div class="wishlist-grid">
+          <div *ngFor="let item of items" class="wishlist-card">
+            <button
+              class="btn-remove"
+              (click)="removeItem(item.productId)"
+              [disabled]="removingId === item.productId"
+              title="Remove from wishlist"
+            >
+              <i class="fa fa-times"></i>
+            </button>
+
+            <a
+              [routerLink]="['/products', item.productId]"
+              class="product-image-link"
+            >
+              <img
+                [src]="item.productImageUrl"
+                [alt]="item.productName"
+                class="product-image"
+              />
+            </a>
+
+            <div class="product-info">
+              <a
+                [routerLink]="['/products', item.productId]"
+                class="product-name"
+              >
+                {{ item.productName }}
+              </a>
+
+              <div class="product-price">
+                {{ item.productPrice | currency: "USD" }}
+              </div>
+
+              <div
+                class="stock-status"
+                [ngClass]="getStockClass(item.productInStock)"
+              >
+                {{ getStockLabel(item.productInStock) }}
+              </div>
+
+              <button
+                class="btn btn-primary btn-sm btn-move-to-cart"
+                (click)="moveToCart(item)"
+                [disabled]="
+                  !item.productInStock || movingToCartId === item.productId
+                "
+              >
+                <i class="fa fa-shopping-cart"></i>
+                {{
+                  movingToCartId === item.productId
+                    ? "Moving..."
+                    : !item.productInStock
+                      ? "Out of Stock"
+                      : "Move to Cart"
+                }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

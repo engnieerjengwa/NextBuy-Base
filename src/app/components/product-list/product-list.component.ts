@@ -1,9 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../common/product';
-import { CurrencyPipe, CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { CartItem } from '../../common/cart-item';
 import { CartService } from '../../services/cart.service';
 import { HeroBannerComponent } from '../hero-banner/hero-banner.component';
@@ -14,30 +20,36 @@ import {
 } from '../filter-sidebar/filter-sidebar.component';
 import { SortBarComponent } from '../sort-bar/sort-bar.component';
 import { SubcategoryNavComponent } from '../subcategory-nav/subcategory-nav.component';
-import { DepartmentGridComponent } from '../department-grid/department-grid.component';
+
+import { ProductCardComponent } from '../product-card/product-card.component';
+import { PromoBannerGridComponent } from '../promo-banner-grid/promo-banner-grid.component';
+import { BrandCarouselComponent } from '../brand-carousel/brand-carousel.component';
+import { MembershipBannerComponent } from '../membership-banner/membership-banner.component';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
   imports: [
     CommonModule,
-    CurrencyPipe,
-    RouterLink,
-    NgbPagination,
     HeroBannerComponent,
     ProductCarouselComponent,
     FilterSidebarComponent,
     SortBarComponent,
     SubcategoryNavComponent,
-    DepartmentGridComponent,
+    ProductCardComponent,
+    PromoBannerGridComponent,
+    BrandCarouselComponent,
+    MembershipBannerComponent,
   ],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   products: Product[] = [];
   featuredProducts: Product[] = [];
   newArrivals: Product[] = [];
+  dealsProducts: Product[] = [];
+  trendingProducts: Product[] = [];
   currentCategoryId: number = 1;
   previousCategoryId: number = 1;
   currentCategoryName: string = '';
@@ -47,8 +59,15 @@ export class ProductListComponent implements OnInit {
 
   // Pagination
   thePageNumber: number = 1;
-  thePageSize: number = 10;
+  thePageSize: number = 20;
   theTotalElements: number = 0;
+
+  // Infinite scroll
+  isLoading: boolean = false;
+  allLoaded: boolean = false;
+  private scrollObserver: IntersectionObserver | null = null;
+
+  @ViewChild('scrollSentinel') scrollSentinel!: ElementRef;
 
   // View mode
   viewMode: 'grid' | 'list' = 'grid';
@@ -79,11 +98,61 @@ export class ProductListComponent implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe(() => {
+      this.thePageNumber = 1;
+      this.allLoaded = false;
       this.listProducts();
     });
 
     this.loadFeaturedProducts();
     this.loadNewArrivals();
+    this.loadDealsProducts();
+    this.loadTrendingProducts();
+  }
+
+  ngAfterViewInit() {
+    this.setupInfiniteScroll();
+  }
+
+  ngOnDestroy() {
+    if (this.scrollObserver) {
+      this.scrollObserver.disconnect();
+    }
+  }
+
+  private setupInfiniteScroll() {
+    if (typeof IntersectionObserver === 'undefined') return;
+
+    this.scrollObserver = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          !this.isLoading &&
+          !this.allLoaded &&
+          !this.isHomePage()
+        ) {
+          this.loadMore();
+        }
+      },
+      { rootMargin: '200px' },
+    );
+
+    setTimeout(() => {
+      if (this.scrollSentinel?.nativeElement) {
+        this.scrollObserver?.observe(this.scrollSentinel.nativeElement);
+      }
+    });
+  }
+
+  loadMore() {
+    if (this.isLoading || this.allLoaded || this.isHomePage()) return;
+    this.thePageNumber++;
+    this.isLoading = true;
+
+    if (this.searchMode) {
+      this.handleSearchProducts(true);
+    } else {
+      this.handleListProducts(true);
+    }
   }
 
   loadFeaturedProducts() {
@@ -112,6 +181,40 @@ export class ProductListComponent implements OnInit {
     });
   }
 
+  loadDealsProducts() {
+    this.productService.getFeaturedProducts(0, 10).subscribe({
+      next: (response: { content: Product[] }) => {
+        this.dealsProducts = response.content || [];
+      },
+      error: () => {
+        // Fallback to random products for deals
+        this.productService.getRandomProducts().subscribe({
+          next: (products: Product[]) => {
+            this.dealsProducts = this.getRandomSubset(products, 8);
+          },
+          error: () => (this.dealsProducts = []),
+        });
+      },
+    });
+  }
+
+  loadTrendingProducts() {
+    this.productService.getNewArrivals(0, 10).subscribe({
+      next: (response: { content: Product[] }) => {
+        this.trendingProducts = response.content || [];
+      },
+      error: () => {
+        // Fallback to random products for trending
+        this.productService.getRandomProducts().subscribe({
+          next: (products: Product[]) => {
+            this.trendingProducts = this.getRandomSubset(products, 8);
+          },
+          error: () => (this.trendingProducts = []),
+        });
+      },
+    });
+  }
+
   private getRandomSubset(products: Product[], count: number): Product[] {
     const shuffled = [...products];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -131,17 +234,18 @@ export class ProductListComponent implements OnInit {
     }
   }
 
-  handleSearchProducts() {
+  handleSearchProducts(append = false) {
     const theKeyword = this.route.snapshot.paramMap.get('keyword')!;
     this.currentKeyword = theKeyword;
 
-    if (this.previousKeyword != theKeyword) {
+    if (!append && this.previousKeyword != theKeyword) {
       this.thePageNumber = 1;
+      this.allLoaded = false;
     }
     this.previousKeyword = theKeyword;
 
     if (this.useAdvancedSearch || this.hasActiveFilters()) {
-      this.handleAdvancedSearch(theKeyword);
+      this.handleAdvancedSearch(theKeyword, append);
     } else {
       this.productService
         .searchProductsPagenation(
@@ -152,20 +256,33 @@ export class ProductListComponent implements OnInit {
         .subscribe({
           next: (data) => {
             if (data && data._embedded && data._embedded.products) {
-              this.products = data._embedded.products;
+              const newProducts = data._embedded.products;
+              this.products = append
+                ? [...this.products, ...newProducts]
+                : newProducts;
               this.thePageNumber = data.page.number + 1;
               this.thePageSize = data.page.size;
               this.theTotalElements = data.page.totalElements;
-            } else {
+              const totalPages = Math.ceil(
+                data.page.totalElements / data.page.size,
+              );
+              if (data.page.number + 1 >= totalPages) {
+                this.allLoaded = true;
+              }
+            } else if (!append) {
               this.products = [];
             }
+            this.isLoading = false;
           },
-          error: () => (this.products = []),
+          error: () => {
+            if (!append) this.products = [];
+            this.isLoading = false;
+          },
         });
     }
   }
 
-  handleAdvancedSearch(keyword?: string) {
+  handleAdvancedSearch(keyword?: string, append = false) {
     this.productService
       .searchProductsAdvanced({
         q: keyword || undefined,
@@ -183,16 +300,27 @@ export class ProductListComponent implements OnInit {
       })
       .subscribe({
         next: (data) => {
-          this.products = data.content || [];
+          const newProducts = data.content || [];
+          this.products = append
+            ? [...this.products, ...newProducts]
+            : newProducts;
           this.thePageNumber = data.number + 1;
           this.thePageSize = data.size;
           this.theTotalElements = data.totalElements;
+          const totalPages = Math.ceil(data.totalElements / data.size);
+          if (data.number + 1 >= totalPages) {
+            this.allLoaded = true;
+          }
+          this.isLoading = false;
         },
-        error: () => (this.products = []),
+        error: () => {
+          if (!append) this.products = [];
+          this.isLoading = false;
+        },
       });
   }
 
-  handleListProducts() {
+  handleListProducts(append = false) {
     const hasCategoryId: boolean = this.route.snapshot.paramMap.has('id');
 
     if (hasCategoryId) {
@@ -203,14 +331,15 @@ export class ProductListComponent implements OnInit {
       this.currentCategoryName = 'All Products';
     }
 
-    if (this.previousCategoryId != this.currentCategoryId) {
+    if (!append && this.previousCategoryId != this.currentCategoryId) {
       this.thePageNumber = 1;
+      this.allLoaded = false;
     }
     this.previousCategoryId = this.currentCategoryId;
     this.currentKeyword = '';
 
     if (this.hasActiveFilters() || this.currentSort !== 'relevance') {
-      this.handleAdvancedSearch();
+      this.handleAdvancedSearch(undefined, append);
       return;
     }
 
@@ -223,15 +352,28 @@ export class ProductListComponent implements OnInit {
       .subscribe({
         next: (data) => {
           if (data && data._embedded && data._embedded.products) {
-            this.products = data._embedded.products;
+            const newProducts = data._embedded.products;
+            this.products = append
+              ? [...this.products, ...newProducts]
+              : newProducts;
             this.thePageNumber = data.page.number + 1;
             this.thePageSize = data.page.size;
             this.theTotalElements = data.page.totalElements;
-          } else {
+            const totalPages = Math.ceil(
+              data.page.totalElements / data.page.size,
+            );
+            if (data.page.number + 1 >= totalPages) {
+              this.allLoaded = true;
+            }
+          } else if (!append) {
             this.products = [];
           }
+          this.isLoading = false;
         },
-        error: () => (this.products = []),
+        error: () => {
+          if (!append) this.products = [];
+          this.isLoading = false;
+        },
       });
   }
 
@@ -239,6 +381,8 @@ export class ProductListComponent implements OnInit {
     this.currentFilters = filters;
     this.useAdvancedSearch = true;
     this.thePageNumber = 1;
+    this.allLoaded = false;
+    this.products = [];
     this.listProducts();
   }
 
@@ -246,6 +390,8 @@ export class ProductListComponent implements OnInit {
     this.currentSort = sort;
     this.useAdvancedSearch = true;
     this.thePageNumber = 1;
+    this.allLoaded = false;
+    this.products = [];
     this.listProducts();
   }
 
@@ -263,12 +409,6 @@ export class ProductListComponent implements OnInit {
       this.currentFilters.minRating ||
       this.currentFilters.isNew
     );
-  }
-
-  updatePageSize(pageSize: string) {
-    this.thePageSize = +pageSize;
-    this.thePageNumber = 1;
-    this.listProducts();
   }
 
   addToCart(theProduct: Product) {

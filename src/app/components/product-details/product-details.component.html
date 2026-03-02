@@ -101,6 +101,28 @@
           {{ isInStock ? "Add to Cart" : "Out of Stock" }}
         </button>
 
+        <!-- Wishlist Heart Button -->
+        <button
+          class="btn-wishlist"
+          (click)="toggleWishlist()"
+          [disabled]="wishlistLoading"
+          [title]="isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'"
+        >
+          <i
+            [class.fas]="isInWishlist"
+            [class.far]="!isInWishlist"
+            class="fa-heart"
+          ></i>
+          {{ isInWishlist ? "In Wishlist" : "Add to Wishlist" }}
+        </button>
+
+        <!-- Stock Notification (when out of stock) -->
+        <app-stock-notification
+          *ngIf="product"
+          [productId]="product.id"
+          [isOutOfStock]="!isInStock"
+        ></app-stock-notification>
+
         <!-- Product Details Tabs -->
         <div class="product-details-tabs">
           <hr />
@@ -150,6 +172,12 @@
           >Back to Product List</a
         >
       </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="reviews-qa-section" *ngIf="product">
+      <app-review-list [productId]="product.id"></app-review-list>
+      <app-product-qa [productId]="product.id"></app-product-qa>
     </div>
   </div>
 </div>

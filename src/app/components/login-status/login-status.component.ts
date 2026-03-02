@@ -1,7 +1,14 @@
 import { DOCUMENT, NgIf, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  OnDestroy,
+  PLATFORM_ID,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '@auth0/auth0-angular';
+import { AuthService } from '../../services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login-status',
@@ -10,46 +17,40 @@ import { AuthService } from '@auth0/auth0-angular';
   templateUrl: './login-status.component.html',
   styleUrl: './login-status.component.css',
 })
-export class LoginStatusComponent implements OnInit {
+export class LoginStatusComponent implements OnInit, OnDestroy {
   isAuthenticated: boolean = false;
   userName: string | undefined;
 
-  storage: Storage | null = null;
+  private subscriptions: Subscription[] = [];
 
   constructor(
-    private auth: AuthService,
-    @Inject(DOCUMENT) private doc: Document,
+    private authService: AuthService,
     @Inject(PLATFORM_ID) private platformId: Object,
-  ) {
-    if (isPlatformBrowser(this.platformId)) {
-      this.storage = sessionStorage;
-    }
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.auth.isAuthenticated$.subscribe((authenticated: boolean) => {
-      this.isAuthenticated = authenticated;
-      console.log('User is authenticated: ', this.isAuthenticated);
-    });
+    this.subscriptions.push(
+      this.authService.isAuthenticated$.subscribe((authenticated: boolean) => {
+        this.isAuthenticated = authenticated;
+      }),
+    );
 
-    this.auth.user$.subscribe((user) => {
-      this.userName =
-        user?.name || user?.given_name || user?.nickname || user?.email;
-      this.storage?.setItem('userName', JSON.stringify(this.userName));
-
-      // Store user email in session storage for order history
-      const userEmail = user?.email;
-      if (userEmail) {
-        this.storage?.setItem('userEmail', JSON.stringify(userEmail));
-      }
-    });
+    this.subscriptions.push(
+      this.authService.currentUser$.subscribe((user) => {
+        if (user) {
+          this.userName = `${user.firstName} ${user.lastName}`;
+        } else {
+          this.userName = undefined;
+        }
+      }),
+    );
   }
 
-  login() {
-    this.auth.loginWithRedirect();
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   logout(): void {
-    this.auth.logout({ logoutParams: { returnTo: this.doc.location.origin } });
+    this.authService.logout();
   }
 }

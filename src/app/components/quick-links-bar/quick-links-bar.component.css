@@ -1,0 +1,69 @@
+.quick-links-bar {
+  background-color: #fff;
+  border-bottom: 1px solid #e9ecef;
+  padding: 8px 0;
+}
+
+.quick-links-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.quick-links-container::-webkit-scrollbar {
+  display: none;
+}
+
+.quick-link-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  background-color: #f0f4f8;
+  color: #1a2d44;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.quick-link-pill:hover {
+  background-color: #0b79bf;
+  color: #fff;
+  border-color: #0b79bf;
+}
+
+.quick-link-pill i {
+  font-size: 12px;
+}
+
+.quick-link-pill.fire-sale {
+  background-color: #fdeaea;
+  color: #e74c3c;
+  border-color: #f5c6cb;
+}
+
+.quick-link-pill.fire-sale:hover {
+  background-color: #e74c3c;
+  color: #fff;
+  border-color: #e74c3c;
+}
+
+@media (max-width: 768px) {
+  .quick-links-container {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .quick-link-pill {
+    padding: 5px 12px;
+    font-size: 12px;
+  }
+}

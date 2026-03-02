@@ -1,0 +1,81 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2>Sign In</h2>
+      <p>Welcome back! Please sign in to your account.</p>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          placeholder="Enter your email"
+          [class.is-invalid]="email?.invalid && email?.touched"
+        />
+        <div class="invalid-feedback" *ngIf="email?.invalid && email?.touched">
+          <span *ngIf="email?.errors?.['required']">Email is required.</span>
+          <span *ngIf="email?.errors?.['email']"
+            >Please enter a valid email.</span
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-control"
+          placeholder="Enter your password"
+          [class.is-invalid]="password?.invalid && password?.touched"
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="password?.invalid && password?.touched"
+        >
+          <span *ngIf="password?.errors?.['required']"
+            >Password is required.</span
+          >
+          <span *ngIf="password?.errors?.['minlength']"
+            >Password must be at least 6 characters.</span
+          >
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+        [disabled]="isLoading"
+      >
+        <span *ngIf="!isLoading">Sign In</span>
+        <span *ngIf="isLoading">Signing In...</span>
+      </button>
+    </form>
+
+    <div class="divider">
+      <span>or</span>
+    </div>
+
+    <div class="google-signin-wrapper">
+      <div id="google-signin-btn-login"></div>
+    </div>
+
+    <div class="auth-footer">
+      <p>Don't have an account? <a routerLink="/register">Create Account</a></p>
+      <p *ngIf="isCheckoutFlow" class="guest-option">
+        <a routerLink="/checkout" class="btn-guest"
+          >Continue as Guest <i class="fa fa-arrow-right"></i
+        ></a>
+      </p>
+    </div>
+  </div>
+</div>

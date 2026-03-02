@@ -3,47 +3,50 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
+  HttpErrorResponse,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthService } from '@auth0/auth0-angular';
-import { from, lastValueFrom, Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthInterceptorService implements HttpInterceptor {
-  constructor(private auth: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
-    return from(this.handleAccess(request, next));
-  }
+    const token = this.authService.getToken();
 
-  private async handleAccess(
-    request: HttpRequest<any>,
-    next: HttpHandler,
-  ): Promise<HttpEvent<any>> {
-    const securedEndpoints = [
-      `${environment.apiUrl}/orders`,
-      `${environment.apiUrl}/checkout/purchase`,
-      `${environment.apiUrl}/checkout/payment-intent`,
-    ];
-
-    // Check if the URL starts with any of the secured endpoints
-    if (securedEndpoints.some((url) => request.urlWithParams.startsWith(url))) {
-      try {
-        const token = await lastValueFrom(this.auth.getAccessTokenSilently());
-        request = request.clone({
-          setHeaders: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      } catch (error) {
-        console.error('Error getting access token:', error);
-      }
+    // Attach token to API requests (except login/register)
+    if (
+      token &&
+      request.url.startsWith(environment.apiUrl) &&
+      !request.url.includes('/auth/login') &&
+      !request.url.includes('/auth/register')
+    ) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     }
 
-    return await lastValueFrom(next.handle(request));
+    return next.handle(request).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          this.authService.logout();
+          this.router.navigate(['/login']);
+        }
+        return throwError(() => error);
+      }),
+    );
   }
 }

@@ -1,3 +1,110 @@
+/* ========== Top Utility Bar ========== */
+.top-utility-bar {
+  background-color: #1a2d44;
+  padding: 4px 0;
+  font-size: 0.75rem;
+}
+
+.utility-bar-content {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+.utility-link {
+  color: #c0d4e8;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.utility-link:hover {
+  color: #fff;
+}
+
+.utility-divider {
+  color: #5a7a99;
+  font-size: 0.65rem;
+}
+
+/* ========== Header Main ========== */
+.header-desktop {
+  background-color: #0b79bf;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.header-main {
+  padding: 10px 0;
+}
+
+.header-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo a {
+  display: flex;
+  align-items: center;
+}
+
+.logo .img-responsive {
+  height: 36px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.search-container {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+.header-action-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.75rem;
+  transition: opacity 0.2s;
+}
+
+.header-action-link:hover {
+  opacity: 0.85;
+  color: #fff;
+}
+
+.header-action-link i {
+  font-size: 1.25rem;
+  margin-bottom: 2px;
+}
+
+.wishlist-link i {
+  color: #e74c3c;
+}
+
+.action-label {
+  font-size: 0.7rem;
+  color: #c0d4e8;
+}
+
+/* ========== Nav Bar ========== */
+.nav-bar-container {
+  background-color: #096a9e;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 /* ========== Mobile Hamburger Button ========== */
 .mobile-hamburger {
   display: none;
@@ -16,7 +123,7 @@
   display: block;
   width: 24px;
   height: 3px;
-  background-color: #333;
+  background-color: #fff;
   border-radius: 2px;
   transition:
     transform 0.3s ease,
@@ -80,13 +187,14 @@
   align-items: center;
   padding: 1rem 1.25rem;
   border-bottom: 1px solid #e9ecef;
-  background: #f8f9fa;
+  background: #0b79bf;
+  color: #fff;
 }
 
 .mobile-menu-title {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #1a1a2e;
+  color: #fff;
 }
 
 .mobile-menu-close {
@@ -94,13 +202,13 @@
   border: none;
   font-size: 1.75rem;
   cursor: pointer;
-  color: #6c757d;
+  color: #fff;
   line-height: 1;
   padding: 0;
 }
 
 .mobile-menu-close:hover {
-  color: #333;
+  color: #c0d4e8;
 }
 
 .mobile-menu-search {
@@ -130,7 +238,7 @@
 
 .mobile-menu-links a:hover {
   background: #f8f9fa;
-  color: #0056b3;
+  color: #0b79bf;
 }
 
 .mobile-menu-categories {
@@ -143,7 +251,194 @@
   border-top: 1px solid #e9ecef;
 }
 
+/* ========== Main Content ========== */
+.main-content {
+  min-height: calc(100vh - 200px);
+  background: #f5f5f5;
+  padding-top: 110px;
+}
+
+/* ========== FOOTER ========== */
+.footer {
+  background-color: #1a2d44;
+  color: #c0d4e8;
+  padding-top: 40px;
+  font-size: 0.85rem;
+}
+
+.footer-columns {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-column h4 {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column li {
+  margin-bottom: 6px;
+}
+
+.footer-column a {
+  color: #8aa8c4;
+  text-decoration: none;
+  transition: color 0.2s;
+  font-size: 0.82rem;
+}
+
+.footer-column a:hover {
+  color: #fff;
+}
+
+/* Footer Apps & Social */
+.footer-apps-social {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-apps {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-apps-label,
+.footer-social-label {
+  color: #8aa8c4;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.app-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.78rem;
+  transition: background 0.2s;
+}
+
+.app-badge:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.footer-social {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.social-icon:hover {
+  background: #0b79bf;
+  color: #fff;
+}
+
+/* Footer SEO Links */
+.footer-seo-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-seo-links a {
+  color: #8aa8c4;
+  text-decoration: none;
+  font-size: 0.78rem;
+  transition: color 0.2s;
+}
+
+.footer-seo-links a:hover {
+  color: #fff;
+}
+
+/* Footer Payment Bar */
+.footer-payment-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.payment-methods {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.payment-label {
+  color: #8aa8c4;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.payment-icon {
+  display: inline-block;
+  padding: 3px 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #c0d4e8;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.footer-copyright {
+  color: #5a7a99;
+  font-size: 0.75rem;
+  margin: 0;
+}
+
 /* ========== Responsive Breakpoints ========== */
+@media (max-width: 992px) {
+  .footer-columns {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .mobile-hamburger {
     display: flex;
@@ -166,10 +461,34 @@
   }
 
   .user-actions {
-    gap: 0.25rem;
+    gap: 8px;
   }
 
   .header-wrap {
-    gap: 0.5rem;
+    gap: 8px;
+  }
+
+  .action-label {
+    display: none;
+  }
+
+  .top-utility-bar {
+    display: none;
+  }
+
+  .footer-columns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer-apps-social {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-columns {
+    grid-template-columns: 1fr;
   }
 }

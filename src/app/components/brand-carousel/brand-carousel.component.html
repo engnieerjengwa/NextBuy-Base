@@ -1,0 +1,35 @@
+<section class="brand-carousel-section">
+  <h3 class="brand-carousel-title">{{ title }}</h3>
+  <div class="brand-carousel-wrapper">
+    <button
+      class="brand-arrow brand-arrow-left"
+      (click)="scrollLeft(brandTrack)"
+      aria-label="Scroll brands left"
+    >
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <div class="brand-track" #brandTrack>
+      <a
+        *ngFor="let brand of brands"
+        [routerLink]="brand.link"
+        class="brand-logo-card"
+        [title]="brand.name"
+      >
+        <img
+          [src]="brand.logoUrl"
+          [alt]="brand.name"
+          loading="lazy"
+          (error)="onBrandImageError($event)"
+        />
+        <span class="brand-name">{{ brand.name }}</span>
+      </a>
+    </div>
+    <button
+      class="brand-arrow brand-arrow-right"
+      (click)="scrollRight(brandTrack)"
+      aria-label="Scroll brands right"
+    >
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+</section>

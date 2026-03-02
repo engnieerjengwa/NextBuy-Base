@@ -1,0 +1,34 @@
+<div class="rating-distribution" *ngIf="distribution">
+  <div class="rating-summary">
+    <div class="average-rating">
+      <span class="rating-number">{{
+        distribution.averageRating | number: "1.1-1"
+      }}</span>
+      <div class="stars">
+        <i
+          *ngFor="let star of getStarArray(5)"
+          class="fa-star"
+          [class.fas]="star <= distribution.averageRating"
+          [class.far]="star > distribution.averageRating"
+        ></i>
+      </div>
+      <span class="total-reviews">{{ distribution.totalReviews }} reviews</span>
+    </div>
+  </div>
+
+  <div class="rating-bars">
+    <div
+      *ngFor="let rc of sortedRatings"
+      class="rating-bar-row"
+      [class.active]="activeRating === rc.rating"
+      (click)="onRatingClick(rc.rating)"
+      title="Click to filter {{ rc.rating }}-star reviews"
+    >
+      <span class="rating-label">{{ rc.rating }} star</span>
+      <div class="bar-container">
+        <div class="bar-fill" [style.width.%]="rc.percentage"></div>
+      </div>
+      <span class="rating-count">{{ rc.count }}</span>
+    </div>
+  </div>
+</div>

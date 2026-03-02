@@ -237,3 +237,34 @@
     max-width: 100%;
   }
 }
+
+/* Wishlist Button */
+.btn-wishlist {
+  background: none;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #555;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 8px;
+  transition: all 0.2s;
+}
+
+.btn-wishlist:hover {
+  border-color: #e53935;
+  color: #e53935;
+}
+
+.btn-wishlist .fa-heart {
+  color: #e53935;
+}
+
+/* Reviews & Q&A Section */
+.reviews-qa-section {
+  margin-top: 30px;
+  padding: 0 15px;
+}

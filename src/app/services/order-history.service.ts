@@ -3,16 +3,17 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { OrderHistory } from '../common/order-history';
+import { OrderStatusHistory } from '../common/order-status-history';
+import { PurchaseResponse } from '../common/purchase-response';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OrderHistoryService {
-
   private orderUrl = environment.apiUrl + '/orders';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   getOrderHistory(email: string): Observable<GetResponseOrderHistory> {
     // Build URL based on the customer email
@@ -26,6 +27,21 @@ export class OrderHistoryService {
     const orderUrl = `${this.orderUrl}/${orderId}`;
 
     return this.httpClient.get<OrderHistory>(orderUrl);
+  }
+
+  getOrderTracking(orderId: number): Observable<OrderStatusHistory[]> {
+    const url = `${this.orderUrl}/${orderId}/tracking`;
+    return this.httpClient.get<OrderStatusHistory[]>(url);
+  }
+
+  cancelOrder(orderId: number): Observable<any> {
+    const url = `${this.orderUrl}/${orderId}/cancel`;
+    return this.httpClient.patch<any>(url, {});
+  }
+
+  reorder(orderId: number): Observable<PurchaseResponse> {
+    const url = `${this.orderUrl}/${orderId}/reorder`;
+    return this.httpClient.post<PurchaseResponse>(url, {});
   }
 
   // Check if an order is eligible for return
@@ -60,13 +76,13 @@ export class OrderHistoryService {
 interface GetResponseOrderHistory {
   _embedded: {
     orders: OrderHistory[];
-  },
+  };
   page: {
-    size: number,
-    totalElements: number,
-    totalPages: number,
-    number: number
-  }
+    size: number;
+    totalElements: number;
+    totalPages: number;
+    number: number;
+  };
 }
 
 // This interface is used to map the response from the backend to the frontend model
