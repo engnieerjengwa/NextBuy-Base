@@ -1,7 +1,8 @@
-import { Component, Input, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StockNotificationService } from '../../services/stock-notification.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-stock-notification',
@@ -22,16 +23,14 @@ export class StockNotificationComponent implements OnInit {
 
   constructor(
     private stockNotificationService: StockNotificationService,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const savedEmail = sessionStorage.getItem('userEmail');
-      if (savedEmail) {
-        this.email = JSON.parse(savedEmail);
-        this.checkSubscription();
-      }
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser?.email) {
+      this.email = currentUser.email;
+      this.checkSubscription();
     }
   }
 

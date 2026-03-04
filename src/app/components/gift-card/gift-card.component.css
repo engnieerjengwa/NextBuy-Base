@@ -1,0 +1,336 @@
+.gift-card-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.gift-card-hero {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.gift-card-hero h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--secondary-color);
+}
+
+.gift-card-hero h1 i {
+  color: #667eea;
+  margin-right: 8px;
+}
+
+.gift-card-hero p {
+  color: var(--text-light);
+  font-size: 16px;
+}
+
+.gift-card-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 48px;
+}
+
+.card-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gift-card-visual .card-front {
+  width: 300px;
+  height: 180px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 12px;
+  padding: 24px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.gift-card-visual .card-front:hover {
+  transform: scale(1.02);
+}
+
+.card-front .brand {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.card-front .amount {
+  font-size: 36px;
+  font-weight: 800;
+}
+
+.card-front .recipient {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.purchase-form h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--secondary-color);
+}
+
+.amount-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.amount-buttons button {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.amount-buttons button:hover {
+  border-color: #667eea;
+}
+
+.amount-buttons button.selected {
+  border-color: #667eea;
+  background: #f0f0ff;
+  color: #667eea;
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: var(--text-color);
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: var(--font-family);
+  transition: border-color 0.2s;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.char-count {
+  font-size: 12px;
+  color: var(--text-lighter);
+  text-align: right;
+  display: block;
+  margin-top: 4px;
+}
+
+.purchase-btn {
+  width: 100%;
+  padding: 14px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background 0.2s;
+}
+
+.purchase-btn:hover:not(:disabled) {
+  background: #5a6fd6;
+}
+
+.purchase-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Purchase Success */
+.purchase-success {
+  text-align: center;
+  padding: 40px 20px;
+  margin-bottom: 40px;
+}
+
+.success-content {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.success-icon {
+  font-size: 48px;
+  color: var(--success-color);
+}
+
+.success-content h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 12px 0;
+  color: var(--secondary-color);
+}
+
+.gift-code {
+  font-size: 24px;
+  font-weight: 700;
+  font-family: monospace;
+  padding: 16px 24px;
+  background: var(--bg-light);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  display: inline-block;
+  margin: 12px 0;
+  letter-spacing: 2px;
+}
+
+.success-detail {
+  color: var(--text-light);
+  margin-top: 8px;
+}
+
+.btn-purchase-another {
+  margin-top: 20px;
+  padding: 10px 24px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-purchase-another:hover {
+  background: var(--primary-dark);
+}
+
+/* Balance Check */
+.balance-check {
+  border-top: 1px solid var(--border-light);
+  padding-top: 32px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.balance-check h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--secondary-color);
+  text-align: center;
+}
+
+.balance-input-row {
+  display: flex;
+  gap: 12px;
+}
+
+.balance-input-row input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+}
+
+.balance-input-row button {
+  padding: 10px 20px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.balance-input-row button:hover:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+.balance-input-row button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.balance-result {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--bg-light);
+  border-radius: var(--radius-md);
+}
+
+.balance-result p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-active {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge-redeemed {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.badge-expired {
+  background: #fbe9e7;
+  color: #c62828;
+}
+
+.error-message {
+  color: var(--accent-color);
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .gift-card-container {
+    grid-template-columns: 1fr;
+  }
+
+  .amount-buttons {
+    flex-wrap: wrap;
+  }
+
+  .amount-buttons button {
+    flex: 1 1 45%;
+  }
+
+  .gift-card-visual .card-front {
+    width: 260px;
+    height: 160px;
+  }
+}

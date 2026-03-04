@@ -1,17 +1,19 @@
-import { Component, Input, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import {
   ProductQuestion,
   ProductQuestionRequest,
   ProductAnswerRequest,
 } from '../../common/product-qa';
 import { ProductQaService } from '../../services/product-qa.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-product-qa',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './product-qa.component.html',
   styleUrl: './product-qa.component.css',
 })
@@ -37,13 +39,11 @@ export class ProductQaComponent implements OnInit {
 
   constructor(
     private productQaService: ProductQaService,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.isLoggedIn = !!sessionStorage.getItem('userEmail');
-    }
+    this.isLoggedIn = this.authService.isLoggedIn();
     this.loadQuestions();
   }
 

@@ -501,6 +501,13 @@
         <div *ngIf="currentStep === 2" class="wizard-step">
           <div class="form-area">
             <h3 class="title-1 mb-20">Delivery Method</h3>
+
+            <!-- Delivery info based on address -->
+            <div class="delivery-info-banner" *ngIf="deliveryBreakdown">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>{{ deliveryBreakdown.description }}</span>
+            </div>
+
             <div class="delivery-options">
               <div
                 class="delivery-option"
@@ -518,9 +525,13 @@
                 </div>
                 <div class="delivery-info">
                   <strong>Standard Delivery</strong>
-                  <p>Estimated 3–5 business days</p>
+                  <p>Estimated 3&#x2013;5 business days</p>
                 </div>
-                <div class="delivery-price">FREE</div>
+                <div class="delivery-price" [class.free]="isStandardFree">
+                  {{
+                    isStandardFree ? "FREE" : (standardDeliveryCost | currency)
+                  }}
+                </div>
               </div>
               <div
                 class="delivery-option"
@@ -538,13 +549,15 @@
                 </div>
                 <div class="delivery-info">
                   <strong>Express Delivery</strong>
-                  <p>Estimated 1–2 business days</p>
+                  <p>Estimated 1&#x2013;2 business days</p>
                 </div>
-                <div class="delivery-price">$9.99</div>
+                <div class="delivery-price">
+                  {{ expressDeliveryCost | currency }}
+                </div>
               </div>
             </div>
 
-            <!-- Order Summary Sidebar -->
+            <!-- Order Summary -->
             <div class="step-order-summary">
               <h4>Order Summary</h4>
               <div class="summary-line">
@@ -553,15 +566,28 @@
               </div>
               <div class="summary-line">
                 <span>Delivery</span>
-                <span>{{
-                  selectedDeliveryMethod === "express" ? "$9.99" : "FREE"
-                }}</span>
+                <span [class.free-delivery-label]="selectedDeliveryCost === 0">
+                  {{
+                    selectedDeliveryCost === 0
+                      ? "FREE"
+                      : (selectedDeliveryCost | currency)
+                  }}
+                </span>
               </div>
-              <div class="summary-line total">
-                <span>Total</span>
-                <span>{{
-                  totalPrice + (selectedDeliveryMethod === "express" ? 9.99 : 0)
-                    | currency
+              <div
+                class="summary-line"
+                *ngIf="deliveryBreakdown && deliveryBreakdown.distanceKm > 0"
+              >
+                <span class="distance-detail">
+                  {{ deliveryBreakdown.distanceKm }} km &#64; ${{
+                    deliveryBreakdown.ratePerKm.toFixed(2)
+                  }}/km
+                </span>
+              </div>
+              <div class="summary-total-box">
+                <span class="summary-total-label">Total</span>
+                <span class="summary-total-price">{{
+                  orderTotal | currency
                 }}</span>
               </div>
             </div>
@@ -583,7 +609,8 @@
         </div>
 
         <!-- ===== STEP 3: PAYMENT ===== -->
-        <div *ngIf="currentStep === 3" class="wizard-step">
+        <!-- Use [hidden] instead of *ngIf so Stripe Payment Element stays mounted in DOM -->
+        <div [hidden]="currentStep !== 3" class="wizard-step">
           <div class="form-area">
             <h3 class="title-1 mb-20">Payment Details</h3>
 
@@ -675,12 +702,13 @@
             <!-- Delivery Summary -->
             <div class="review-section">
               <h4><i class="fa fa-truck"></i> Delivery Method</h4>
-              <p>
-                {{
-                  selectedDeliveryMethod === "express"
-                    ? "Express Delivery (1–2 days) — $9.99"
-                    : "Standard Delivery (3–5 days) — FREE"
-                }}
+              <p>{{ deliverySummaryText }}</p>
+              <p
+                class="delivery-detail-note"
+                *ngIf="deliveryBreakdown && deliveryBreakdown.distanceKm > 0"
+              >
+                {{ deliveryBreakdown.distanceKm }} km &mdash;
+                {{ deliveryBreakdown.description }}
               </p>
               <button
                 type="button"
@@ -764,19 +792,21 @@
                       <p>Total Quantity: {{ totalQuantity }}</p>
                       <p>
                         Shipping:
-                        {{
-                          selectedDeliveryMethod === "express"
-                            ? "$9.99"
-                            : "FREE"
-                        }}
+                        <span
+                          [class.free-delivery-label]="
+                            selectedDeliveryCost === 0
+                          "
+                        >
+                          {{
+                            selectedDeliveryCost === 0
+                              ? "FREE"
+                              : (selectedDeliveryCost | currency)
+                          }}
+                        </span>
                       </p>
-                      <p>
+                      <p class="review-total-price">
                         Total Price:
-                        {{
-                          totalPrice +
-                            (selectedDeliveryMethod === "express" ? 9.99 : 0)
-                            | currency
-                        }}
+                        {{ orderTotal | currency }}
                       </p>
                     </td>
                   </tr>

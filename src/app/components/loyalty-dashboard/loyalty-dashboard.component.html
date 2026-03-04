@@ -1,0 +1,121 @@
+<div class="loyalty-page" *ngIf="!isLoading && program">
+  <div class="loyalty-header">
+    <h2>Loyalty Rewards</h2>
+  </div>
+
+  <!-- Points Summary Card -->
+  <div class="points-card" [style.borderColor]="tierColor">
+    <div class="card-left">
+      <span class="tier-icon-large">{{ tierIcon }}</span>
+      <div>
+        <span class="tier-label">{{ program.tier }} Member</span>
+        <span class="multiplier"
+          >{{ program.progressPercentage }}% to next tier</span
+        >
+      </div>
+    </div>
+    <div class="card-right">
+      <span class="points-label">Available Points</span>
+      <span class="points-value">{{ program.totalPoints | number }}</span>
+      <span class="points-worth"
+        >Worth {{ pointsValue | currency: "USD" }}</span
+      >
+    </div>
+  </div>
+
+  <!-- Tier Progress -->
+  <div class="tier-progress">
+    <div class="tier-badges">
+      <div
+        class="tier-badge"
+        *ngFor="let tier of tiers"
+        [class.active]="tier.name === program.tier"
+        [class.achieved]="isAchieved(tier.name)"
+      >
+        <span class="tier-icon">{{ tier.icon }}</span>
+        <span class="tier-name">{{ tier.name }}</span>
+        <span class="tier-threshold">{{ tier.threshold }} pts</span>
+      </div>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="progressPercentage"></div>
+    </div>
+
+    <p class="progress-text" *ngIf="program.nextTier">
+      {{ program.pointsToNextTier }} more points to reach {{ program.nextTier }}
+    </p>
+    <p class="progress-text max-tier" *ngIf="!program.nextTier">
+      🎉 You've reached the highest tier!
+    </p>
+  </div>
+
+  <!-- Redeem Section -->
+  <div class="redeem-section" *ngIf="program.totalPoints >= 100">
+    <h3>Redeem Points</h3>
+    <p class="redeem-info">100 points = $1.00 store credit</p>
+    <div class="redeem-input-row">
+      <input
+        type="number"
+        [(ngModel)]="redeemAmount"
+        [min]="100"
+        [max]="program.totalPoints"
+        step="100"
+        placeholder="Points to redeem"
+      />
+      <span class="credit-preview" *ngIf="redeemAmount >= 100">
+        = {{ redeemAmount / 100 | currency: "USD" }} credit
+      </span>
+      <button (click)="redeemPoints()" [disabled]="!canRedeem() || isRedeeming">
+        {{ isRedeeming ? "Redeeming..." : "Redeem" }}
+      </button>
+    </div>
+    <div class="redeem-success" *ngIf="redeemSuccess">{{ redeemSuccess }}</div>
+    <div class="redeem-error" *ngIf="redeemError">{{ redeemError }}</div>
+  </div>
+
+  <!-- How It Works -->
+  <div class="how-it-works">
+    <h3>How It Works</h3>
+    <div class="steps">
+      <div class="step">
+        <span class="step-icon">🛒</span>
+        <span class="step-text">Earn 1 point per $1 spent</span>
+      </div>
+      <div class="step">
+        <span class="step-icon">⬆️</span>
+        <span class="step-text">Higher tiers earn more points</span>
+      </div>
+      <div class="step">
+        <span class="step-icon">💰</span>
+        <span class="step-text">Redeem 100 points for $1 credit</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Points History -->
+  <div class="points-history" *ngIf="transactions.length > 0">
+    <h3>Points History</h3>
+    <div class="history-row" *ngFor="let txn of transactions">
+      <div class="history-info">
+        <span class="history-desc">{{ txn.description }}</span>
+        <span class="history-date">{{ txn.createdDate | date: "medium" }}</span>
+      </div>
+      <span class="history-points" [class]="txn.type.toLowerCase()">
+        {{ txn.type === "EARNED" || txn.type === "BONUS" ? "+" : "-"
+        }}{{ txn.points }} pts
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div class="loading-state" *ngIf="isLoading">
+  <p>Loading loyalty data...</p>
+</div>
+
+<!-- No Program State -->
+<div class="empty-state" *ngIf="!isLoading && !program">
+  <h2>Loyalty Rewards</h2>
+  <p>Start shopping to earn loyalty points and unlock exclusive rewards!</p>
+</div>

@@ -47,8 +47,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.returnUrl =
-      this.route.snapshot.queryParams['returnUrl'] || '/products';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     this.isCheckoutFlow = this.returnUrl.includes('/checkout');
 
     this.loginForm = this.fb.group({

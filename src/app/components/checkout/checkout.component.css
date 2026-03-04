@@ -406,7 +406,42 @@ select.form-control:hover {
 .delivery-price {
   font-size: 18px;
   font-weight: 700;
+  color: #333;
+}
+
+.delivery-price.free {
   color: #28a745;
+}
+
+/* ===== Delivery Info Banner ===== */
+.delivery-info-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #e8f4fd;
+  border: 1px solid #bee5eb;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 13px;
+  color: #0c5460;
+}
+
+.delivery-info-banner i {
+  color: #17a2b8;
+}
+
+/* ===== Free Delivery Label ===== */
+.free-delivery-label {
+  color: #28a745;
+  font-weight: 600;
+}
+
+/* ===== Distance Detail ===== */
+.distance-detail {
+  font-size: 12px;
+  color: #888;
+  font-style: italic;
 }
 
 /* ===== Step Order Summary ===== */
@@ -440,6 +475,43 @@ select.form-control:hover {
   border-top: 2px solid #dee2e6;
   margin-top: 8px;
   padding-top: 12px;
+}
+
+/* ===== Summary Total Box (improved styling) ===== */
+.summary-total-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0b3d91;
+  color: #fff;
+  border-radius: 6px;
+  padding: 0.85rem 1rem;
+  margin-top: 12px;
+}
+
+.summary-total-label {
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-total-price {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+/* ===== Review Total Price ===== */
+.review-total-price {
+  font-size: 18px;
+  color: #0b3d91;
+}
+
+/* ===== Delivery Detail Note ===== */
+.delivery-detail-note {
+  font-size: 12px !important;
+  color: #888 !important;
+  font-style: italic;
 }
 
 /* ===== Review Section ===== */

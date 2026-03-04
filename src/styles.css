@@ -367,6 +367,44 @@ section {
   padding: 0 30px;
 }
 
+/* ── Page Content Wrapper (child pages) ── */
+.page-content {
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
+
+/* ── Reusable Breadcrumb Bar (Takealot-style) ── */
+.page-breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  padding: 12px 0;
+  margin-bottom: 16px;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.page-breadcrumb a {
+  color: #0b79bf;
+  text-decoration: none;
+}
+
+.page-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.page-breadcrumb .bc-sep {
+  color: #bbb;
+  margin: 0 10px;
+  font-size: 0.75rem;
+}
+
+.page-breadcrumb .bc-current {
+  color: #555;
+  font-weight: 400;
+}
+
 .au-input-xl {
   width: 100%;
 }

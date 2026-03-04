@@ -28,6 +28,7 @@
 
 .badge {
   display: inline-block;
+  position: relative;
   font-size: 0.7rem;
   font-weight: 700;
   padding: 3px 8px;
@@ -37,8 +38,17 @@
 }
 
 .badge-discount {
-  background: #2ecc71;
+  background: #0b79bf;
   color: #fff;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+}
+
+.badge-preorder {
+  background: #ff9800;
+  color: #fff;
+  letter-spacing: 0.5px;
 }
 
 .badge-fire-sale {

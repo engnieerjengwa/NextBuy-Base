@@ -3,6 +3,7 @@
     <a
       *ngFor="let link of quickLinks"
       [routerLink]="link.route"
+      [queryParams]="link.queryParams || {}"
       class="quick-link-pill"
       [ngClass]="link.cssClass || ''"
     >

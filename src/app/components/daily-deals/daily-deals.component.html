@@ -1,0 +1,188 @@
+<div class="page-content">
+  <div class="section-content section-content-p30">
+    <div class="container-fluid">
+      <!-- Breadcrumb -->
+      <nav class="page-breadcrumb">
+        <a routerLink="/products">Home</a>
+        <span class="bc-sep">/</span>
+        <span class="bc-current">Daily Deals</span>
+      </nav>
+
+      <h2 class="page-title"><i class="fas fa-bolt"></i> Daily Deals</h2>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Loading deals...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error" class="alert alert-warning">{{ error }}</div>
+
+      <!-- Flash Sales Section -->
+      <div *ngIf="flashSales.length > 0" class="flash-sales-section">
+        <div class="section-header flash-header">
+          <h3><i class="fas fa-fire"></i> Flash Sales</h3>
+          <span class="flash-badge">Limited Time!</span>
+        </div>
+
+        <div class="deals-grid">
+          <div *ngFor="let deal of flashSales" class="deal-card flash-card">
+            <div class="deal-banner" *ngIf="deal.bannerImageUrl">
+              <img [src]="deal.bannerImageUrl" [alt]="deal.title" />
+            </div>
+            <div class="deal-info">
+              <h4 class="deal-title">{{ deal.title }}</h4>
+              <p class="deal-description">{{ deal.description }}</p>
+              <div class="deal-countdown">
+                <span class="countdown-label">Ends in:</span>
+                <div class="countdown-timer">
+                  <div class="time-block">
+                    <span class="time-value">{{
+                      getHours(deal.remainingSeconds)
+                    }}</span>
+                    <span class="time-label">HRS</span>
+                  </div>
+                  <span class="time-separator">:</span>
+                  <div class="time-block">
+                    <span class="time-value">{{
+                      getMinutes(deal.remainingSeconds)
+                    }}</span>
+                    <span class="time-label">MIN</span>
+                  </div>
+                  <span class="time-separator">:</span>
+                  <div class="time-block">
+                    <span class="time-value">{{
+                      getSeconds(deal.remainingSeconds)
+                    }}</span>
+                    <span class="time-label">SEC</span>
+                  </div>
+                </div>
+              </div>
+              <div class="deal-discount-badge">
+                Up to {{ deal.discountPercentage }}% OFF
+              </div>
+            </div>
+
+            <!-- Deal Products -->
+            <div class="deal-products" *ngIf="deal.products.length > 0">
+              <div
+                *ngFor="let product of deal.products"
+                class="deal-product-card"
+              >
+                <a [routerLink]="['/products', product.productId]">
+                  <img
+                    [src]="product.productImageUrl"
+                    [alt]="product.productName"
+                    class="deal-product-img"
+                  />
+                  <div class="deal-product-info">
+                    <p class="deal-product-name">{{ product.productName }}</p>
+                    <div class="deal-product-pricing">
+                      <span class="deal-price">{{
+                        product.dealPrice | currency: "USD"
+                      }}</span>
+                      <span class="original-price">{{
+                        product.originalPrice | currency: "USD"
+                      }}</span>
+                      <span class="discount-tag"
+                        >-{{ product.discountPercentage }}%</span
+                      >
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Daily Deals Section -->
+      <div *ngIf="dailyDeals.length > 0" class="daily-deals-section">
+        <div class="section-header">
+          <h3><i class="fas fa-clock"></i> Today's Deals</h3>
+        </div>
+
+        <div class="deals-grid">
+          <div *ngFor="let deal of dailyDeals" class="deal-card">
+            <div class="deal-banner" *ngIf="deal.bannerImageUrl">
+              <img [src]="deal.bannerImageUrl" [alt]="deal.title" />
+            </div>
+            <div class="deal-info">
+              <h4 class="deal-title">{{ deal.title }}</h4>
+              <p class="deal-description">{{ deal.description }}</p>
+              <div class="deal-countdown">
+                <span class="countdown-label">Ends in:</span>
+                <div class="countdown-timer">
+                  <div class="time-block">
+                    <span class="time-value">{{
+                      getHours(deal.remainingSeconds)
+                    }}</span>
+                    <span class="time-label">HRS</span>
+                  </div>
+                  <span class="time-separator">:</span>
+                  <div class="time-block">
+                    <span class="time-value">{{
+                      getMinutes(deal.remainingSeconds)
+                    }}</span>
+                    <span class="time-label">MIN</span>
+                  </div>
+                  <span class="time-separator">:</span>
+                  <div class="time-block">
+                    <span class="time-value">{{
+                      getSeconds(deal.remainingSeconds)
+                    }}</span>
+                    <span class="time-label">SEC</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Deal Products -->
+            <div class="deal-products" *ngIf="deal.products.length > 0">
+              <div
+                *ngFor="let product of deal.products"
+                class="deal-product-card"
+              >
+                <a [routerLink]="['/products', product.productId]">
+                  <img
+                    [src]="product.productImageUrl"
+                    [alt]="product.productName"
+                    class="deal-product-img"
+                  />
+                  <div class="deal-product-info">
+                    <p class="deal-product-name">{{ product.productName }}</p>
+                    <div class="deal-product-pricing">
+                      <span class="deal-price">{{
+                        product.dealPrice | currency: "USD"
+                      }}</span>
+                      <span class="original-price">{{
+                        product.originalPrice | currency: "USD"
+                      }}</span>
+                      <span class="discount-tag"
+                        >-{{ product.discountPercentage }}%</span
+                      >
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Deals -->
+      <div
+        *ngIf="!loading && dailyDeals.length === 0 && flashSales.length === 0"
+        class="no-deals"
+      >
+        <i class="fas fa-tag fa-3x"></i>
+        <h4>No active deals right now</h4>
+        <p>Check back soon for amazing deals!</p>
+        <a routerLink="/products" class="btn btn-primary">Browse Products</a>
+      </div>
+    </div>
+  </div>
+</div>

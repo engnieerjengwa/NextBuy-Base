@@ -1,50 +1,60 @@
-/* ========== Top Utility Bar ========== */
-.top-utility-bar {
-  background-color: #1a2d44;
-  padding: 4px 0;
-  font-size: 0.75rem;
-}
+/* ========== Top Utility Bar (removed - integrated into header) ========== */
 
-.utility-bar-content {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 8px;
-}
-
-.utility-link {
-  color: #c0d4e8;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.utility-link:hover {
-  color: #fff;
-}
-
-.utility-divider {
-  color: #5a7a99;
-  font-size: 0.65rem;
-}
-
-/* ========== Header Main ========== */
+/* ========== Header Desktop ========== */
 .header-desktop {
-  background-color: #0b79bf;
+  background-color: #fff;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
-.header-main {
+.header-desktop .container-fluid {
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+/* ── Top Row: Logo + Info Links + Account + Icons ── */
+.header-top {
   padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.header-wrap {
+.header-top-wrap {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
+}
+
+.header-info-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.info-link {
+  color: #555;
+  text-decoration: none;
+  font-size: 0.82rem;
+  transition: color 0.2s;
+}
+
+.info-link:hover {
+  color: #0b79bf;
+  text-decoration: underline;
+}
+
+.header-spacer {
+  flex: 1;
+}
+
+/* ── Search Row ── */
+.header-search-row {
+  padding: 8px 0;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .logo a {
@@ -55,7 +65,6 @@
 .logo .img-responsive {
   height: 36px;
   width: auto;
-  filter: brightness(0) invert(1);
 }
 
 .search-container {
@@ -66,37 +75,34 @@
 .user-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
   white-space: nowrap;
 }
 
-.header-action-link {
-  display: flex;
-  flex-direction: column;
+/* ── Wishlist & Cart Circle Icons (Takealot-style) ── */
+.header-icon-btn {
+  display: inline-flex;
   align-items: center;
-  color: #fff;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   text-decoration: none;
-  font-size: 0.75rem;
+  font-size: 1.1rem;
   transition: opacity 0.2s;
 }
 
-.header-action-link:hover {
-  opacity: 0.85;
+.header-icon-btn:hover {
+  opacity: 0.8;
+}
+
+.wishlist-icon {
+  background-color: #e74c3c;
   color: #fff;
 }
 
-.header-action-link i {
-  font-size: 1.25rem;
-  margin-bottom: 2px;
-}
-
-.wishlist-link i {
-  color: #e74c3c;
-}
-
-.action-label {
-  font-size: 0.7rem;
-  color: #c0d4e8;
+.wishlist-icon i {
+  color: #fff;
 }
 
 /* ========== Nav Bar ========== */
@@ -123,7 +129,7 @@
   display: block;
   width: 24px;
   height: 3px;
-  background-color: #fff;
+  background-color: #333;
   border-radius: 2px;
   transition:
     transform 0.3s ease,
@@ -255,7 +261,9 @@
 .main-content {
   min-height: calc(100vh - 200px);
   background: #f5f5f5;
-  padding-top: 110px;
+  padding-top: 160px;
+  padding-left: 100px;
+  padding-right: 100px;
 }
 
 /* ========== FOOTER ========== */
@@ -264,6 +272,11 @@
   color: #c0d4e8;
   padding-top: 40px;
   font-size: 0.85rem;
+}
+
+.footer .container-fluid {
+  padding-left: 100px;
+  padding-right: 100px;
 }
 
 .footer-columns {
@@ -434,6 +447,21 @@
 
 /* ========== Responsive Breakpoints ========== */
 @media (max-width: 992px) {
+  .header-desktop .container-fluid {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .main-content {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .footer .container-fluid {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
   .footer-columns {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -456,24 +484,35 @@
     display: none;
   }
 
-  .search-container {
+  .header-search-row {
+    display: none;
+  }
+
+  .header-info-links {
     display: none;
   }
 
   .user-actions {
+    gap: 4px;
+  }
+
+  .header-top-wrap {
     gap: 8px;
   }
 
-  .header-wrap {
-    gap: 8px;
+  .header-desktop .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
-  .action-label {
-    display: none;
+  .main-content {
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
-  .top-utility-bar {
-    display: none;
+  .footer .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
   .footer-columns {

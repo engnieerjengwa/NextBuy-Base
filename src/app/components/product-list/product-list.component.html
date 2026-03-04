@@ -1,4 +1,4 @@
-<div class="main-content">
+<div class="product-list-content">
   <!-- Hero Banner - Home page only -->
   <app-hero-banner *ngIf="isHomePage()"></app-hero-banner>
 
@@ -82,7 +82,7 @@
           </div>
 
           <h4 *ngIf="!searchMode" class="section-heading">
-            {{ currentCategoryName }}
+            {{ activeFilterLabel || currentCategoryName }}
           </h4>
           <hr />
 

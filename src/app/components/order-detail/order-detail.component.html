@@ -1,244 +1,252 @@
-<div class="main-content">
-  <div class="section-content section-content-p30">
-    <div class="container-fluid">
-      <!-- Loading indicator -->
-      <div *ngIf="isLoading" class="text-center">
-        <div class="spinner-border text-primary" role="status">
-          <span class="sr-only">Loading...</span>
-        </div>
-        <p>Loading order details...</p>
-      </div>
+<div class="od-page">
+  <div class="od-container">
+    <!-- Breadcrumb -->
+    <nav class="od-breadcrumb">
+      <a routerLink="/account">My Account</a>
+      <span class="od-bc-sep">/</span>
+      <a routerLink="/orders">Orders</a>
+      <span class="od-bc-sep">/</span>
+      <span class="od-bc-current">Order Detail</span>
+    </nav>
 
-      <!-- Error message -->
-      <div *ngIf="errorMessage" class="alert alert-danger">
-        {{ errorMessage }}
-      </div>
+    <!-- Page Title Row -->
+    <div class="od-title-row">
+      <h1 class="od-title">Order Detail</h1>
+      <button class="od-btn od-btn-outline" (click)="backToOrderHistory()">
+        View All Orders
+      </button>
+    </div>
 
-      <!-- Order details -->
-      <div *ngIf="!isLoading && !errorMessage && order">
-        <!-- 1. Order Header Bar -->
-        <div class="order-header-bar">
-          <div class="order-identifiers">
-            <span class="order-number"
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="od-loading">
+      <div class="od-spinner"></div>
+      <p>Loading order details...</p>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="errorMessage" class="od-alert od-alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Order Content -->
+    <div *ngIf="!isLoading && !errorMessage && order" class="od-content">
+      <!-- Order Header Card -->
+      <div class="od-card od-header-card">
+        <div class="od-header-row">
+          <div class="od-header-info">
+            <span class="od-order-num"
               >Order #{{ order.orderTrackingNumber }}</span
             >
-            <span class="order-date"
+            <span class="od-header-sep">|</span>
+            <span class="od-header-date"
               >ORDERED
               {{ order.dateCreated | date: "dd MMM yyyy" | uppercase }}</span
             >
-            <span class="payment-date"
+            <span class="od-header-sep">|</span>
+            <span class="od-header-date"
               >PAID
               {{ order.dateCreated | date: "dd MMM yyyy" | uppercase }}</span
             >
           </div>
-          <div class="header-actions">
-            <button class="btn btn-secondary" (click)="backToOrderHistory()">
-              <i class="fa fa-arrow-left"></i> Back to Orders
-            </button>
-            <button class="btn btn-secondary" (click)="viewInvoice()">
-              <i class="fa fa-eye"></i> View Invoices
-            </button>
-          </div>
+          <button
+            class="od-btn od-btn-outline"
+            (click)="viewInvoice()"
+            [disabled]="invoiceLoading"
+          >
+            <i
+              class="fa"
+              [ngClass]="invoiceLoading ? 'fa-spinner fa-spin' : 'fa-eye'"
+            ></i>
+            {{ invoiceLoading ? "Downloading..." : "View Invoices" }}
+          </button>
         </div>
+      </div>
 
-        <!-- 2. Order Info Grid (3 Columns) -->
-        <div class="order-info-grid">
-          <!-- Column 1: Shipping Address -->
-          <div class="info-column shipping-address">
-            <h3><i class="fa fa-map-marker"></i> Shipping Address</h3>
-            <div class="address-content">
+      <!-- Order Info Grid -->
+      <div class="od-card od-info-card">
+        <div class="od-info-grid">
+          <!-- Shipping Address -->
+          <div class="od-info-col">
+            <h3 class="od-info-heading">
+              <i class="fa fa-map-marker-alt"></i> Shipping Address
+            </h3>
+            <div
+              class="od-address"
+              *ngIf="order.shippingAddress; else noAddress"
+            >
               <p *ngIf="order.customer">
                 {{ order.customer.firstName }} {{ order.customer.lastName }}
               </p>
-              <p *ngIf="order.shippingAddress">
-                {{ order.shippingAddress.street }}
-              </p>
-              <p *ngIf="order.shippingAddress">
-                {{ order.shippingAddress.city }}
-              </p>
-              <p *ngIf="order.shippingAddress">
-                {{ order.shippingAddress.state }}
-              </p>
-              <p *ngIf="order.shippingAddress">
-                {{ order.shippingAddress.country }}
-              </p>
-              <p *ngIf="order.shippingAddress">
-                {{ order.shippingAddress.zipCode }}
-              </p>
-              <!-- Fallback if no shipping address -->
-              <p *ngIf="!order.shippingAddress" class="text-muted">
-                No shipping address available
-              </p>
+              <p>{{ order.shippingAddress.street }}</p>
+              <p>{{ order.shippingAddress.city }}</p>
+              <p>{{ order.shippingAddress.state }}</p>
+              <p>{{ order.shippingAddress.country }}</p>
+              <p>{{ order.shippingAddress.zipCode }}</p>
             </div>
+            <ng-template #noAddress>
+              <p class="od-muted">No shipping address available</p>
+            </ng-template>
           </div>
 
-          <!-- Column 2: Delivery & Payment -->
-          <div class="info-column delivery-payment">
-            <div class="delivery-method">
-              <h3><i class="fa fa-truck"></i> Delivery Method</h3>
-              <p>Standard Delivery</p>
-            </div>
-            <div class="payment-method">
-              <h3><i class="fa fa-credit-card"></i> Payment Method</h3>
-              <p>Credit / Debit Card</p>
-            </div>
+          <!-- Delivery & Payment -->
+          <div class="od-info-col">
+            <h3 class="od-info-heading">
+              <i class="fa fa-truck"></i> Delivery Method
+            </h3>
+            <p class="od-info-value">Standard Delivery</p>
+
+            <h3 class="od-info-heading od-mt-16">
+              <i class="fa fa-credit-card"></i> Payment Method
+            </h3>
+            <p class="od-info-value">Credit / Debit Card</p>
           </div>
 
-          <!-- Column 3: Order Summary -->
-          <div class="info-column order-summary">
-            <h3><i class="fa fa-list"></i> Order Summary</h3>
-            <div class="summary-rows">
-              <div class="summary-row">
-                <span class="summary-label">Items Count</span>
-                <span class="summary-value"
-                  >{{ order.totalQuantity }} Items</span
-                >
+          <!-- Order Summary -->
+          <div class="od-info-col">
+            <h3 class="od-info-heading">
+              <i class="fa fa-list-alt"></i> Order Summary
+            </h3>
+            <div class="od-summary">
+              <div class="od-summary-row">
+                <span>Items Count</span>
+                <span>{{ order.totalQuantity }} Items</span>
               </div>
-              <div class="summary-row">
-                <span class="summary-label">Amount</span>
-                <span class="summary-value">{{
-                  calculatedTotal | currency: "USD"
-                }}</span>
+              <div class="od-summary-row">
+                <span>Amount</span>
+                <span>{{ calculatedTotal | currency: "USD" }}</span>
               </div>
-              <div class="summary-row">
-                <span class="summary-label">Delivery</span>
-                <span class="summary-value">{{ 0 | currency: "USD" }}</span>
+              <div class="od-summary-row">
+                <span>Delivery</span>
+                <span>{{ deliveryCost | currency: "USD" }}</span>
               </div>
-              <div class="summary-row divider"></div>
-              <div class="summary-row">
-                <span class="summary-label">Order Total:</span>
-                <span class="summary-value">{{
-                  calculatedTotal | currency: "USD"
-                }}</span>
+              <div class="od-summary-divider"></div>
+              <div class="od-summary-row od-summary-total">
+                <span>Order Total:</span>
+                <span>{{ order.totalPrice | currency: "USD" }}</span>
               </div>
-              <div class="summary-row payment">
-                <span class="summary-label">Paid (Credit / Debit Card)</span>
-                <span class="summary-value negative"
-                  >-{{ calculatedTotal | currency: "USD" }}</span
+              <div class="od-summary-row od-summary-paid">
+                <span>Paid (Credit / Debit Card)</span>
+                <span class="od-text-negative"
+                  >-{{ order.totalPrice | currency: "USD" }}</span
                 >
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Delivery & Items Section -->
-        <div class="delivery-items-container">
-          <!-- Order Tracking Timeline -->
-          <app-order-tracking-timeline
-            *ngIf="statusHistory.length > 0 || order.status"
-            [statusHistory]="statusHistory"
-            [currentStatus]="order.status || 'PROCESSING'"
-          ></app-order-tracking-timeline>
+      <!-- Delivery & Items Card -->
+      <div class="od-card od-items-card">
+        <!-- Order Tracking Timeline -->
+        <app-order-tracking-timeline
+          *ngIf="statusHistory.length > 0 || order.status"
+          [statusHistory]="statusHistory"
+          [currentStatus]="order.status || 'PROCESSING'"
+        ></app-order-tracking-timeline>
 
-          <!-- Delivery Status Header -->
-          <div class="delivery-status-header">
-            <div class="delivery-status-info">
-              <span
-                class="delivery-status-text"
-                *ngIf="order.status === 'DELIVERED'"
-              >
-                <strong>Delivered</strong>
-                {{ order.deliveryDate | date: "EEE, d MMM yyyy" }}
-              </span>
-              <span
-                class="delivery-status-text"
-                *ngIf="order.status === 'SHIPPED'"
-              >
-                <strong>Shipped</strong> - In Transit
-              </span>
-              <span
-                class="delivery-status-text"
-                *ngIf="order.status === 'PROCESSING'"
-              >
-                <strong>Processing</strong> - Preparing Your Order
-              </span>
-              <span
-                class="delivery-status-text"
-                *ngIf="order.status === 'CANCELLED'"
-              >
-                <strong>Cancelled</strong>
-              </span>
+        <!-- Delivery Status Bar -->
+        <div class="od-status-bar">
+          <div class="od-status-text">
+            <span *ngIf="order.status === 'DELIVERED'">
+              <strong>Delivered</strong>
+              {{ order.deliveryDate | date: "EEE, d MMM yyyy" }}
+            </span>
+            <span *ngIf="order.status === 'SHIPPED'">
+              <strong>Shipped</strong> - In Transit
+            </span>
+            <span *ngIf="order.status === 'PROCESSING'">
+              <strong>Processing</strong> - Preparing Your Order
+            </span>
+            <span *ngIf="order.status === 'CANCELLED'">
+              <strong>Cancelled</strong>
+            </span>
+          </div>
+          <div class="od-status-actions">
+            <button
+              class="od-btn od-btn-outline"
+              (click)="buyAgain()"
+              [disabled]="reorderLoading"
+              *ngIf="order.status === 'DELIVERED'"
+            >
+              <i class="fa fa-redo"></i>
+              {{ reorderLoading ? "Ordering..." : "Buy Again" }}
+            </button>
+            <button
+              class="od-btn od-btn-danger"
+              (click)="cancelOrder()"
+              [disabled]="cancelLoading"
+              *ngIf="canCancel()"
+            >
+              <i class="fa fa-times"></i>
+              {{ cancelLoading ? "Cancelling..." : "Cancel Order" }}
+            </button>
+            <button
+              class="od-btn od-btn-outline"
+              (click)="logReturn()"
+              *ngIf="isEligibleForReturn()"
+            >
+              <i class="fa fa-box"></i> Log Return
+            </button>
+          </div>
+        </div>
+
+        <!-- Signed By -->
+        <div
+          class="od-signed-by"
+          *ngIf="order.status === 'DELIVERED' && order.signedBy"
+        >
+          <i class="fa fa-check-circle"></i>
+          <span
+            >Signed by: {{ order.signedBy.name }} ({{
+              order.signedBy.role === "CUSTOMER" ? "Customer" : "Concierge"
+            }})</span
+          >
+        </div>
+
+        <!-- Order Items -->
+        <div class="od-items-list">
+          <div *ngFor="let item of order.orderItems" class="od-item">
+            <div class="od-item-img">
+              <a [routerLink]="['/products', item.productId]">
+                <img [src]="item.imageUrl" alt="Product Image" />
+              </a>
             </div>
-            <div class="delivery-actions">
-              <button
-                class="btn btn-buy-again"
-                (click)="buyAgain()"
-                [disabled]="reorderLoading"
-                *ngIf="order.status === 'DELIVERED'"
+            <div class="od-item-info">
+              <a
+                class="od-item-name"
+                [routerLink]="['/products', item.productId]"
               >
-                <i class="fa fa-redo"></i>
-                {{ reorderLoading ? "Ordering..." : "Buy Again" }}
-              </button>
-              <button
-                class="btn btn-cancel-order"
-                (click)="cancelOrder()"
-                [disabled]="cancelLoading"
-                *ngIf="canCancel()"
+                {{ item.productName || "Product #" + item.productId }}
+              </a>
+              <span class="od-item-qty">Qty: {{ item.quantity }}</span>
+              <span class="od-item-price-mobile">{{
+                item.unitPrice | currency: "USD"
+              }}</span>
+              <span class="od-item-seller"
+                >Sold by <strong>NexBuy Store</strong></span
               >
-                <i class="fa fa-times"></i>
-                {{ cancelLoading ? "Cancelling..." : "Cancel Order" }}
-              </button>
-              <button
-                class="btn btn-secondary"
-                (click)="logReturn()"
-                *ngIf="isEligibleForReturn()"
-              >
-                <i class="fa fa-box"></i> Log Return
-              </button>
+            </div>
+            <div class="od-item-price">
+              {{ item.unitPrice | currency: "USD" }}
             </div>
           </div>
 
-          <!-- Proof of Delivery (Signature Row) -->
-          <div class="proof-of-delivery" *ngIf="order.signedBy">
-            <i class="fa fa-check-circle text-success"></i>
-            <span
-              >Signed by: {{ order.signedBy.name }} ({{
-                order.signedBy.role === "CUSTOMER" ? "Customer" : "Concierge"
-              }})</span
-            >
-          </div>
-
-          <!-- Order Items List -->
-          <div class="order-items-list">
-            <!-- Display actual order items -->
-            <div *ngFor="let item of order.orderItems" class="order-item">
-              <div class="item-thumbnail">
-                <a [routerLink]="['/products', item.productId]">
-                  <img [src]="item.imageUrl" alt="Product Image" />
-                </a>
-              </div>
-              <div class="item-details">
-                <div class="item-name">
-                  <a [routerLink]="['/products', item.productId]">
-                    {{ item.productName || "Product #" + item.productId }}
-                  </a>
-                </div>
-                <div class="item-quantity">Qty: {{ item.quantity }}</div>
-                <div class="item-seller">Sold by: NexBuy Store</div>
-              </div>
-              <div class="item-price">
-                {{ item.unitPrice | currency: "USD" }}
-              </div>
-            </div>
-
-            <!-- Fallback if no order items -->
-            <div
-              *ngIf="!order.orderItems || order.orderItems.length === 0"
-              class="alert alert-info"
-            >
-              No items found for this order.
-            </div>
+          <div
+            *ngIf="!order.orderItems || order.orderItems.length === 0"
+            class="od-empty"
+          >
+            No items found for this order.
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- No order found -->
-      <div
-        *ngIf="!isLoading && !errorMessage && !order"
-        class="alert alert-warning"
-      >
-        Order not found.
-      </div>
+    <!-- No order found -->
+    <div
+      *ngIf="!isLoading && !errorMessage && !order"
+      class="od-alert od-alert-warning"
+    >
+      Order not found.
     </div>
   </div>
 </div>

@@ -1,31 +1,26 @@
 <div class="login-status-header">
-  <div *ngIf="isAuthenticated && userName" class="login-status-user-info">
+  <span *ngIf="isAuthenticated && userName" class="login-status-user-info">
     Hi {{ userName }}
-  </div>
+  </span>
 
-  <a *ngIf="!isAuthenticated" routerLink="/login" class="security-btn">
+  <a *ngIf="!isAuthenticated" routerLink="/login" class="header-text-link">
     Login
   </a>
-
-  <a
-    *ngIf="!isAuthenticated"
-    routerLink="/register"
-    class="security-btn register-btn"
-  >
+  <span *ngIf="!isAuthenticated" class="link-divider">|</span>
+  <a *ngIf="!isAuthenticated" routerLink="/register" class="header-text-link">
     Register
   </a>
+  <span class="link-divider">|</span>
 
-  <button *ngIf="isAuthenticated" (click)="logout()" class="security-btn">
+  <a routerLink="/orders" class="header-text-link">Orders</a>
+  <span class="link-divider">|</span>
+  <a routerLink="/orders" class="header-text-link">My Account</a>
+
+  <button
+    *ngIf="isAuthenticated"
+    (click)="logout()"
+    class="header-text-link logout-link"
+  >
     Logout
   </button>
-
-  <div *ngIf="isAuthenticated" class="order-history">
-    <a routerLink="/orders" routerLinkActive="active-link" class="security-btn"
-      >Orders</a
-    >
-  </div>
-
-  <div *ngIf="isAuthenticated" class="my-account-link">
-    <a routerLink="/orders" class="security-btn">My Account</a>
-  </div>
 </div>

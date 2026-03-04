@@ -5,7 +5,6 @@ import { SearchComponent } from './components/search/search.component';
 import { CartStatusComponent } from './components/cart-status/cart-status.component';
 import { LoginStatusComponent } from './components/login-status/login-status.component';
 import { CommonModule } from '@angular/common';
-import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
 import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
 
@@ -19,7 +18,6 @@ import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.c
     SearchComponent,
     CartStatusComponent,
     LoginStatusComponent,
-    BreadcrumbComponent,
     CookieConsentComponent,
     ScrollToTopComponent,
   ],

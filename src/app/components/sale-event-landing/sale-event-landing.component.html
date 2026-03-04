@@ -1,0 +1,128 @@
+<div class="sale-event-page" *ngIf="event">
+  <!-- Hero Banner -->
+  <div
+    class="event-hero"
+    [style.backgroundImage]="
+      event.bannerImageUrl ? 'url(' + event.bannerImageUrl + ')' : 'none'
+    "
+    [style.backgroundColor]="event.bannerColor || '#1a2d44'"
+  >
+    <div class="hero-overlay">
+      <h1 class="event-title">{{ event.name }}</h1>
+      <p class="event-description">{{ event.description }}</p>
+
+      <div class="event-countdown" *ngIf="event.isActive">
+        <span class="countdown-label">Ends in</span>
+        <div class="countdown-timer">
+          <div class="time-block" *ngIf="days > 0">
+            <span class="time-value">{{ days }}</span>
+            <span class="time-label">DAYS</span>
+          </div>
+          <span class="time-separator" *ngIf="days > 0">:</span>
+          <div class="time-block">
+            <span class="time-value">{{ hours | number: "2.0-0" }}</span>
+            <span class="time-label">HRS</span>
+          </div>
+          <span class="time-separator">:</span>
+          <div class="time-block">
+            <span class="time-value">{{ minutes | number: "2.0-0" }}</span>
+            <span class="time-label">MIN</span>
+          </div>
+          <span class="time-separator">:</span>
+          <div class="time-block">
+            <span class="time-value">{{ seconds | number: "2.0-0" }}</span>
+            <span class="time-label">SEC</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Deal Count -->
+  <div class="deal-count-bar">
+    <span>{{ event.deals.length }} deals available</span>
+  </div>
+
+  <!-- Sort Controls -->
+  <div class="controls" *ngIf="event.isActive && sortedDeals.length > 0">
+    <select [(ngModel)]="sortBy" (change)="sortDeals()">
+      <option value="percentOff">Biggest Discount</option>
+      <option value="priceLow">Price: Low to High</option>
+      <option value="priceHigh">Price: High to Low</option>
+      <option value="endingSoon">Ending Soon</option>
+    </select>
+  </div>
+
+  <!-- Deals Grid -->
+  <div class="deals-grid" *ngIf="event.isActive">
+    <div *ngFor="let deal of sortedDeals" class="deal-card">
+      <div class="deal-badge" *ngIf="deal.discountPercentage">
+        -{{ deal.discountPercentage }}%
+      </div>
+      <div class="deal-banner" *ngIf="deal.bannerImageUrl">
+        <img [src]="deal.bannerImageUrl" [alt]="deal.title" />
+      </div>
+      <div class="deal-info">
+        <h4 class="deal-title">{{ deal.title }}</h4>
+        <p class="deal-description">{{ deal.description }}</p>
+
+        <!-- Deal Products -->
+        <div class="deal-products">
+          <a
+            *ngFor="let product of deal.products"
+            [routerLink]="['/products', product.productId]"
+            class="deal-product"
+          >
+            <img
+              [src]="product.productImageUrl"
+              [alt]="product.productName"
+              class="product-thumb"
+            />
+            <div class="product-info">
+              <span class="product-name">{{ product.productName }}</span>
+              <div class="product-prices">
+                <span class="original-price">{{
+                  product.originalPrice | currency: "USD"
+                }}</span>
+                <span class="deal-price">{{
+                  product.dealPrice | currency: "USD"
+                }}</span>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Deal Countdown -->
+        <div class="deal-countdown" *ngIf="deal.remainingSeconds > 0">
+          <span class="deal-countdown-label">Ends in:</span>
+          <span class="deal-time"
+            >{{ getDealHours(deal) }}:{{ getDealMinutes(deal) }}:{{
+              getDealSeconds(deal)
+            }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Event Expired State -->
+  <div class="event-expired" *ngIf="!event.isActive">
+    <h2>This sale has ended</h2>
+    <p>Check out our <a routerLink="/deals">current deals</a> instead!</p>
+  </div>
+</div>
+
+<!-- Loading -->
+<div class="loading-state" *ngIf="isLoading">
+  <div class="loading-hero"></div>
+  <div class="loading-grid">
+    <div class="loading-card" *ngFor="let i of [1, 2, 3, 4, 5, 6]"></div>
+  </div>
+</div>
+
+<!-- Not Found -->
+<div class="not-found" *ngIf="!isLoading && !event">
+  <h2>Sale not found</h2>
+  <p>This sale event doesn't exist or has been removed.</p>
+  <a routerLink="/deals" class="back-link">Browse current deals</a>
+</div>

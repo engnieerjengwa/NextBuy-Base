@@ -7,6 +7,7 @@ export interface QuickLink {
   route: string;
   icon?: string;
   cssClass?: string;
+  queryParams?: { [key: string]: string | boolean | number };
 }
 
 @Component({
@@ -18,15 +19,25 @@ export interface QuickLink {
 })
 export class QuickLinksBarComponent {
   quickLinks: QuickLink[] = [
-    { label: 'Deals', route: '/products', icon: 'fas fa-tag' },
-    { label: 'New Arrivals', route: '/products', icon: 'fas fa-sparkles' },
+    { label: 'Deals', route: '/deals', icon: 'fas fa-tag' },
+    {
+      label: 'New Arrivals',
+      route: '/products',
+      icon: 'fas fa-sparkles',
+      queryParams: { filter: 'new-arrivals' },
+    },
     {
       label: 'Fire Sale',
-      route: '/products',
+      route: '/deals',
       icon: 'fas fa-fire',
       cssClass: 'fire-sale',
     },
-    { label: 'Brands Store', route: '/products', icon: 'fas fa-store' },
-    { label: 'Clearance', route: '/products', icon: 'fas fa-percent' },
+    { label: 'Brands Store', route: '/brands', icon: 'fas fa-store' },
+    {
+      label: 'Clearance',
+      route: '/products',
+      icon: 'fas fa-percent',
+      queryParams: { filter: 'clearance' },
+    },
   ];
 }

@@ -1,14 +1,16 @@
-import { Component, Input, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { Review, ReviewRequest, RatingDistribution } from '../../common/review';
 import { ReviewService } from '../../services/review.service';
 import { RatingDistributionComponent } from '../rating-distribution/rating-distribution.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-review-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RatingDistributionComponent],
+  imports: [CommonModule, FormsModule, RouterLink, RatingDistributionComponent],
   templateUrl: './review-list.component.html',
   styleUrl: './review-list.component.css',
 })
@@ -48,13 +50,11 @@ export class ReviewListComponent implements OnInit {
 
   constructor(
     private reviewService: ReviewService,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.isLoggedIn = !!sessionStorage.getItem('userEmail');
-    }
+    this.isLoggedIn = this.authService.isLoggedIn();
     this.loadReviews();
     this.loadDistribution();
   }

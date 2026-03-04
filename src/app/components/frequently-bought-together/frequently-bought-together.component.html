@@ -1,0 +1,66 @@
+<div class="fbt-section" *ngIf="bundleProducts.length > 0">
+  <h3 class="fbt-title">Frequently Bought Together</h3>
+
+  <div class="fbt-container">
+    <!-- Product chain -->
+    <div class="fbt-products">
+      <!-- Current product (always included) -->
+      <div class="fbt-product">
+        <img [src]="currentProduct.imageUrl" [alt]="currentProduct.name" />
+        <span class="product-name">{{ currentProduct.name }}</span>
+        <span class="product-price">{{
+          currentProduct.unitPrice | currency: "USD"
+        }}</span>
+        <span class="this-item-label">This item</span>
+      </div>
+
+      <!-- Related products with checkboxes -->
+      <ng-container *ngFor="let product of bundleProducts; let i = index">
+        <span class="fbt-plus">+</span>
+
+        <div class="fbt-product" [class.deselected]="!product.selected">
+          <label class="fbt-checkbox">
+            <input
+              type="checkbox"
+              [checked]="product.selected"
+              (change)="toggleProduct(i)"
+            />
+          </label>
+          <img [src]="product.productImageUrl" [alt]="product.productName" />
+          <a
+            class="product-name"
+            [routerLink]="['/products', product.productId]"
+          >
+            {{ product.productName }}
+          </a>
+          <span class="product-price" *ngIf="!hasSalePrice(product)">
+            {{ product.unitPrice | currency: "USD" }}
+          </span>
+          <span class="product-price sale" *ngIf="hasSalePrice(product)">
+            {{ product.bundlePrice | currency: "USD" }}
+            <del>{{ product.unitPrice | currency: "USD" }}</del>
+          </span>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Summary -->
+    <div class="fbt-summary">
+      <span class="total-label">Total price:</span>
+      <span class="total-amount">{{ bundleTotal | currency: "USD" }}</span>
+      <div class="bundle-savings" *ngIf="bundleSavings > 0">
+        You save {{ bundleSavings | currency: "USD" }}
+      </div>
+      <div class="selected-count">{{ selectedCount }} items selected</div>
+      <button
+        class="add-all-btn"
+        [disabled]="isAdding || selectedCount <= 1"
+        (click)="addAllToCart()"
+      >
+        <span *ngIf="!isAdding">Add selected to cart</span>
+        <span *ngIf="isAdding">Adding...</span>
+      </button>
+      <div class="add-success" *ngIf="showSuccess">✓ Added to cart!</div>
+    </div>
+  </div>
+</div>

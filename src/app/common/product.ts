@@ -24,6 +24,15 @@ export class Product {
     public isNew: boolean = false,
     public averageRating: number = 0,
     public reviewCount: number = 0,
+    // Phase 4: Pre-order fields
+    public isPreorder: boolean = false,
+    public preorderReleaseDate: string = '',
+    public preorderMessage: string = '',
+    public maxPreorderQuantity: number = 0,
+    public preorderCount: number = 0,
+    // Seller location for delivery cost
+    public sellerProvince: string = 'Harare',
+    public sellerCity: string = 'Harare',
   ) {}
 }
 

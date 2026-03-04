@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SavedAddressService } from '../../services/saved-address.service';
@@ -7,7 +8,7 @@ import { SavedAddress, SavedAddressRequest } from '../../common/saved-address';
 @Component({
   selector: 'app-address-book',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './address-book.component.html',
   styleUrl: './address-book.component.css',
 })

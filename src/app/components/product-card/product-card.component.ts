@@ -17,8 +17,8 @@ export class ProductCardComponent {
   @Input() showFireSaleBadge: boolean = false;
   @Input() showMoreDealsBadge: boolean = false;
   @Input() showAlotForLessBadge: boolean = false;
-  @Input() currencyCode: string = 'ZAR';
-  @Input() currencyPrefix: string = 'R';
+  @Input() currencyCode: string = 'USD';
+  @Input() currencyPrefix: string = '$';
   @Input() lowStockThreshold: number = 20;
   @Input() showAddToCart: boolean = false;
 

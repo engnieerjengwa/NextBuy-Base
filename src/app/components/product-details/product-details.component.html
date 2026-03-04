@@ -1,90 +1,135 @@
 <div class="detail-section" *ngIf="product">
-  <div class="container-fluid">
-    <div class="product-detail-layout">
-      <!-- Left: Image Gallery -->
-      <div class="product-images">
-        <app-image-gallery
-          [images]="productImages"
-          [productName]="product.name"
-          [fallbackImageUrl]="product.imageUrl"
-        ></app-image-gallery>
+  <!-- Breadcrumb Bar -->
+  <div class="pdp-breadcrumb-bar">
+    <div class="pdp-breadcrumb">
+      <a routerLink="/products">Home</a>
+      <span class="breadcrumb-sep">/</span>
+      <a routerLink="/products" class="breadcrumb-link">Products</a>
+      <span class="breadcrumb-sep" *ngIf="product.brand">/</span>
+      <span class="breadcrumb-current" *ngIf="product.brand">{{
+        product.brand
+      }}</span>
+    </div>
+    <div class="pdp-share-actions">
+      <button class="share-btn" title="Share">
+        <i class="fas fa-share-alt"></i> Share
+      </button>
+    </div>
+  </div>
+
+  <!-- Main PDP Layout: 3 columns -->
+  <div class="pdp-main-grid">
+    <!-- Column 1: Image Gallery Card -->
+    <div class="pdp-gallery-card">
+      <!-- Discount Badge Overlay -->
+      <div class="pdp-discount-overlay" *ngIf="product.discountPercentage">
+        <span class="pdp-discount-tag"
+          >{{ product.discountPercentage }}% OFF</span
+        >
+      </div>
+      <app-image-gallery
+        [images]="productImages"
+        [productName]="product.name"
+        [fallbackImageUrl]="product.imageUrl"
+      ></app-image-gallery>
+    </div>
+
+    <!-- Column 2: Product Info -->
+    <div class="pdp-info-card">
+      <h1 class="pdp-title">{{ product.name }}</h1>
+
+      <div class="pdp-brand" *ngIf="product.brand">
+        <a routerLink="/products" [queryParams]="{ brand: product.brand }">{{
+          product.brand
+        }}</a>
       </div>
 
-      <!-- Right: Product Info -->
-      <div class="product-info">
-        <div class="product-brand" *ngIf="product.brand">
-          {{ product.brand }}
-        </div>
-        <h3>{{ product.name }}</h3>
+      <!-- Rating -->
+      <div class="pdp-rating" *ngIf="product.averageRating">
+        <i class="fas fa-star pdp-star"></i>
+        <span class="pdp-rating-score">{{
+          product.averageRating | number: "1.1-1"
+        }}</span>
+        <a class="pdp-review-count">{{ product.reviewCount }} Reviews</a>
+      </div>
 
-        <!-- Rating -->
-        <div class="product-rating" *ngIf="product.averageRating">
-          <span class="stars">
-            <i
-              *ngFor="let star of [1, 2, 3, 4, 5]"
-              class="fa-star"
-              [class.fas]="star <= product.averageRating"
-              [class.far]="star > product.averageRating"
-            ></i>
-          </span>
-          <span class="rating-text">
-            {{ product.averageRating | number: "1.1-1" }}
-            <span class="review-count"
-              >({{ product.reviewCount }} reviews)</span
-            >
-          </span>
-        </div>
-
-        <!-- Pricing -->
-        <div class="pricing-section">
-          <div class="price">{{ effectivePrice | currency: "USD" }}</div>
-          <div
-            class="original-price"
-            *ngIf="
-              product.originalPrice && product.originalPrice > effectivePrice
-            "
-          >
-            <span class="was-price"
-              >Was {{ product.originalPrice | currency: "USD" }}</span
-            >
-            <span class="discount-badge" *ngIf="product.discountPercentage">
-              -{{ product.discountPercentage }}%
-            </span>
-          </div>
-        </div>
-
-        <!-- Stock Badge -->
-        <div class="stock-badge" [ngClass]="stockBadgeClass">
+      <!-- Stock Badge -->
+      <div class="pdp-stock-row">
+        <span class="pdp-stock-badge" [ngClass]="stockBadgeClass">
           {{ stockLabel }}
-        </div>
+        </span>
+      </div>
 
-        <!-- Urgency Indicator -->
-        <div class="urgency-indicator" *ngIf="isLowStock">
-          <span class="urgency-icon">&#9888;</span>
-          Hurry! Only {{ effectiveStock }} left in stock - order soon.
-        </div>
+      <!-- Urgency Indicator -->
+      <div class="pdp-urgency" *ngIf="isLowStock">
+        <i class="fas fa-exclamation-triangle"></i>
+        Hurry! Only {{ effectiveStock }} left in stock - order soon.
+      </div>
 
-        <!-- Variant Selector -->
-        <app-variant-selector
-          *ngIf="productVariants.length > 0"
-          [variants]="productVariants"
-          (variantSelected)="onVariantSelected($event)"
-        ></app-variant-selector>
+      <!-- Feature Bullets -->
+      <ul class="pdp-features">
+        <li *ngIf="isInStock">
+          <i class="fas fa-check-circle pdp-feature-icon"></i>
+          Eligible for next-day delivery or collection.
+        </li>
+        <li>
+          <i class="fas fa-check-circle pdp-feature-icon"></i>
+          Hassle-Free Exchanges &amp; Returns for 30 Days.
+        </li>
+        <li *ngIf="product.warrantyInfo">
+          <i class="fas fa-shield-alt pdp-feature-icon"></i>
+          {{ product.warrantyInfo }}
+        </li>
+      </ul>
+
+      <!-- Variant Selector -->
+      <app-variant-selector
+        *ngIf="productVariants.length > 0"
+        [variants]="productVariants"
+        (variantSelected)="onVariantSelected($event)"
+      ></app-variant-selector>
+
+      <!-- Stock Notification (when out of stock) -->
+      <app-stock-notification
+        *ngIf="product"
+        [productId]="product.id"
+        [isOutOfStock]="!isInStock"
+      ></app-stock-notification>
+    </div>
+
+    <!-- Column 3: Price & Action Panel -->
+    <div class="pdp-price-panel">
+      <div class="pdp-price-card">
+        <!-- Price -->
+        <div class="pdp-price-main">{{ effectivePrice | currency: "USD" }}</div>
+        <div
+          class="pdp-price-original"
+          *ngIf="
+            product.originalPrice && product.originalPrice > effectivePrice
+          "
+        >
+          <span class="pdp-was-price">{{
+            product.originalPrice | currency: "USD"
+          }}</span>
+          <span class="pdp-discount-badge" *ngIf="product.discountPercentage">
+            -{{ product.discountPercentage }}%
+          </span>
+        </div>
 
         <!-- Quantity Selector -->
-        <div class="quantity-selector" *ngIf="isInStock">
-          <label class="qty-label">Qty:</label>
-          <div class="qty-controls">
+        <div class="pdp-qty-row" *ngIf="isInStock">
+          <label class="pdp-qty-label">Qty:</label>
+          <div class="pdp-qty-controls">
             <button
-              class="qty-btn"
+              class="pdp-qty-btn"
               (click)="decrementQuantity()"
               [disabled]="quantity <= 1"
             >
               &#8722;
             </button>
-            <span class="qty-value">{{ quantity }}</span>
+            <span class="pdp-qty-value">{{ quantity }}</span>
             <button
-              class="qty-btn"
+              class="pdp-qty-btn"
               (click)="incrementQuantity()"
               [disabled]="quantity >= effectiveStock"
             >
@@ -93,17 +138,44 @@
           </div>
         </div>
 
+        <!-- Add to Cart -->
         <button
+          *ngIf="!product.isPreorder"
           (click)="addToCart()"
-          class="btn btn-primary btn-sm add-to-cart-btn"
+          class="pdp-add-to-cart"
           [disabled]="!isInStock"
         >
+          <i class="fas fa-cart-plus"></i>
           {{ isInStock ? "Add to Cart" : "Out of Stock" }}
         </button>
 
-        <!-- Wishlist Heart Button -->
+        <!-- Pre-order Section -->
+        <div *ngIf="product.isPreorder" class="pdp-preorder-section">
+          <app-pre-order-badge
+            [releaseDate]="product.preorderReleaseDate"
+          ></app-pre-order-badge>
+          <p class="pdp-preorder-msg" *ngIf="product.preorderMessage">
+            {{ product.preorderMessage }}
+          </p>
+          <p class="pdp-preorder-avail" *ngIf="product.maxPreorderQuantity">
+            {{ product.maxPreorderQuantity - product.preorderCount }} pre-order
+            slots remaining
+          </p>
+          <button
+            class="pdp-preorder-btn"
+            (click)="placePreOrder()"
+            [disabled]="
+              isPreordering ||
+              product.preorderCount >= product.maxPreorderQuantity
+            "
+          >
+            {{ isPreordering ? "Placing Pre-order..." : "Pre-order Now" }}
+          </button>
+        </div>
+
+        <!-- Add to Wishlist -->
         <button
-          class="btn-wishlist"
+          class="pdp-add-to-list"
           (click)="toggleWishlist()"
           [disabled]="wishlistLoading"
           [title]="isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'"
@@ -113,71 +185,94 @@
             [class.far]="!isInWishlist"
             class="fa-heart"
           ></i>
-          {{ isInWishlist ? "In Wishlist" : "Add to Wishlist" }}
+          {{ isInWishlist ? "In Wishlist" : "Add to List" }}
         </button>
 
-        <!-- Stock Notification (when out of stock) -->
-        <app-stock-notification
-          *ngIf="product"
-          [productId]="product.id"
-          [isOutOfStock]="!isInStock"
-        ></app-stock-notification>
-
-        <!-- Product Details Tabs -->
-        <div class="product-details-tabs">
-          <hr />
-          <h4>Description</h4>
-          <p>{{ product.description }}</p>
-
-          <!-- Specifications -->
-          <div *ngIf="product.specifications" class="specifications-section">
-            <h4>Specifications</h4>
-            <p>{{ product.specifications }}</p>
-          </div>
-
-          <!-- Dimensions & Weight -->
-          <div
-            *ngIf="product.weightKg || product.lengthCm"
-            class="dimensions-section"
-          >
-            <h4>Dimensions & Weight</h4>
-            <table class="specs-table">
-              <tr *ngIf="product.weightKg">
-                <td class="spec-label">Weight</td>
-                <td>{{ product.weightKg }} kg</td>
-              </tr>
-              <tr *ngIf="product.lengthCm">
-                <td class="spec-label">Length</td>
-                <td>{{ product.lengthCm }} cm</td>
-              </tr>
-              <tr *ngIf="product.widthCm">
-                <td class="spec-label">Width</td>
-                <td>{{ product.widthCm }} cm</td>
-              </tr>
-              <tr *ngIf="product.heightCm">
-                <td class="spec-label">Height</td>
-                <td>{{ product.heightCm }} cm</td>
-              </tr>
-            </table>
-          </div>
-
-          <!-- Warranty -->
-          <div *ngIf="product.warrantyInfo" class="warranty-section">
-            <h4>Warranty</h4>
-            <p>{{ product.warrantyInfo }}</p>
-          </div>
+        <!-- Seller Info -->
+        <div class="pdp-seller-info">
+          <span class="pdp-seller-label">Sold by</span>
+          <span class="pdp-seller-name">NexBuy</span>
         </div>
-
-        <a routerLink="/products" class="mt-5 back-link"
-          >Back to Product List</a
-        >
       </div>
     </div>
+  </div>
 
-    <!-- Reviews Section -->
-    <div class="reviews-qa-section" *ngIf="product">
-      <app-review-list [productId]="product.id"></app-review-list>
-      <app-product-qa [productId]="product.id"></app-product-qa>
+  <!-- Description & Specs Section -->
+  <div class="pdp-details-section">
+    <div class="pdp-details-card">
+      <h4>Description</h4>
+      <p>{{ product.description }}</p>
+
+      <!-- Specifications -->
+      <div *ngIf="product.specifications" class="pdp-spec-block">
+        <h4>Specifications</h4>
+        <p>{{ product.specifications }}</p>
+      </div>
+
+      <!-- Dimensions & Weight -->
+      <div *ngIf="product.weightKg || product.lengthCm" class="pdp-spec-block">
+        <h4>Dimensions &amp; Weight</h4>
+        <table class="pdp-specs-table">
+          <tr *ngIf="product.weightKg">
+            <td class="pdp-spec-label">Weight</td>
+            <td>{{ product.weightKg }} kg</td>
+          </tr>
+          <tr *ngIf="product.lengthCm">
+            <td class="pdp-spec-label">Length</td>
+            <td>{{ product.lengthCm }} cm</td>
+          </tr>
+          <tr *ngIf="product.widthCm">
+            <td class="pdp-spec-label">Width</td>
+            <td>{{ product.widthCm }} cm</td>
+          </tr>
+          <tr *ngIf="product.heightCm">
+            <td class="pdp-spec-label">Height</td>
+            <td>{{ product.heightCm }} cm</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Warranty -->
+      <div *ngIf="product.warrantyInfo" class="pdp-spec-block">
+        <h4>Warranty</h4>
+        <p>{{ product.warrantyInfo }}</p>
+      </div>
     </div>
+  </div>
+
+  <!-- Reviews & Q&A Section -->
+  <div class="pdp-reviews-section" *ngIf="product">
+    <app-review-list [productId]="product.id"></app-review-list>
+    <app-product-qa [productId]="product.id"></app-product-qa>
+  </div>
+
+  <!-- Frequently Bought Together -->
+  <app-frequently-bought-together
+    *ngIf="product"
+    [productId]="product.id"
+    [currentProduct]="{
+      name: product.name,
+      imageUrl: product.imageUrl,
+      unitPrice: product.unitPrice,
+    }"
+  ></app-frequently-bought-together>
+</div>
+
+<!-- Pre-order Confirmation Dialog -->
+<div class="preorder-confirm" *ngIf="showConfirmation">
+  <div class="confirm-content">
+    <span class="confirm-icon">✅</span>
+    <h3>Pre-order Confirmed!</h3>
+    <p *ngIf="confirmationData?.orderId">
+      Order #{{ confirmationData.orderId }}
+    </p>
+    <p *ngIf="product.preorderReleaseDate">
+      Expected ship date: {{ product.preorderReleaseDate | date: "mediumDate" }}
+    </p>
+    <p>You'll receive a confirmation email shortly.</p>
+    <button class="btn btn-primary" (click)="viewOrder()">View Order</button>
+    <button class="btn btn-outline mt-2" (click)="showConfirmation = false">
+      Close
+    </button>
   </div>
 </div>

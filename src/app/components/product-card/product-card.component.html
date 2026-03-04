@@ -13,6 +13,9 @@
     <span class="badge badge-discount" *ngIf="hasDiscount">{{
       discountBadgeText
     }}</span>
+    <span class="badge badge-preorder" *ngIf="product.isPreorder"
+      >PRE-ORDER</span
+    >
   </div>
 
   <!-- Wishlist Heart -->
@@ -53,10 +56,10 @@
     <!-- Pricing -->
     <div class="card-pricing">
       <span class="card-price-current">
-        {{ currencyPrefix }} {{ product.unitPrice | number: "1.0-0" }}
+        {{ product.unitPrice | currency: currencyCode }}
       </span>
       <span class="card-price-original" *ngIf="hasOriginalPrice">
-        {{ currencyPrefix }} {{ product.originalPrice | number: "1.0-0" }}
+        {{ product.originalPrice | currency: currencyCode }}
       </span>
     </div>
 

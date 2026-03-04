@@ -5,8 +5,9 @@ export class CartItem {
   name: string;
   imageUrl: string;
   unitPrice: number;
-
   quantity: number;
+  sellerProvince: string;
+  sellerCity: string;
 
   constructor(product: Product) {
     this.id = product.id;
@@ -14,5 +15,7 @@ export class CartItem {
     this.imageUrl = product.imageUrl;
     this.unitPrice = product.unitPrice;
     this.quantity = 1;
+    this.sellerProvince = product.sellerProvince || 'Harare';
+    this.sellerCity = product.sellerCity || 'Harare';
   }
 }

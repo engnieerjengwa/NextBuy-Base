@@ -1,0 +1,117 @@
+<div class="gift-card-page">
+  <div class="gift-card-hero">
+    <h1><i class="fas fa-gift"></i> NexBuy Gift Cards</h1>
+    <p>The perfect gift for any occasion</p>
+  </div>
+
+  <!-- Purchase Success -->
+  <div class="purchase-success" *ngIf="purchaseSuccess">
+    <div class="success-content">
+      <span class="success-icon"><i class="fas fa-check-circle"></i></span>
+      <h3>Gift Card Purchased!</h3>
+      <p>Your gift card code is:</p>
+      <div class="gift-code">{{ purchasedCode }}</div>
+      <p class="success-detail">
+        A confirmation email has been sent to {{ recipientEmail }}.
+      </p>
+      <button class="btn-purchase-another" (click)="resetPurchase()">
+        Purchase Another
+      </button>
+    </div>
+  </div>
+
+  <!-- Purchase Form -->
+  <div class="gift-card-container" *ngIf="!purchaseSuccess">
+    <!-- Card Preview -->
+    <div class="card-preview">
+      <div class="gift-card-visual">
+        <div class="card-front">
+          <span class="brand">NexBuy</span>
+          <span class="amount">{{ selectedAmount | currency: "USD" }}</span>
+          <span class="recipient" *ngIf="recipientName"
+            >To: {{ recipientName }}</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Purchase Form -->
+    <div class="purchase-form">
+      <h3>Choose Amount</h3>
+      <div class="amount-buttons">
+        <button
+          *ngFor="let amount of presetAmounts"
+          [class.selected]="selectedAmount === amount"
+          (click)="selectAmount(amount)"
+        >
+          {{ amount | currency: "USD" }}
+        </button>
+      </div>
+
+      <div class="form-fields">
+        <div class="field">
+          <label>Recipient's Name</label>
+          <input [(ngModel)]="recipientName" placeholder="Enter name" />
+        </div>
+        <div class="field">
+          <label>Recipient's Email</label>
+          <input
+            [(ngModel)]="recipientEmail"
+            type="email"
+            placeholder="email&#64;example.com"
+          />
+        </div>
+        <div class="field">
+          <label>Personal Message (optional)</label>
+          <textarea
+            [(ngModel)]="personalMessage"
+            rows="3"
+            placeholder="Add a personal message..."
+            maxlength="200"
+          ></textarea>
+          <span class="char-count">{{ personalMessage.length }}/200</span>
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="purchaseError">{{ purchaseError }}</div>
+
+      <button
+        class="purchase-btn"
+        (click)="purchaseGiftCard()"
+        [disabled]="!canPurchase() || isPurchasing"
+      >
+        {{ isPurchasing ? "Processing..." : "Purchase Gift Card" }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Balance Check Section -->
+  <div class="balance-check">
+    <h3>Check Gift Card Balance</h3>
+    <div class="balance-input-row">
+      <input
+        [(ngModel)]="balanceCheckCode"
+        placeholder="Enter gift card code"
+      />
+      <button (click)="checkBalance()" [disabled]="!balanceCheckCode.trim()">
+        Check
+      </button>
+    </div>
+    <div class="balance-result" *ngIf="balanceResult">
+      <p>
+        Balance:
+        <strong>{{ balanceResult.currentBalance | currency: "USD" }}</strong>
+      </p>
+      <p>Expires: {{ balanceResult.expiryDate | date: "mediumDate" }}</p>
+      <p>
+        Status:
+        <span
+          class="badge"
+          [class]="'badge-' + balanceResult.status.toLowerCase()"
+          >{{ balanceResult.status }}</span
+        >
+      </p>
+    </div>
+    <div class="error-message" *ngIf="balanceError">{{ balanceError }}</div>
+  </div>
+</div>

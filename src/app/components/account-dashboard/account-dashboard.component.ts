@@ -1,10 +1,11 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { OrderHistoryService } from '../../services/order-history.service';
 import { WishlistService } from '../../services/wishlist.service';
 import { SavedAddressService } from '../../services/saved-address.service';
 import { OrderHistory } from '../../common/order-history';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-account-dashboard',
@@ -25,17 +26,16 @@ export class AccountDashboardComponent implements OnInit {
     private orderHistoryService: OrderHistoryService,
     private wishlistService: WishlistService,
     private savedAddressService: SavedAddressService,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const emailRaw = sessionStorage.getItem('userEmail');
-      const nameRaw = sessionStorage.getItem('userName');
-      this.userEmail = emailRaw ? JSON.parse(emailRaw) : '';
-      this.userName = nameRaw
-        ? JSON.parse(nameRaw)
-        : this.userEmail.split('@')[0];
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.userEmail = currentUser.email || '';
+      this.userName =
+        `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() ||
+        this.userEmail.split('@')[0];
     }
 
     this.loadDashboardData();

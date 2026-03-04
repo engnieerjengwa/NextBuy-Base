@@ -1,0 +1,365 @@
+.loyalty-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.loyalty-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--secondary-color);
+  margin-bottom: 20px;
+}
+
+/* Points Card */
+.points-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px;
+  border-radius: var(--radius-lg);
+  border-left: 4px solid;
+  background: white;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 24px;
+}
+
+.card-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.tier-icon-large {
+  font-size: 40px;
+}
+
+.tier-label {
+  font-size: 18px;
+  font-weight: 700;
+  display: block;
+  color: var(--secondary-color);
+}
+
+.multiplier {
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.card-right {
+  text-align: right;
+}
+
+.points-label {
+  font-size: 12px;
+  color: var(--text-lighter);
+  display: block;
+}
+
+.points-value {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--secondary-color);
+  display: block;
+}
+
+.points-worth {
+  font-size: 13px;
+  color: var(--success-color);
+}
+
+/* Tier Progress */
+.tier-progress {
+  margin-bottom: 24px;
+}
+
+.tier-badges {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tier-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0.4;
+  transition: var(--transition);
+}
+
+.tier-badge.active,
+.tier-badge.achieved {
+  opacity: 1;
+}
+
+.tier-badge.active {
+  transform: scale(1.1);
+}
+
+.tier-icon {
+  font-size: 24px;
+}
+
+.tier-name {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 4px;
+  color: var(--text-color);
+}
+
+.tier-threshold {
+  font-size: 11px;
+  color: var(--text-lighter);
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--bg-light);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin: 16px 0 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #cd7f32, #ffd700);
+  border-radius: var(--radius-sm);
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  font-size: 13px;
+  color: var(--text-light);
+  text-align: center;
+}
+
+.progress-text.max-tier {
+  color: var(--success-color);
+  font-weight: 600;
+}
+
+/* Redeem Section */
+.redeem-section {
+  background: var(--bg-light);
+  padding: 24px;
+  border-radius: var(--radius-md);
+  margin: 24px 0;
+}
+
+.redeem-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--secondary-color);
+}
+
+.redeem-info {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 12px;
+}
+
+.redeem-input-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.redeem-input-row input {
+  width: 150px;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+}
+
+.redeem-input-row input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.credit-preview {
+  font-size: 14px;
+  color: var(--success-color);
+  font-weight: 600;
+}
+
+.redeem-input-row button {
+  padding: 10px 20px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.redeem-input-row button:hover:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+.redeem-input-row button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.redeem-success {
+  color: var(--success-color);
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 12px;
+}
+
+.redeem-error {
+  color: var(--accent-color);
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+/* How It Works */
+.how-it-works {
+  margin: 24px 0;
+}
+
+.how-it-works h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--secondary-color);
+}
+
+.steps {
+  display: flex;
+  gap: 24px;
+}
+
+.step {
+  flex: 1;
+  text-align: center;
+  padding: 20px;
+  background: var(--bg-light);
+  border-radius: var(--radius-md);
+}
+
+.step-icon {
+  display: block;
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.step-text {
+  font-size: 14px;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+/* Points History */
+.points-history {
+  margin-top: 24px;
+}
+
+.points-history h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--secondary-color);
+}
+
+.history-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light);
+  transition: background 0.2s;
+}
+
+.history-row:hover {
+  background: var(--bg-light);
+}
+
+.history-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.history-desc {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.history-date {
+  font-size: 12px;
+  color: var(--text-lighter);
+}
+
+.history-points {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.history-points.earned {
+  color: var(--success-color);
+}
+
+.history-points.redeemed {
+  color: var(--accent-color);
+}
+
+.history-points.expired {
+  color: var(--text-lighter);
+}
+
+.history-points.bonus {
+  color: var(--warning-color);
+}
+
+/* States */
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-state h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--secondary-color);
+  margin-bottom: 8px;
+}
+
+.empty-state p,
+.loading-state p {
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .points-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .card-left {
+    flex-direction: column;
+  }
+
+  .card-right {
+    text-align: center;
+  }
+
+  .steps {
+    flex-direction: column;
+  }
+
+  .redeem-input-row {
+    flex-wrap: wrap;
+  }
+
+  .tier-badge {
+    font-size: 10px;
+  }
+}

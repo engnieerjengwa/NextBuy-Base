@@ -1,0 +1,47 @@
+<div class="page-content">
+  <div class="section-content section-content-p30">
+    <div class="container-fluid">
+      <!-- Breadcrumb -->
+      <nav class="page-breadcrumb">
+        <a routerLink="/products">Home</a>
+        <span class="bc-sep">/</span>
+        <span class="bc-current">Brands</span>
+      </nav>
+
+      <h2 class="page-title"><i class="fas fa-store"></i> Shop by Brand</h2>
+      <p class="page-subtitle">Discover products from your favorite brands</p>
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+      <!-- Brands Grid -->
+      <div *ngIf="!loading && brands.length > 0" class="brands-grid">
+        <a
+          *ngFor="let brand of brands"
+          [routerLink]="['/products']"
+          [queryParams]="{ brand: brand }"
+          class="brand-card"
+        >
+          <div
+            class="brand-logo"
+            [style.background-color]="getBrandColor(brand)"
+          >
+            {{ getBrandInitial(brand) }}
+          </div>
+          <span class="brand-name">{{ brand }}</span>
+        </a>
+      </div>
+
+      <!-- No Brands -->
+      <div *ngIf="!loading && brands.length === 0" class="no-brands">
+        <i class="fas fa-store-slash fa-3x"></i>
+        <h4>No brands available</h4>
+        <p>Check back soon for new brands!</p>
+      </div>
+    </div>
+  </div>
+</div>

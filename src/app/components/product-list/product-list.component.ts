@@ -84,6 +84,9 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   };
   useAdvancedSearch: boolean = false;
 
+  // Active filter label for header display
+  activeFilterLabel: string = '';
+
   constructor(
     private productService: ProductService,
     private cartService: CartService,
@@ -101,6 +104,29 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
       this.thePageNumber = 1;
       this.allLoaded = false;
       this.listProducts();
+    });
+
+    // React to query param changes (e.g. ?filter=new-arrivals)
+    this.route.queryParamMap.subscribe((queryParams) => {
+      const filter = queryParams.get('filter');
+      if (filter === 'new-arrivals') {
+        this.activeFilterLabel = 'New Arrivals';
+        this.currentFilters = { ...this.currentFilters, isNew: true };
+        this.currentSort = 'dateCreatedDesc';
+        this.useAdvancedSearch = true;
+        this.thePageNumber = 1;
+        this.allLoaded = false;
+        this.handleAdvancedSearch();
+      } else if (filter === 'clearance') {
+        this.activeFilterLabel = 'Clearance';
+        this.currentSort = 'priceAsc';
+        this.useAdvancedSearch = true;
+        this.thePageNumber = 1;
+        this.allLoaded = false;
+        this.handleAdvancedSearch();
+      } else {
+        this.activeFilterLabel = '';
+      }
     });
 
     this.loadFeaturedProducts();

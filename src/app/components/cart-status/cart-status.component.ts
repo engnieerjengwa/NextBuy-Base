@@ -19,7 +19,10 @@ export class CartStatusComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
-  constructor(private cartService: CartService, private router: Router) {}
+  constructor(
+    private cartService: CartService,
+    private router: Router,
+  ) {}
 
   ngOnInit() {
     this.updateCartStatus();
@@ -52,10 +55,14 @@ export class CartStatusComponent implements OnInit, OnDestroy {
   }
 
   toggleHover(): void {
-    if (this.cartItems.length > 0) {
-      this.router.navigate(['/cart-details']);
-    } else {
-      this.isHovering = !this.isHovering;
+    this.isHovering = !this.isHovering;
+  }
+
+  closeDropdown(): void {
+    this.isHovering = false;
+    if (this.hideDropdownTimer) {
+      clearTimeout(this.hideDropdownTimer);
+      this.hideDropdownTimer = null;
     }
   }
 
@@ -72,6 +79,6 @@ export class CartStatusComponent implements OnInit, OnDestroy {
   handleMouseLeave(): void {
     this.hideDropdownTimer = setTimeout(() => {
       this.isHovering = false;
-    }, 500);
+    }, 400);
   }
 }

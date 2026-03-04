@@ -26,6 +26,10 @@ import {
   GuestOrderItem,
 } from '../../common/guest-checkout';
 import { CartItem } from '../../common/cart-item';
+import {
+  DeliveryService,
+  DeliveryBreakdown,
+} from '../../services/delivery.service';
 import { CurrencyPipe, NgFor, NgIf, isPlatformBrowser } from '@angular/common';
 import { Country } from '../../common/country';
 import { State } from '../../common/state';
@@ -66,6 +70,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   // Delivery method
   selectedDeliveryMethod: string = 'standard';
+  deliveryBreakdown: DeliveryBreakdown | null = null;
+  standardDeliveryCost: number = 0;
+  expressDeliveryCost: number = 9.99;
 
   // Guest checkout
   isGuestMode: boolean = false;
@@ -115,6 +122,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private stripeService: StripeService,
     private savedAddressService: SavedAddressService,
     private authService: AuthService,
+    private deliveryService: DeliveryService,
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
@@ -123,31 +131,18 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     // Determine if guest mode
     this.isGuestMode = !this.authService.isLoggedIn();
 
-    // Get user details from session storage (SSR-safe)
-    let userNameJson: string | null = null;
-    let userEmailJson: string | null = null;
-    if (isPlatformBrowser(this.platformId) && !this.isGuestMode) {
-      userNameJson = sessionStorage.getItem('userName');
-      userEmailJson = sessionStorage.getItem('userEmail');
-    }
-
-    // Parse user details
+    // Get user details from AuthService (not sessionStorage — auth stores in localStorage)
     let firstName = '';
     let lastName = '';
     let email = '';
 
-    if (userNameJson) {
-      const userName = JSON.parse(userNameJson);
-      if (userName) {
-        // Check if userName contains a space (indicating first and last name)
-        const nameParts = userName.split(' ');
-        firstName = nameParts[0] || '';
-        lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+    if (!this.isGuestMode) {
+      const currentUser = this.authService.getCurrentUser();
+      if (currentUser) {
+        firstName = currentUser.firstName || '';
+        lastName = currentUser.lastName || '';
+        email = currentUser.email || '';
       }
-    }
-
-    if (userEmailJson) {
-      email = JSON.parse(userEmailJson) || '';
     }
 
     this.checkoutFormGroup = this.formBuilder.group({
@@ -218,7 +213,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     if (shippingAddressCountryValueChanges) {
       this.subscriptions.push(
         shippingAddressCountryValueChanges.subscribe((country) => {
-          this.getStates(country.code, this.shippingAddressStates);
+          if (country?.code) {
+            this.getStates(country.code, this.shippingAddressStates);
+          }
         }),
       );
     }
@@ -230,7 +227,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     if (billingAddressValueChanges) {
       this.subscriptions.push(
         billingAddressValueChanges.subscribe((country) => {
-          this.getStates(country.code, this.billingAddressStates);
+          if (country?.code) {
+            this.getStates(country.code, this.billingAddressStates);
+          }
         }),
       );
     }
@@ -252,14 +251,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     // Get cart items and totals
     this.subscriptions.push(
-      this.cartService.cartItemsSubject.subscribe(
-        (data) => (this.cartItems = data),
-      ),
+      this.cartService.cartItemsSubject.subscribe((data) => {
+        this.cartItems = data;
+        this.recalculateDelivery();
+      }),
     );
     this.subscriptions.push(
       this.cartService.totalPrice.subscribe((data) => {
         this.totalPrice = data;
-        this.paymentInfo.amount = Math.round(this.totalPrice * 100);
+        this.paymentInfo.amount = Math.round(this.orderTotal * 100);
+        this.recalculateDelivery();
       }),
     );
     this.subscriptions.push(
@@ -475,7 +476,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
 
     let order = new Order();
-    order.totalPrice = this.totalPrice;
+    order.totalPrice = this.orderTotal;
     order.totalQuantity = this.totalQuantity;
 
     const cartItems = this.cartItems;
@@ -534,7 +535,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.router.navigate(['/order-confirmation'], {
           queryParams: {
             tracking: response.orderTrackingNumber,
-            total: this.totalPrice,
+            total: this.orderTotal,
             qty: this.totalQuantity,
             email: customerEmail,
           },
@@ -634,7 +635,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       lastName: customer.lastName,
       shippingAddress,
       billingAddress,
-      totalPrice: this.totalPrice,
+      totalPrice: this.orderTotal,
       totalQuantity: this.totalQuantity,
       orderItems: guestOrderItems,
     };
@@ -644,7 +645,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.router.navigate(['/order-confirmation'], {
           queryParams: {
             tracking: response.orderTrackingNumber,
-            total: this.totalPrice,
+            total: this.orderTotal,
             qty: this.totalQuantity,
             email: customerEmail,
           },
@@ -792,9 +793,17 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     this.currentStep = step;
 
-    // Initialize Stripe when entering payment step
-    if (step === 3 && (!this.stripe || !this.elements)) {
-      setTimeout(() => this.setupStripePaymentElement(), 500);
+    // Recalculate delivery when entering delivery step
+    if (step === 2) {
+      this.recalculateDelivery();
+    }
+
+    // Update payment amount when entering payment step
+    if (step === 3) {
+      this.paymentInfo.amount = Math.round(this.orderTotal * 100);
+      if (!this.stripe || !this.elements) {
+        setTimeout(() => this.setupStripePaymentElement(), 500);
+      }
     }
   }
 
@@ -815,6 +824,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         return !!(customer?.valid && shipping?.valid && billing?.valid);
       case 2: // Delivery
         return true; // Delivery method always has a selection
+
       case 3: // Payment
         return !this.isProcessingPayment;
       case 4: // Review
@@ -845,8 +855,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     if (!isPlatformBrowser(this.platformId)) return;
     if (this.isGuestMode) return;
 
-    const userEmail = sessionStorage.getItem('userEmail');
-    if (!userEmail) return;
+    if (!this.authService.isLoggedIn()) return;
 
     this.savedAddressService.getAddresses().subscribe({
       next: (addresses) => {
@@ -874,7 +883,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       zipCode: address.zipCode,
     });
 
-    // Find and set country
+    // Find and set country, then load states and auto-select province
     const matchedCountry = this.countries.find(
       (c) => c.name === address.country,
     );
@@ -882,12 +891,86 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.checkoutFormGroup
         .get('shippingAddress.country')
         ?.setValue(matchedCountry);
+
+      // Load states for this country, then auto-select province
+      this.cardExpiryService.getProvinces(matchedCountry.code).subscribe({
+        next: (states) => {
+          this.shippingAddressStates.length = 0;
+          states.forEach((s) => this.shippingAddressStates.push(s));
+
+          // Match province/state by name
+          const matchedState = states.find((s) => s.name === address.province);
+          if (matchedState) {
+            this.checkoutFormGroup
+              .get('shippingAddress.state')
+              ?.setValue(matchedState);
+          }
+        },
+      });
     }
   }
 
   useManualAddress() {
     this.useNewAddress = true;
     this.selectedSavedAddressId = null;
+  }
+
+  // ---- Delivery cost calculation ----
+
+  /** Recalculate delivery cost based on shipping address */
+  recalculateDelivery(): void {
+    const stateVal = this.checkoutFormGroup.get('shippingAddress.state')?.value;
+    const cityVal = this.checkoutFormGroup.get('shippingAddress.city')?.value;
+
+    const province = stateVal?.name || stateVal || '';
+    const city = cityVal || province;
+
+    if (province && this.cartItems.length > 0) {
+      this.deliveryBreakdown = this.deliveryService.calculateDelivery(
+        this.cartItems,
+        this.totalPrice,
+        province,
+        city,
+      );
+      this.standardDeliveryCost = this.deliveryBreakdown.totalDeliveryCost;
+      // Express is standard cost + $9.99 surcharge
+      this.expressDeliveryCost = this.standardDeliveryCost + 9.99;
+    } else {
+      this.deliveryBreakdown = null;
+      this.standardDeliveryCost = 0;
+      this.expressDeliveryCost = 9.99;
+    }
+  }
+
+  /** Currently selected delivery cost based on method */
+  get selectedDeliveryCost(): number {
+    if (this.selectedDeliveryMethod === 'express') {
+      return this.expressDeliveryCost;
+    }
+    return this.standardDeliveryCost;
+  }
+
+  /** Final order total with delivery */
+  get orderTotal(): number {
+    return this.totalPrice + this.selectedDeliveryCost;
+  }
+
+  /** Whether standard delivery is free */
+  get isStandardFree(): boolean {
+    return this.standardDeliveryCost === 0;
+  }
+
+  /** Description for the delivery summary in review step */
+  get deliverySummaryText(): string {
+    const methodLabel =
+      this.selectedDeliveryMethod === 'express'
+        ? 'Express Delivery (1\u20132 days)'
+        : 'Standard Delivery (3\u20135 days)';
+    const costLabel =
+      this.selectedDeliveryCost === 0
+        ? 'FREE'
+        : '$' + this.selectedDeliveryCost.toFixed(2);
+    return `${methodLabel} \u2014 ${costLabel}`;
   }
 
   getMonthName(month: number): string {

@@ -8,25 +8,34 @@
 /* Cart Icon */
 .cart-icon {
   position: relative;
-  padding: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #4caf50;
 }
 
 .cart-icon i {
-  font-size: 24px;
-  color: #333;
+  font-size: 16px;
+  color: #fff;
 }
 
 /* Badge for item count */
 .badge {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -4px;
+  right: -4px;
   background-color: #f44336;
   color: white;
   border-radius: 50%;
-  padding: 4px 8px;
-  font-size: 12px;
+  padding: 2px 6px;
+  font-size: 10px;
   font-weight: bold;
+  min-width: 18px;
+  text-align: center;
+  line-height: 14px;
 }
 
 /* Cart Dropdown */
@@ -35,11 +44,27 @@
   right: 0;
   top: 100%;
   width: 320px;
+  z-index: 1000;
+  padding-top: 10px;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.15s ease,
+    visibility 0.15s ease;
+}
+
+.cart-dropdown.show {
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+}
+
+.cart-dropdown-inner {
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 4px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   padding: 15px;
   max-height: 400px;
   overflow-y: auto;

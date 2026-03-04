@@ -1,11 +1,12 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { OrderHistoryService } from '../../services/order-history.service';
 import { OrderHistory, OrderHistoryItem } from '../../common/order-history';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
+import { InvoiceService } from '../../services/invoice.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-order-history',
@@ -17,7 +18,6 @@ import { ProductService } from '../../services/product.service';
 export class OrderHistoryComponent implements OnInit {
   orderHistoryList: OrderHistory[] = [];
   allOrdersList: OrderHistory[] = [];
-  storage: Storage | null = null;
   isFiltered: boolean = false;
   selectedPeriod: number = 3;
   filterOptions = [
@@ -28,28 +28,25 @@ export class OrderHistoryComponent implements OnInit {
   ];
 
   reorderLoading: { [orderId: string]: boolean } = {};
+  invoiceLoading: { [orderId: string]: boolean } = {};
 
   constructor(
     private orderHistoryService: OrderHistoryService,
     private productService: ProductService,
+    private invoiceService: InvoiceService,
+    private authService: AuthService,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object,
-  ) {
-    if (isPlatformBrowser(this.platformId)) {
-      this.storage = sessionStorage;
-    }
-  }
+  ) {}
 
   ngOnInit(): void {
     this.handleOrderHistory();
   }
 
   handleOrderHistory() {
-    const theEmail = this.storage
-      ? JSON.parse(this.storage.getItem('userEmail')!)
-      : null;
-    const userName = this.storage
-      ? JSON.parse(this.storage.getItem('userName')!)
+    const currentUser = this.authService.getCurrentUser();
+    const theEmail = currentUser?.email || null;
+    const userName = currentUser
+      ? `${currentUser.firstName} ${currentUser.lastName}`.trim()
       : null;
 
     // Only fetch order history if email is available
@@ -192,5 +189,25 @@ export class OrderHistoryComponent implements OnInit {
       default:
         return 'status-default';
     }
+  }
+
+  downloadInvoice(orderId: string): void {
+    this.invoiceLoading[orderId] = true;
+    this.invoiceService.downloadInvoice(+orderId).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `invoice-${orderId}.pdf`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+        this.invoiceLoading[orderId] = false;
+      },
+      error: (err) => {
+        this.invoiceLoading[orderId] = false;
+        console.error('Error downloading invoice:', err);
+        alert('Failed to download invoice. Please try again.');
+      },
+    });
   }
 }

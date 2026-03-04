@@ -1,23 +1,12 @@
 <div class="page-wrapper">
   <!-- PAGE CONTAINER-->
   <div class="page-container">
-    <!-- TOP UTILITY BAR -->
-    <div class="top-utility-bar">
-      <div class="container-fluid">
-        <div class="utility-bar-content">
-          <a href="#" class="utility-link">Help Centre</a>
-          <span class="utility-divider">|</span>
-          <a href="#" class="utility-link">Sell on NexBuy</a>
-        </div>
-      </div>
-    </div>
-
     <!-- HEADER DESKTOP-->
     <header class="header-desktop">
-      <!-- Main Header Row -->
-      <div class="header-main">
+      <!-- Top Row: Logo + Info Links + Account Links + Icons -->
+      <div class="header-top">
         <div class="container-fluid">
-          <div class="header-wrap">
+          <div class="header-top-wrap">
             <!-- Hamburger (mobile only) -->
             <button
               class="mobile-hamburger"
@@ -49,24 +38,35 @@
               </a>
             </div>
 
-            <!-- Search -->
-            <div class="search-container">
-              <app-search></app-search>
+            <!-- Help & Sell Links -->
+            <div class="header-info-links">
+              <a href="#" class="info-link">Help Centre</a>
+              <a href="#" class="info-link">Sell on NexBuy</a>
             </div>
 
-            <!-- User Actions -->
+            <div class="header-spacer"></div>
+
+            <!-- Account Links + Icons -->
             <div class="user-actions">
               <app-login-status></app-login-status>
               <a
                 routerLink="/account/wishlist"
-                class="header-action-link wishlist-link"
+                class="header-icon-btn wishlist-icon"
                 title="Wishlist"
               >
-                <i class="fa fa-heart-o"></i>
-                <span class="action-label">Wishlist</span>
+                <i class="fa fa-heart"></i>
               </a>
               <app-cart-status></app-cart-status>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Row -->
+      <div class="header-search-row">
+        <div class="container-fluid">
+          <div class="search-container">
+            <app-search></app-search>
           </div>
         </div>
       </div>
@@ -121,7 +121,6 @@
 
     <!-- MAIN CONTENT-->
     <div class="main-content">
-      <app-breadcrumb></app-breadcrumb>
       <router-outlet></router-outlet>
     </div>
   </div>

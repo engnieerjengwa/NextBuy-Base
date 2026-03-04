@@ -1,0 +1,55 @@
+<div class="wallet-page">
+  <div class="wallet-header">
+    <h2>My Wallet</h2>
+    <div class="balance-card">
+      <span class="balance-label">Available Balance</span>
+      <span class="balance-amount">{{ balance | currency: "USD" }}</span>
+    </div>
+  </div>
+
+  <div class="wallet-info">
+    <p>
+      Your wallet balance can be used at checkout. Credits are earned from
+      refunds, gift cards, loyalty rewards, and referral bonuses.
+    </p>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="isLoading">
+    <p>Loading wallet...</p>
+  </div>
+
+  <div class="transactions-section" *ngIf="!isLoading">
+    <h3>Transaction History</h3>
+
+    <div class="transaction-list" *ngIf="transactions.length > 0">
+      <div
+        class="transaction-row"
+        *ngFor="let txn of transactions"
+        [class.credit]="txn.transactionType === 'CREDIT'"
+        [class.debit]="txn.transactionType === 'DEBIT'"
+      >
+        <div class="txn-icon">{{ getIcon(txn.source) }}</div>
+        <div class="txn-details">
+          <span class="txn-description">{{ txn.description }}</span>
+          <span class="txn-date">{{ txn.createdDate | date: "medium" }}</span>
+          <span class="txn-source badge">{{ txn.source | lowercase }}</span>
+        </div>
+        <div class="txn-amount">
+          <span
+            [class.positive]="txn.transactionType === 'CREDIT'"
+            [class.negative]="txn.transactionType === 'DEBIT'"
+          >
+            {{ txn.transactionType === "CREDIT" ? "+" : "-"
+            }}{{ txn.amount | currency: "USD" }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="transactions.length === 0">
+      <div class="empty-icon">💰</div>
+      <p>No transactions yet. Your wallet activity will appear here.</p>
+    </div>
+  </div>
+</div>

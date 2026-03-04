@@ -1,5 +1,4 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component } from '@angular/core';
 import { Product, ProductImage, ProductVariant } from '../../common/product';
 import { ProductService } from '../../services/product.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -7,8 +6,8 @@ import {
   CurrencyPipe,
   NgIf,
   NgClass,
-  NgFor,
   DecimalPipe,
+  DatePipe,
 } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { CartItem } from '../../common/cart-item';
@@ -19,21 +18,28 @@ import { WishlistService } from '../../services/wishlist.service';
 import { ReviewListComponent } from '../review-list/review-list.component';
 import { ProductQaComponent } from '../product-qa/product-qa.component';
 import { StockNotificationComponent } from '../stock-notification/stock-notification.component';
+import { PreorderService } from '../../services/preorder.service';
+import { PreOrderBadgeComponent } from '../pre-order-badge/pre-order-badge.component';
+import { FrequentlyBoughtTogetherComponent } from '../frequently-bought-together/frequently-bought-together.component';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-product-details',
   imports: [
     CurrencyPipe,
     DecimalPipe,
+    DatePipe,
     RouterLink,
     NgIf,
     NgClass,
-    NgFor,
     ImageGalleryComponent,
     VariantSelectorComponent,
     ReviewListComponent,
     ProductQaComponent,
     StockNotificationComponent,
+    PreOrderBadgeComponent,
+    FrequentlyBoughtTogetherComponent,
   ],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css',
@@ -52,8 +58,10 @@ export class ProductDetailsComponent {
     private cartService: CartService,
     private browsingHistoryService: BrowsingHistoryService,
     private wishlistService: WishlistService,
+    private preorderService: PreorderService,
+    private authService: AuthService,
+    private router: Router,
     private route: ActivatedRoute,
-    @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
 
   ngOnInit() {
@@ -86,10 +94,7 @@ export class ProductDetailsComponent {
       });
 
       // Check wishlist status
-      if (
-        isPlatformBrowser(this.platformId) &&
-        sessionStorage.getItem('userEmail')
-      ) {
+      if (this.authService.isLoggedIn()) {
         this.wishlistService.isInWishlist(theProductId).subscribe({
           next: (res) => (this.isInWishlist = res.inWishlist),
           error: () => (this.isInWishlist = false),
@@ -181,5 +186,31 @@ export class ProductDetailsComponent {
         error: () => (this.wishlistLoading = false),
       });
     }
+  }
+
+  // Pre-order
+  isPreordering = false;
+  showConfirmation = false;
+  confirmationData: any = null;
+
+  placePreOrder(): void {
+    this.isPreordering = true;
+    this.preorderService
+      .placePreOrder(this.product.id, this.quantity)
+      .subscribe({
+        next: (response) => {
+          this.isPreordering = false;
+          this.confirmationData = response;
+          this.showConfirmation = true;
+        },
+        error: () => {
+          this.isPreordering = false;
+        },
+      });
+  }
+
+  viewOrder(): void {
+    this.showConfirmation = false;
+    this.router.navigate(['/order-history']);
   }
 }
