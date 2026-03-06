@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { OrderHistoryService } from '../../services/order-history.service';
 import { OrderHistory, OrderHistoryItem } from '../../common/order-history';
 import { OrderStatusHistory } from '../../common/order-status-history';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { NexbuyCurrencyPipe } from '../../pipes/nexbuy-currency.pipe';
 import { ProductService } from '../../services/product.service';
 import { OrderTrackingTimelineComponent } from '../order-tracking-timeline/order-tracking-timeline.component';
 import { AuthService } from '../../services/auth.service';
@@ -14,7 +15,7 @@ import { InvoiceService } from '../../services/invoice.service';
   standalone: true,
   imports: [
     CommonModule,
-    CurrencyPipe,
+    NexbuyCurrencyPipe,
     RouterLink,
     OrderTrackingTimelineComponent,
   ],
@@ -40,6 +41,7 @@ export class OrderDetailComponent implements OnInit {
     private invoiceService: InvoiceService,
     private route: ActivatedRoute,
     private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
 
   ngOnInit(): void {
@@ -171,7 +173,7 @@ export class OrderDetailComponent implements OnInit {
   }
 
   viewInvoice() {
-    if (!this.orderId) return;
+    if (!this.orderId || !isPlatformBrowser(this.platformId)) return;
     this.invoiceLoading = true;
     this.invoiceService.downloadInvoice(+this.orderId).subscribe({
       next: (blob) => {

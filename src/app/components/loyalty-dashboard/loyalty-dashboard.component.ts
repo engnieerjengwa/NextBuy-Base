@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NexbuyCurrencyPipe } from '../../pipes/nexbuy-currency.pipe';
 import {
   LoyaltyService,
   LoyaltyStatus,
@@ -22,7 +23,7 @@ const TIER_CONFIG: Record<
 @Component({
   selector: 'app-loyalty-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NexbuyCurrencyPipe],
   templateUrl: './loyalty-dashboard.component.html',
   styleUrl: './loyalty-dashboard.component.css',
 })

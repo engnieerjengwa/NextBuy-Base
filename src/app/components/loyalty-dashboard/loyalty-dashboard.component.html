@@ -17,9 +17,7 @@
     <div class="card-right">
       <span class="points-label">Available Points</span>
       <span class="points-value">{{ program.totalPoints | number }}</span>
-      <span class="points-worth"
-        >Worth {{ pointsValue | currency: "USD" }}</span
-      >
+      <span class="points-worth">Worth {{ pointsValue | nexbuyCurrency }}</span>
     </div>
   </div>
 
@@ -64,7 +62,7 @@
         placeholder="Points to redeem"
       />
       <span class="credit-preview" *ngIf="redeemAmount >= 100">
-        = {{ redeemAmount / 100 | currency: "USD" }} credit
+        = {{ redeemAmount / 100 | nexbuyCurrency }} credit
       </span>
       <button (click)="redeemPoints()" [disabled]="!canRedeem() || isRedeeming">
         {{ isRedeeming ? "Redeeming..." : "Redeem" }}

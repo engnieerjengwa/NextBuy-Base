@@ -36,7 +36,7 @@
       <div class="detail-row">
         <span class="detail-label">Total Paid</span>
         <span class="detail-value total-price">{{
-          totalPrice | currency: "USD"
+          totalPrice | nexbuyCurrency
         }}</span>
       </div>
       <div class="detail-row" *ngIf="customerEmail">

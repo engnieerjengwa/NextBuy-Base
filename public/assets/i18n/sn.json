@@ -1,0 +1,128 @@
+{
+  "NAV": {
+    "HOME": "Kumba",
+    "CATEGORIES": "Mhando",
+    "CART": "Ngoro",
+    "ACCOUNT": "Akaundi Yangu",
+    "LOGIN": "Pinda",
+    "REGISTER": "Nyoresa",
+    "LOGOUT": "Buda",
+    "SEARCH_PLACEHOLDER": "Tsvaga zvigadzirwa...",
+    "ORDERS": "Ma Odha Angu",
+    "WISHLIST": "Zvandanoda",
+    "ADDRESSES": "Kero",
+    "WALLET": "Chikwama",
+    "LOYALTY": "Mibayiro",
+    "DEALS": "Zvipikiri Zvezuva",
+    "BRANDS": "Mabhuranzi",
+    "GIFT_CARDS": "Makadhi eZvipo"
+  },
+  "PRODUCT": {
+    "ADD_TO_CART": "Isa muNgoro",
+    "BUY_NOW": "Tenga Iye Zvino",
+    "OUT_OF_STOCK": "Hapachina",
+    "IN_STOCK": "Iripo",
+    "UNIT_PRICE": "Mutengo",
+    "QUANTITY": "Huwandu",
+    "DESCRIPTION": "Tsananguro",
+    "REVIEWS": "Ongororo",
+    "FREE_DELIVERY": "Kuendesa Mahara",
+    "SKU": "SKU",
+    "CATEGORY": "Mhando"
+  },
+  "CART": {
+    "TITLE": "Ngoro Yokutenga",
+    "EMPTY": "Ngoro yako haina chinhu",
+    "SUBTOTAL": "Zvose Zvidiki",
+    "DELIVERY": "Kuendesa",
+    "TOTAL": "Zvose",
+    "CHECKOUT": "Enderera kuBhadhara",
+    "CONTINUE_SHOPPING": "Ramba Uchitenga",
+    "REMOVE": "Bvisa",
+    "ITEMS": "zvinhu"
+  },
+  "CHECKOUT": {
+    "TITLE": "Bhadhara",
+    "SHIPPING": "Kero Yekuendesera",
+    "PAYMENT": "Kubhadhara",
+    "PLACE_ORDER": "Isa Odha",
+    "FIRST_NAME": "Zita Rekutanga",
+    "LAST_NAME": "Zita Rekupedzisira",
+    "EMAIL": "Imeri",
+    "PHONE": "Nhamba yeFoni",
+    "ADDRESS": "Kero yeMugwagwa",
+    "CITY": "Guta",
+    "COUNTRY": "Nyika"
+  },
+  "AUTH": {
+    "LOGIN_TITLE": "Pinda",
+    "REGISTER_TITLE": "Gadzira Akaundi",
+    "EMAIL": "Kero yeImeri",
+    "PASSWORD": "Shoko Rakavanzika",
+    "CONFIRM_PASSWORD": "Simbisa Shoko Rakavanzika",
+    "FORGOT_PASSWORD": "Wakanganwa Shoko Rakavanzika?",
+    "SIGN_UP": "Nyoresa",
+    "SIGN_IN": "Pinda"
+  },
+  "ORDERS": {
+    "TITLE": "Ma Odha Angu",
+    "ORDER_NUMBER": "Odha #",
+    "DATE": "Zuva",
+    "STATUS": "Mamiriro",
+    "TOTAL": "Zvose",
+    "DETAILS": "Ona Zvakadzama",
+    "NO_ORDERS": "Hamusati maita odha"
+  },
+  "ACCOUNT": {
+    "TITLE": "Akaundi Yangu",
+    "PROFILE": "Umboo",
+    "ADDRESSES": "Bhuku reKero",
+    "ORDERS": "Nhoroondo yeMa Odha",
+    "WISHLIST": "Zvandanoda"
+  },
+  "COMMON": {
+    "LOADING": "Kuvhura...",
+    "ERROR": "Pane chakaipa",
+    "RETRY": "Edza Zvakare",
+    "BACK": "Dzoka",
+    "NEXT": "Mberi",
+    "SAVE": "Sevha",
+    "CANCEL": "Kanzura",
+    "DELETE": "Dzima",
+    "CLOSE": "Vhara",
+    "YES": "Hongu",
+    "NO": "Kwete",
+    "SEARCH": "Tsvaga",
+    "NO_RESULTS": "Hapana zvawanikwa",
+    "BACK_TO_HOME": "Dzokera Kumba",
+    "VIEW_ALL": "Ona Zvose"
+  },
+  "FOOTER": {
+    "ABOUT": "Pamusoro peNexBuy",
+    "HELP": "Nzvimbo Yerubatsiro",
+    "RETURNS": "Mutemo Wekudzosa",
+    "PRIVACY": "Mutemo Wekuchengetedza",
+    "TERMS": "Mitemo neMamiriro",
+    "CONTACT": "Taurai Nesu",
+    "COPYRIGHT": "© 2026 NexBuy. Kodzero dzose dzakachengetwa."
+  },
+  "DEALS": {
+    "TITLE": "Zvipikiri Zvezuva",
+    "ENDS_IN": "Inopera mu",
+    "SOLD": "yakatengwa",
+    "REMAINING": "dzasara"
+  },
+  "WISHLIST": {
+    "TITLE": "Zvandanoda",
+    "EMPTY": "Rondedzero yako haina chinhu",
+    "MOVE_TO_CART": "Isa muNgoro"
+  },
+  "ERRORS": {
+    "NOT_FOUND_TITLE": "Peji Haina Kuwanikwa",
+    "NOT_FOUND_MESSAGE": "Peji yamuri kutsvaga haina kuwanikwa kana kuti yakafambiswa.",
+    "SERVER_ERROR_TITLE": "Pane Chakaipa",
+    "SERVER_ERROR_MESSAGE": "Tiri kusangana nematambudziko. Edzai zvakare gare gare.",
+    "BACK_TO_HOME": "Dzokera Kumba",
+    "BACK_TO_SHOPPING": "Dzokera Kutenga"
+  }
+}

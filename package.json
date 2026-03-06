@@ -7,7 +7,9 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:base-ecommerce": "node dist/base-ecommerce/server/server.mjs"
+    "serve:ssr:base-ecommerce": "node dist/base-ecommerce/server/server.mjs",
+    "analyze": "ng build --source-map && npx source-map-explorer dist/base-ecommerce/browser/**/*.js",
+    "analyze:bundle": "ng build --stats-json && npx webpack-bundle-analyzer dist/base-ecommerce/stats.json"
   },
   "private": true,
   "dependencies": {
@@ -23,6 +25,8 @@
     "@auth0/auth0-angular": "^2.5.0",
     "@fortawesome/fontawesome-free": "^7.1.0",
     "@ng-bootstrap/ng-bootstrap": "^18.0.0",
+    "@ngx-translate/core": "^17.0.0",
+    "@ngx-translate/http-loader": "^17.0.0",
     "@popperjs/core": "^2.11.8",
     "@stripe/stripe-js": "^8.6.1",
     "bootstrap": "^5.3.8",

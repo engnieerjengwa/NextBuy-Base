@@ -2,9 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CartItem } from '../../common/cart-item';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
-import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { NexbuyCurrencyPipe } from '../../pipes/nexbuy-currency.pipe';
 import { Subscription } from 'rxjs';
 import {
   CouponService,
@@ -19,7 +20,7 @@ import { SavedAddress } from '../../common/saved-address';
 
 @Component({
   selector: 'app-cart-details',
-  imports: [CurrencyPipe, NgFor, NgIf, RouterLink, FormsModule],
+  imports: [NexbuyCurrencyPipe, NgFor, NgIf, RouterLink, FormsModule],
   templateUrl: './cart-details.component.html',
   standalone: true,
   styleUrl: './cart-details.component.css',

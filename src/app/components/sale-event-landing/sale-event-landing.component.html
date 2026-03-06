@@ -82,10 +82,10 @@
               <span class="product-name">{{ product.productName }}</span>
               <div class="product-prices">
                 <span class="original-price">{{
-                  product.originalPrice | currency: "USD"
+                  product.originalPrice | nexbuyCurrency
                 }}</span>
                 <span class="deal-price">{{
-                  product.dealPrice | currency: "USD"
+                  product.dealPrice | nexbuyCurrency
                 }}</span>
               </div>
             </div>

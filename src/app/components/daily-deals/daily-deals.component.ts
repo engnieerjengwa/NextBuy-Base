@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { NexbuyCurrencyPipe } from '../../pipes/nexbuy-currency.pipe';
 import { DealService, Deal, DealProduct } from '../../services/deal.service';
 
 @Component({
   selector: 'app-daily-deals',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, NexbuyCurrencyPipe],
   templateUrl: './daily-deals.component.html',
   styleUrl: './daily-deals.component.css',
 })

@@ -1,0 +1,30 @@
+<div class="error-page">
+  <div class="error-container">
+    <div class="error-illustration">
+      <span class="error-code">500</span>
+      <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+    </div>
+    <h1 class="error-title">{{ "ERRORS.SERVER_ERROR_TITLE" | translate }}</h1>
+    <p class="error-message">
+      {{ "ERRORS.SERVER_ERROR_MESSAGE" | translate }}
+    </p>
+    <div class="error-actions">
+      <a routerLink="/products" class="btn btn-primary btn-lg">
+        <i class="fa-solid fa-house"></i>
+        {{ "ERRORS.BACK_TO_HOME" | translate }}
+      </a>
+      <button
+        class="btn btn-outline-secondary btn-lg"
+        onclick="window.location.reload()"
+      >
+        <i class="fa-solid fa-rotate-right"></i> Try Again
+      </button>
+    </div>
+    <div class="error-help">
+      <p>
+        If the problem persists, please
+        <a href="mailto:support&#64;nexbuy.co.zw">contact support</a>.
+      </p>
+    </div>
+  </div>
+</div>

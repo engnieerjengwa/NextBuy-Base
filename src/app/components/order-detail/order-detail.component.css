@@ -526,3 +526,24 @@
     padding: 14px 16px;
   }
 }
+
+/* Small phone breakpoint */
+@media (max-width: 480px) {
+  .od-container {
+    padding: 0 8px;
+  }
+
+  .od-title {
+    font-size: 16px;
+  }
+
+  .od-item {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .od-status-actions .od-btn {
+    font-size: 0.8rem;
+    padding: 8px 12px;
+  }
+}

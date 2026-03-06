@@ -40,19 +40,25 @@
 
             <!-- Help & Sell Links -->
             <div class="header-info-links">
-              <a href="#" class="info-link">Help Centre</a>
-              <a href="#" class="info-link">Sell on NexBuy</a>
+              <a href="#" class="info-link">{{
+                "NAV.HELP_CENTRE" | translate
+              }}</a>
+              <a href="#" class="info-link">{{
+                "NAV.SELL_ON_NEXBUY" | translate
+              }}</a>
             </div>
 
             <div class="header-spacer"></div>
 
             <!-- Account Links + Icons -->
             <div class="user-actions">
+              <app-language-selector></app-language-selector>
+              <app-currency-selector></app-currency-selector>
               <app-login-status></app-login-status>
               <a
                 routerLink="/account/wishlist"
                 class="header-icon-btn wishlist-icon"
-                title="Wishlist"
+                [title]="'NAV.WISHLIST' | translate"
               >
                 <i class="fa fa-heart"></i>
               </a>
@@ -88,7 +94,7 @@
     ></div>
     <nav class="mobile-menu" [class.open]="isMobileMenuOpen">
       <div class="mobile-menu-header">
-        <span class="mobile-menu-title">Menu</span>
+        <span class="mobile-menu-title">{{ "NAV.MENU" | translate }}</span>
         <button
           class="mobile-menu-close"
           (click)="closeMobileMenu()"
@@ -102,13 +108,19 @@
       </div>
       <ul class="mobile-menu-links">
         <li>
-          <a routerLink="/products" (click)="closeMobileMenu()">All Products</a>
+          <a routerLink="/products" (click)="closeMobileMenu()">{{
+            "NAV.ALL_PRODUCTS" | translate
+          }}</a>
         </li>
         <li>
-          <a routerLink="/cart-details" (click)="closeMobileMenu()">Cart</a>
+          <a routerLink="/cart-details" (click)="closeMobileMenu()">{{
+            "NAV.CART" | translate
+          }}</a>
         </li>
         <li>
-          <a routerLink="/orders" (click)="closeMobileMenu()">My Orders</a>
+          <a routerLink="/orders" (click)="closeMobileMenu()">{{
+            "NAV.MY_ORDERS" | translate
+          }}</a>
         </li>
       </ul>
       <div class="mobile-menu-categories">
@@ -132,51 +144,99 @@
     <!-- Footer Links - 5 Columns -->
     <div class="footer-columns">
       <div class="footer-column">
-        <h4>Shop</h4>
+        <h4>{{ "FOOTER.SHOP" | translate }}</h4>
         <ul>
-          <li><a routerLink="/products">Deals</a></li>
-          <li><a routerLink="/products">New Arrivals</a></li>
-          <li><a routerLink="/products">Fire Sale</a></li>
-          <li><a routerLink="/products">Gift Cards</a></li>
-          <li><a routerLink="/products">Clearance</a></li>
+          <li>
+            <a routerLink="/products">{{ "FOOTER.DEALS" | translate }}</a>
+          </li>
+          <li>
+            <a routerLink="/products">{{
+              "FOOTER.NEW_ARRIVALS" | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/products">{{ "FOOTER.FIRE_SALE" | translate }}</a>
+          </li>
+          <li>
+            <a routerLink="/products">{{ "FOOTER.GIFT_CARDS" | translate }}</a>
+          </li>
+          <li>
+            <a routerLink="/products">{{ "FOOTER.CLEARANCE" | translate }}</a>
+          </li>
         </ul>
       </div>
       <div class="footer-column">
-        <h4>My Account</h4>
+        <h4>{{ "FOOTER.MY_ACCOUNT" | translate }}</h4>
         <ul>
-          <li><a routerLink="/orders">My Account</a></li>
-          <li><a routerLink="/orders">Track Order</a></li>
-          <li><a href="#">Returns</a></li>
-          <li><a href="#">Invoices</a></li>
-          <li><a href="#">Coupons</a></li>
+          <li>
+            <a routerLink="/orders">{{ "FOOTER.MY_ACCOUNT" | translate }}</a>
+          </li>
+          <li>
+            <a routerLink="/orders">{{ "FOOTER.TRACK_ORDER" | translate }}</a>
+          </li>
+          <li>
+            <a href="#">{{ "FOOTER.RETURNS" | translate }}</a>
+          </li>
+          <li>
+            <a href="#">{{ "FOOTER.INVOICES" | translate }}</a>
+          </li>
+          <li>
+            <a href="#">{{ "FOOTER.COUPONS" | translate }}</a>
+          </li>
         </ul>
       </div>
       <div class="footer-column">
-        <h4>Help</h4>
+        <h4>{{ "FOOTER.HELP" | translate }}</h4>
         <ul>
-          <li><a href="#">Help Centre</a></li>
-          <li><a href="#">Contact Us</a></li>
-          <li><a href="#">Returns & Refunds</a></li>
-          <li><a href="#">Shipping Info</a></li>
-          <li><a href="#">Delivery Info</a></li>
+          <li>
+            <a href="#">{{ "FOOTER.HELP_CENTRE" | translate }}</a>
+          </li>
+          <li>
+            <a href="#">{{ "FOOTER.CONTACT_US" | translate }}</a>
+          </li>
+          <li>
+            <a href="#">{{ "FOOTER.RETURNS_REFUNDS" | translate }}</a>
+          </li>
+          <li>
+            <a href="#">{{ "FOOTER.SHIPPING_INFO" | translate }}</a>
+          </li>
+          <li>
+            <a href="#">{{ "FOOTER.DELIVERY_INFO" | translate }}</a>
+          </li>
         </ul>
       </div>
       <div class="footer-column">
-        <h4>Company</h4>
+        <h4>{{ "FOOTER.COMPANY" | translate }}</h4>
         <ul>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">Sell on NexBuy</a></li>
-          <li><a href="#">Press</a></li>
+          <li>
+            <a href="#">{{ "FOOTER.ABOUT_US" | translate }}</a>
+          </li>
+          <li>
+            <a href="#">{{ "FOOTER.CAREERS" | translate }}</a>
+          </li>
+          <li>
+            <a href="#">{{ "FOOTER.SELL_ON_NEXBUY" | translate }}</a>
+          </li>
+          <li>
+            <a href="#">{{ "FOOTER.PRESS" | translate }}</a>
+          </li>
         </ul>
       </div>
       <div class="footer-column">
-        <h4>Terms &amp; Policies</h4>
+        <h4>{{ "FOOTER.TERMS_POLICIES" | translate }}</h4>
         <ul>
-          <li><a href="#">Platform Terms</a></li>
-          <li><a href="#">Returns Policy</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Terms & Conditions</a></li>
+          <li>
+            <a href="#">{{ "FOOTER.PLATFORM_TERMS" | translate }}</a>
+          </li>
+          <li>
+            <a href="#">{{ "FOOTER.RETURNS_POLICY" | translate }}</a>
+          </li>
+          <li>
+            <a href="#">{{ "FOOTER.PRIVACY_POLICY" | translate }}</a>
+          </li>
+          <li>
+            <a href="#">{{ "FOOTER.TERMS_CONDITIONS" | translate }}</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -184,16 +244,20 @@
     <!-- App Store & Social -->
     <div class="footer-apps-social">
       <div class="footer-apps">
-        <span class="footer-apps-label">Download Our Apps</span>
+        <span class="footer-apps-label">{{
+          "FOOTER.DOWNLOAD_APPS" | translate
+        }}</span>
         <a href="#" class="app-badge" aria-label="App Store">
-          <i class="fa fa-apple"></i> App Store
+          <i class="fa fa-apple"></i> {{ "FOOTER.APP_STORE" | translate }}
         </a>
         <a href="#" class="app-badge" aria-label="Google Play">
-          <i class="fa fa-android"></i> Google Play
+          <i class="fa fa-android"></i> {{ "FOOTER.GOOGLE_PLAY" | translate }}
         </a>
       </div>
       <div class="footer-social">
-        <span class="footer-social-label">Follow Us</span>
+        <span class="footer-social-label">{{
+          "FOOTER.FOLLOW_US" | translate
+        }}</span>
         <a href="#" class="social-icon" aria-label="Facebook"
           ><i class="fa fa-facebook"></i
         ></a>
@@ -224,7 +288,7 @@
     <!-- Payment Methods Bar -->
     <div class="footer-payment-bar">
       <div class="payment-methods">
-        <span class="payment-label">We accept:</span>
+        <span class="payment-label">{{ "FOOTER.WE_ACCEPT" | translate }}</span>
         <span class="payment-icon">VISA</span>
         <span class="payment-icon">MasterCard</span>
         <span class="payment-icon">Amex</span>
@@ -232,10 +296,13 @@
         <span class="payment-icon">Ozow</span>
         <span class="payment-icon">eBucks</span>
       </div>
-      <p class="footer-copyright">&copy; 2026 NexBuy. All rights reserved.</p>
+      <p class="footer-copyright">{{ "FOOTER.COPYRIGHT" | translate }}</p>
     </div>
   </div>
 </footer>
+
+<!-- MOBILE BOTTOM NAV -->
+<app-mobile-bottom-nav></app-mobile-bottom-nav>
 
 <!-- SCROLL-TO-TOP FAB -->
 <app-scroll-to-top></app-scroll-to-top>

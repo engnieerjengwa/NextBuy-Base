@@ -1457,3 +1457,224 @@ a.primary-btn:hover {
     padding: 8px 0;
   }
 }
+
+/*
+ * ----------------------------
+ * FE-31 — Global Responsive Utilities
+ * ----------------------------
+ */
+
+/* Prevent horizontal scroll globally */
+html,
+body {
+  overflow-x: hidden;
+}
+
+/* ── Touch Targets (48px minimum on mobile) ── */
+@media (max-width: 767px) {
+  button,
+  a.btn,
+  input[type="submit"],
+  [role="button"],
+  .clickable {
+    min-height: 44px;
+  }
+
+  /* Ensure form inputs are comfortable to tap */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="search"],
+  input[type="url"],
+  select,
+  textarea {
+    min-height: 44px;
+    font-size: 16px; /* prevents iOS zoom on focus */
+  }
+
+  /* Readable body text on mobile */
+  body {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  h1 {
+    font-size: 1.625rem;
+  }
+  h2 {
+    font-size: 1.375rem;
+  }
+  h3 {
+    font-size: 1.125rem;
+  }
+  h4 {
+    font-size: 1rem;
+  }
+}
+
+/* ── Visibility Helpers ── */
+.hide-mobile {
+  display: none !important;
+}
+@media (min-width: 768px) {
+  .hide-mobile {
+    display: block !important;
+  }
+}
+@media (min-width: 768px) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* ── Spacing Helpers (Mobile) ── */
+.px-mobile-sm {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+@media (min-width: 768px) {
+  .px-mobile-sm {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* ── Responsive Container ── */
+.container-responsive {
+  width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .container-responsive {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+@media (min-width: 1200px) {
+  .container-responsive {
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+}
+
+/* ── Responsive Typography ── */
+@media (max-width: 767px) {
+  .page-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* ── Responsive Tables → Cards on Mobile ── */
+@media (max-width: 767px) {
+  .table-responsive-cards thead {
+    display: none;
+  }
+
+  .table-responsive-cards tbody tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    background: #fff;
+  }
+
+  .table-responsive-cards tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.35rem 0;
+    border: none;
+    font-size: 0.9rem;
+  }
+
+  .table-responsive-cards tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-color);
+    margin-right: 1rem;
+  }
+}
+
+/* ── Full-Width Buttons on Mobile ── */
+@media (max-width: 767px) {
+  .btn-mobile-full {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ── Flex Stack on Mobile ── */
+@media (max-width: 767px) {
+  .flex-mobile-stack {
+    flex-direction: column !important;
+    gap: 0.75rem;
+  }
+}
+
+/* ── Safe Area (for phones with notch) ── */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/*
+ * ----------------------------
+ * FE-36 — CLS Prevention
+ * ----------------------------
+ */
+
+/* Reserve space for dynamic content areas to prevent layout shift */
+.product-grid {
+  min-height: 400px;
+}
+
+.category-bar {
+  min-height: 48px;
+}
+
+.banner-carousel,
+.hero-banner {
+  aspect-ratio: 3 / 1;
+  min-height: 200px;
+}
+
+@media (max-width: 767px) {
+  .banner-carousel,
+  .hero-banner {
+    aspect-ratio: 16 / 9;
+    min-height: 150px;
+  }
+}
+
+/* Prevent FOIT (Flash of Invisible Text) */
+@font-face {
+  font-family: "Poppins";
+  font-display: swap;
+}
+
+/* Skeleton placeholder for deferred content */
+.skeleton-section {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

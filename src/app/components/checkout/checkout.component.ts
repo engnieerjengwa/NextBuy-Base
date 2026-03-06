@@ -30,7 +30,8 @@ import {
   DeliveryService,
   DeliveryBreakdown,
 } from '../../services/delivery.service';
-import { CurrencyPipe, NgFor, NgIf, isPlatformBrowser } from '@angular/common';
+import { NgFor, NgIf, isPlatformBrowser } from '@angular/common';
+import { NexbuyCurrencyPipe } from '../../pipes/nexbuy-currency.pipe';
 import { Country } from '../../common/country';
 import { State } from '../../common/state';
 import { Order } from '../../common/order';
@@ -45,7 +46,7 @@ import { Stripe } from '@stripe/stripe-js';
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [ReactiveFormsModule, CurrencyPipe, NgFor, NgIf, RouterLink],
+  imports: [ReactiveFormsModule, NexbuyCurrencyPipe, NgFor, NgIf, RouterLink],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css',
 })
@@ -99,6 +100,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   // Click outside listener to close the expiry selector
   @HostListener('document:click', ['$event'])
   clickOutside(event: Event) {
+    if (!isPlatformBrowser(this.platformId)) return;
     const target = event.target as HTMLElement;
     const expirySelector = document.querySelector('.expiry-selector-popup');
     const expiryDisplay = document.querySelector('.expiry-display');
@@ -418,7 +420,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
 
     // Get the current origin for the return URL
-    const returnUrl = window.location.origin + '/order-confirmation';
+    const returnUrl = isPlatformBrowser(this.platformId)
+      ? window.location.origin + '/order-confirmation'
+      : '/order-confirmation';
 
     // Confirm the payment with Stripe
     return this.stripeService.confirmPayment(

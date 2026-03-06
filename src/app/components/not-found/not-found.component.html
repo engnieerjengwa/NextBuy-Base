@@ -1,0 +1,30 @@
+<div class="error-page">
+  <div class="error-container">
+    <div class="error-illustration">
+      <span class="error-code">404</span>
+      <i class="fa-solid fa-face-sad-tear error-icon"></i>
+    </div>
+    <h1 class="error-title">{{ "ERRORS.NOT_FOUND_TITLE" | translate }}</h1>
+    <p class="error-message">
+      {{ "ERRORS.NOT_FOUND_MESSAGE" | translate }}
+    </p>
+    <div class="error-actions">
+      <a routerLink="/products" class="btn btn-primary btn-lg">
+        <i class="fa-solid fa-house"></i>
+        {{ "ERRORS.BACK_TO_HOME" | translate }}
+      </a>
+      <a routerLink="/deals" class="btn btn-outline-primary btn-lg">
+        <i class="fa-solid fa-tags"></i>
+        {{ "ERRORS.BACK_TO_SHOPPING" | translate }}
+      </a>
+    </div>
+    <div class="error-suggestions">
+      <p class="suggestions-label">You might want to:</p>
+      <ul>
+        <li>Check the URL for typos</li>
+        <li>Use the search bar to find what you need</li>
+        <li>Browse our <a routerLink="/products">product categories</a></li>
+      </ul>
+    </div>
+  </div>
+</div>

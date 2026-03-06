@@ -1,13 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CartService } from '../../services/cart.service';
-import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
+import { NexbuyCurrencyPipe } from '../../pipes/nexbuy-currency.pipe';
 import { CartItem } from '../../common/cart-item';
 import { Subscription } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-cart-status',
-  imports: [CurrencyPipe, RouterLink, NgFor, NgIf],
+  imports: [NexbuyCurrencyPipe, RouterLink, NgFor, NgIf, TranslateModule],
   templateUrl: './cart-status.component.html',
   styleUrl: './cart-status.component.css',
 })

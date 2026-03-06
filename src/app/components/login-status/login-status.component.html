@@ -4,23 +4,27 @@
   </span>
 
   <a *ngIf="!isAuthenticated" routerLink="/login" class="header-text-link">
-    Login
+    {{ "AUTH.LOGIN" | translate }}
   </a>
   <span *ngIf="!isAuthenticated" class="link-divider">|</span>
   <a *ngIf="!isAuthenticated" routerLink="/register" class="header-text-link">
-    Register
+    {{ "AUTH.REGISTER" | translate }}
   </a>
   <span class="link-divider">|</span>
 
-  <a routerLink="/orders" class="header-text-link">Orders</a>
+  <a routerLink="/orders" class="header-text-link">{{
+    "AUTH.ORDERS" | translate
+  }}</a>
   <span class="link-divider">|</span>
-  <a routerLink="/orders" class="header-text-link">My Account</a>
+  <a routerLink="/orders" class="header-text-link">{{
+    "AUTH.MY_ACCOUNT" | translate
+  }}</a>
 
   <button
     *ngIf="isAuthenticated"
     (click)="logout()"
     class="header-text-link logout-link"
   >
-    Logout
+    {{ "AUTH.LOGOUT" | translate }}
   </button>
 </div>

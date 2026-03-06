@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { NexbuyCurrencyPipe } from '../../pipes/nexbuy-currency.pipe';
 import { Product } from '../../common/product';
 import { WishlistService } from '../../services/wishlist.service';
 import { AuthService } from '../../services/auth.service';
@@ -8,7 +9,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, NexbuyCurrencyPipe],
   templateUrl: './product-card.component.html',
   styleUrls: ['./product-card.component.css'],
 })

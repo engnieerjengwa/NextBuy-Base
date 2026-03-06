@@ -101,7 +101,7 @@
     <div class="pdp-price-panel">
       <div class="pdp-price-card">
         <!-- Price -->
-        <div class="pdp-price-main">{{ effectivePrice | currency: "USD" }}</div>
+        <div class="pdp-price-main">{{ effectivePrice | nexbuyCurrency }}</div>
         <div
           class="pdp-price-original"
           *ngIf="
@@ -109,7 +109,7 @@
           "
         >
           <span class="pdp-was-price">{{
-            product.originalPrice | currency: "USD"
+            product.originalPrice | nexbuyCurrency
           }}</span>
           <span class="pdp-discount-badge" *ngIf="product.discountPercentage">
             -{{ product.discountPercentage }}%

@@ -3,40 +3,36 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
 } from '@angular/router';
-import { ProductListComponent } from './components/product-list/product-list.component';
-import { ProductDetailsComponent } from './components/product-details/product-details.component';
-import { CartDetailsComponent } from './components/cart-details/cart-details.component';
-import { CheckoutComponent } from './components/checkout/checkout.component';
-import { OrderHistoryComponent } from './components/order-history/order-history.component';
-import { OrderDetailComponent } from './components/order-detail/order-detail.component';
-import { LogReturnComponent } from './components/log-return/log-return.component';
-import { OrderConfirmationComponent } from './components/order-confirmation/order-confirmation.component';
 import { authGuard } from './guards/auth.guard';
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
-import { AccountDashboardComponent } from './components/account-dashboard/account-dashboard.component';
-import { WishlistComponent } from './components/wishlist/wishlist.component';
-import { AddressBookComponent } from './components/address-book/address-book.component';
-import { DailyDealsComponent } from './components/daily-deals/daily-deals.component';
-import { BrandShowcaseComponent } from './components/brand-showcase/brand-showcase.component';
-import { GiftCardComponent } from './components/gift-card/gift-card.component';
-import { WalletComponent } from './components/wallet/wallet.component';
-import { LoyaltyDashboardComponent } from './components/loyalty-dashboard/loyalty-dashboard.component';
-import { SaleEventLandingComponent } from './components/sale-event-landing/sale-event-landing.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { ServerErrorComponent } from './components/server-error/server-error.component';
 
 export const routes: Routes = [
-  // Auth routes
-  { path: 'login', component: LoginComponent, data: { breadcrumb: 'Login' } },
+  // Auth routes (lazy)
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./components/login/login.component').then(
+        (m) => m.LoginComponent,
+      ),
+    data: { breadcrumb: 'Login' },
+  },
   {
     path: 'register',
-    component: RegisterComponent,
+    loadComponent: () =>
+      import('./components/register/register.component').then(
+        (m) => m.RegisterComponent,
+      ),
     data: { breadcrumb: 'Register' },
   },
 
-  // Order routes with authentication
+  // Order routes with authentication (lazy)
   {
     path: 'orders',
-    component: OrderHistoryComponent,
+    loadComponent: () =>
+      import('./components/order-history/order-history.component').then(
+        (m) => m.OrderHistoryComponent,
+      ),
     data: { breadcrumb: 'My Orders' },
     canActivate: [
       (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
@@ -45,7 +41,10 @@ export const routes: Routes = [
   },
   {
     path: 'orders/:orderId',
-    component: OrderDetailComponent,
+    loadComponent: () =>
+      import('./components/order-detail/order-detail.component').then(
+        (m) => m.OrderDetailComponent,
+      ),
     data: { breadcrumb: 'Order Details' },
     canActivate: [
       (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
@@ -54,7 +53,10 @@ export const routes: Routes = [
   },
   {
     path: 'orders/:orderId/return',
-    component: LogReturnComponent,
+    loadComponent: () =>
+      import('./components/log-return/log-return.component').then(
+        (m) => m.LogReturnComponent,
+      ),
     data: { breadcrumb: 'Log Return' },
     canActivate: [
       (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
@@ -68,14 +70,20 @@ export const routes: Routes = [
   // Order confirmation (no auth guard - allows guest checkout)
   {
     path: 'order-confirmation',
-    component: OrderConfirmationComponent,
+    loadComponent: () =>
+      import('./components/order-confirmation/order-confirmation.component').then(
+        (m) => m.OrderConfirmationComponent,
+      ),
     data: { breadcrumb: 'Order Confirmation' },
   },
 
-  // Checkout (requires authentication)
+  // Checkout (requires authentication, lazy)
   {
     path: 'checkout',
-    component: CheckoutComponent,
+    loadComponent: () =>
+      import('./components/checkout/checkout.component').then(
+        (m) => m.CheckoutComponent,
+      ),
     data: { breadcrumb: 'Checkout' },
     canActivate: [
       (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
@@ -83,10 +91,13 @@ export const routes: Routes = [
     ],
   },
 
-  // Account routes
+  // Account routes (lazy)
   {
     path: 'account',
-    component: AccountDashboardComponent,
+    loadComponent: () =>
+      import('./components/account-dashboard/account-dashboard.component').then(
+        (m) => m.AccountDashboardComponent,
+      ),
     data: { breadcrumb: 'My Account' },
     canActivate: [
       (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
@@ -95,7 +106,10 @@ export const routes: Routes = [
   },
   {
     path: 'account/wishlist',
-    component: WishlistComponent,
+    loadComponent: () =>
+      import('./components/wishlist/wishlist.component').then(
+        (m) => m.WishlistComponent,
+      ),
     data: { breadcrumb: 'My Wishlist' },
     canActivate: [
       (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
@@ -104,7 +118,10 @@ export const routes: Routes = [
   },
   {
     path: 'account/addresses',
-    component: AddressBookComponent,
+    loadComponent: () =>
+      import('./components/address-book/address-book.component').then(
+        (m) => m.AddressBookComponent,
+      ),
     data: { breadcrumb: 'Address Book' },
     canActivate: [
       (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
@@ -113,38 +130,80 @@ export const routes: Routes = [
   },
   {
     path: 'cart-details',
-    component: CartDetailsComponent,
+    loadComponent: () =>
+      import('./components/cart-details/cart-details.component').then(
+        (m) => m.CartDetailsComponent,
+      ),
     data: { breadcrumb: 'Cart' },
   },
   {
     path: 'products/:id',
-    component: ProductDetailsComponent,
+    loadComponent: () =>
+      import('./components/product-details/product-details.component').then(
+        (m) => m.ProductDetailsComponent,
+      ),
     data: { breadcrumb: 'Product Details' },
   },
-  { path: 'search/:keyword', component: ProductListComponent },
-  { path: 'category/:id/:name', component: ProductListComponent },
-  { path: 'category', component: ProductListComponent },
-  { path: 'products', component: ProductListComponent },
+  {
+    path: 'search/:keyword',
+    loadComponent: () =>
+      import('./components/product-list/product-list.component').then(
+        (m) => m.ProductListComponent,
+      ),
+  },
+  {
+    path: 'category/:id/:name',
+    loadComponent: () =>
+      import('./components/product-list/product-list.component').then(
+        (m) => m.ProductListComponent,
+      ),
+  },
+  {
+    path: 'category',
+    loadComponent: () =>
+      import('./components/product-list/product-list.component').then(
+        (m) => m.ProductListComponent,
+      ),
+  },
+  {
+    path: 'products',
+    loadComponent: () =>
+      import('./components/product-list/product-list.component').then(
+        (m) => m.ProductListComponent,
+      ),
+  },
 
-  // Phase 4: Deals, Promotions & Growth
+  // Phase 4: Deals, Promotions & Growth (lazy)
   {
     path: 'deals',
-    component: DailyDealsComponent,
+    loadComponent: () =>
+      import('./components/daily-deals/daily-deals.component').then(
+        (m) => m.DailyDealsComponent,
+      ),
     data: { breadcrumb: 'Daily Deals' },
   },
   {
     path: 'brands',
-    component: BrandShowcaseComponent,
+    loadComponent: () =>
+      import('./components/brand-showcase/brand-showcase.component').then(
+        (m) => m.BrandShowcaseComponent,
+      ),
     data: { breadcrumb: 'Brands' },
   },
   {
     path: 'gift-cards',
-    component: GiftCardComponent,
+    loadComponent: () =>
+      import('./components/gift-card/gift-card.component').then(
+        (m) => m.GiftCardComponent,
+      ),
     data: { breadcrumb: 'Gift Cards' },
   },
   {
     path: 'account/wallet',
-    component: WalletComponent,
+    loadComponent: () =>
+      import('./components/wallet/wallet.component').then(
+        (m) => m.WalletComponent,
+      ),
     data: { breadcrumb: 'Wallet' },
     canActivate: [
       (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
@@ -153,7 +212,10 @@ export const routes: Routes = [
   },
   {
     path: 'account/loyalty',
-    component: LoyaltyDashboardComponent,
+    loadComponent: () =>
+      import('./components/loyalty-dashboard/loyalty-dashboard.component').then(
+        (m) => m.LoyaltyDashboardComponent,
+      ),
     data: { breadcrumb: 'Loyalty Rewards' },
     canActivate: [
       (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
@@ -162,10 +224,27 @@ export const routes: Routes = [
   },
   {
     path: 'sale/:slug',
-    component: SaleEventLandingComponent,
+    loadComponent: () =>
+      import('./components/sale-event-landing/sale-event-landing.component').then(
+        (m) => m.SaleEventLandingComponent,
+      ),
     data: { breadcrumb: 'Sale' },
   },
 
   { path: '', redirectTo: '/products', pathMatch: 'full' },
-  { path: '**', redirectTo: '/products', pathMatch: 'full' },
+
+  // Error pages (kept eager — tiny components, needed for error handling)
+  {
+    path: 'error',
+    component: ServerErrorComponent,
+    data: { breadcrumb: 'Error' },
+  },
+  {
+    path: 'not-found',
+    component: NotFoundComponent,
+    data: { breadcrumb: 'Page Not Found' },
+  },
+
+  // Wildcard — must be last
+  { path: '**', component: NotFoundComponent },
 ];

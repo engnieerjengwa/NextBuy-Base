@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { NexbuyCurrencyPipe } from '../../pipes/nexbuy-currency.pipe';
 import { FrequentlyBoughtTogetherService } from '../../services/frequently-bought-together.service';
 import { CartService } from '../../services/cart.service';
 import { CartItem } from '../../common/cart-item';
@@ -19,7 +20,7 @@ interface BundleProduct {
 @Component({
   selector: 'app-frequently-bought-together',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, RouterLink],
+  imports: [CommonModule, NexbuyCurrencyPipe, RouterLink],
   templateUrl: './frequently-bought-together.component.html',
   styleUrl: './frequently-bought-together.component.css',
 })

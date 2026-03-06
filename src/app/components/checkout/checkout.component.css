@@ -550,6 +550,85 @@ select.form-control:hover {
 }
 
 /* ===== Responsive adjustments ===== */
+
+/* Tablet breakpoint */
+@media (max-width: 992px) {
+  .saved-addresses-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Small tablet / large phone breakpoint */
+@media (max-width: 768px) {
+  .checkout-stepper {
+    gap: 0;
+    padding: 1rem 0;
+  }
+
+  .checkout-stepper .step {
+    max-width: 140px;
+  }
+
+  .step-label {
+    font-size: 12px;
+  }
+
+  .step-number {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+
+  .wizard-nav {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .wizard-nav .btn {
+    width: 100%;
+  }
+
+  .saved-addresses-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .delivery-option {
+    flex-wrap: wrap;
+    padding: 1rem;
+  }
+
+  .delivery-price {
+    width: 100%;
+    text-align: right;
+    margin-top: 8px;
+  }
+
+  .delivery-info strong {
+    font-size: 15px;
+  }
+
+  .review-section .btn-link {
+    position: static;
+    display: block;
+    margin-top: 8px;
+  }
+
+  .guest-banner-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .summary-total-price {
+    font-size: 18px;
+  }
+
+  .summary-total-label {
+    font-size: 14px;
+  }
+}
+
+/* Phone breakpoint */
 @media (max-width: 576px) {
   .expiry-selector-popup {
     width: 100%;

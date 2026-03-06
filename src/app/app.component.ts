@@ -7,6 +7,10 @@ import { LoginStatusComponent } from './components/login-status/login-status.com
 import { CommonModule } from '@angular/common';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
 import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
+import { CurrencySelectorComponent } from './components/currency-selector/currency-selector.component';
+import { MobileBottomNavComponent } from './components/mobile-bottom-nav/mobile-bottom-nav.component';
+import { LanguageSelectorComponent } from './components/language-selector/language-selector.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +24,10 @@ import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.c
     LoginStatusComponent,
     CookieConsentComponent,
     ScrollToTopComponent,
+    CurrencySelectorComponent,
+    MobileBottomNavComponent,
+    LanguageSelectorComponent,
+    TranslateModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',

@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { NexbuyCurrencyPipe } from '../../pipes/nexbuy-currency.pipe';
 
 @Component({
   selector: 'app-order-confirmation',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, RouterLink],
+  imports: [CommonModule, NexbuyCurrencyPipe, RouterLink],
   templateUrl: './order-confirmation.component.html',
   styleUrl: './order-confirmation.component.css',
 })

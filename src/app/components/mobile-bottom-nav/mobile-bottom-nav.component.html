@@ -1,0 +1,48 @@
+<nav
+  class="bottom-nav"
+  [class.bottom-nav--hidden]="!isVisible"
+  aria-label="Mobile navigation"
+>
+  <a
+    routerLink="/products"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    class="bottom-nav__item"
+  >
+    <i class="fas fa-home" aria-hidden="true"></i>
+    <span>{{ "NAV.HOME" | translate }}</span>
+  </a>
+
+  <a
+    routerLink="/category"
+    routerLinkActive="active"
+    class="bottom-nav__item"
+    aria-label="Browse categories"
+  >
+    <i class="fas fa-th-large" aria-hidden="true"></i>
+    <span>{{ "NAV.CATEGORIES" | translate }}</span>
+  </a>
+
+  <a
+    routerLink="/cart-details"
+    routerLinkActive="active"
+    class="bottom-nav__item bottom-nav__item--cart"
+  >
+    <div class="bottom-nav__cart-icon">
+      <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+      <span
+        class="bottom-nav__badge"
+        *ngIf="cartCount > 0"
+        [attr.aria-label]="cartCount + ' items in cart'"
+      >
+        {{ cartCount > 99 ? "99+" : cartCount }}
+      </span>
+    </div>
+    <span>{{ "NAV.CART" | translate }}</span>
+  </a>
+
+  <a routerLink="/account" routerLinkActive="active" class="bottom-nav__item">
+    <i class="fas fa-user" aria-hidden="true"></i>
+    <span>{{ "NAV.ACCOUNT" | translate }}</span>
+  </a>
+</nav>

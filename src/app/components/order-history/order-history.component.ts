@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { OrderHistoryService } from '../../services/order-history.service';
 import { OrderHistory, OrderHistoryItem } from '../../common/order-history';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
@@ -36,6 +36,7 @@ export class OrderHistoryComponent implements OnInit {
     private invoiceService: InvoiceService,
     private authService: AuthService,
     private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
 
   ngOnInit(): void {
@@ -192,6 +193,7 @@ export class OrderHistoryComponent implements OnInit {
   }
 
   downloadInvoice(orderId: string): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     this.invoiceLoading[orderId] = true;
     this.invoiceService.downloadInvoice(+orderId).subscribe({
       next: (blob) => {

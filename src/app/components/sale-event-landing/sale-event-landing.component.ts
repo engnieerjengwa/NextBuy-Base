@@ -8,6 +8,7 @@ import {
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { NexbuyCurrencyPipe } from '../../pipes/nexbuy-currency.pipe';
 import { Title, Meta } from '@angular/platform-browser';
 import { DealService, Deal, DealProduct } from '../../services/deal.service';
 import { SaleEvent } from '../../common/sale-event';
@@ -15,7 +16,7 @@ import { SaleEvent } from '../../common/sale-event';
 @Component({
   selector: 'app-sale-event-landing',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, NexbuyCurrencyPipe],
   templateUrl: './sale-event-landing.component.html',
   styleUrl: './sale-event-landing.component.css',
 })

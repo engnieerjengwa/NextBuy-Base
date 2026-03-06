@@ -1,0 +1,50 @@
+<div class="currency-selector">
+  <button
+    class="currency-selector__toggle"
+    (click)="toggle()"
+    [attr.aria-expanded]="isOpen"
+    aria-haspopup="listbox"
+    aria-label="Select currency"
+  >
+    <span class="currency-selector__flag">{{
+      currentCurrency.code === "USD" ? "🇺🇸" : "🇿🇼"
+    }}</span>
+    <span class="currency-selector__code">{{
+      currentCurrency.code === "ZIG" ? "ZiG" : currentCurrency.code
+    }}</span>
+    <i
+      class="fas fa-chevron-down currency-selector__chevron"
+      [class.open]="isOpen"
+      aria-hidden="true"
+    ></i>
+  </button>
+
+  <ul
+    class="currency-selector__dropdown"
+    *ngIf="isOpen"
+    role="listbox"
+    aria-label="Currency options"
+  >
+    <li
+      *ngFor="let currency of currencies"
+      role="option"
+      [attr.aria-selected]="currency.code === currentCurrency.code"
+      (click)="selectCurrency(currency.code)"
+      class="currency-selector__option"
+      [class.active]="currency.code === currentCurrency.code"
+    >
+      <span class="currency-selector__flag">{{
+        currency.code === "USD" ? "🇺🇸" : "🇿🇼"
+      }}</span>
+      <span
+        >{{ currency.code === "ZIG" ? "ZiG" : currency.code }} —
+        {{ currency.name }}</span
+      >
+      <i
+        class="fas fa-check"
+        *ngIf="currency.code === currentCurrency.code"
+        aria-hidden="true"
+      ></i>
+    </li>
+  </ul>
+</div>

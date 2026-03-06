@@ -4,7 +4,7 @@
       #myInput
       type="text"
       class="au-input au-input-xl"
-      placeholder="Search for products"
+      [placeholder]="'NAV.SEARCH_PLACEHOLDER' | translate"
       [value]="searchQuery"
       (input)="onSearchInput(myInput.value)"
       (keyup.enter)="doSearch(myInput.value)"
@@ -14,7 +14,7 @@
     <i
       class="fas fa-search search-icon"
       (click)="doSearch(myInput.value)"
-      title="Search"
+      [title]="'NAV.SEARCH' | translate"
     ></i>
   </div>
 
@@ -40,11 +40,13 @@
         }}</span>
       </div>
       <span class="suggestion-price" *ngIf="suggestion.unitPrice">
-        {{ suggestion.unitPrice | currency: "USD" }}
+        {{ suggestion.unitPrice | nexbuyCurrency }}
       </span>
     </div>
     <div class="autocomplete-footer" (click)="doSearch(searchQuery)">
-      See all results for "<strong>{{ searchQuery }}</strong
+      {{ "SEARCH.SEE_ALL_RESULTS" | translate }} "<strong>{{
+        searchQuery
+      }}</strong
       >"
     </div>
   </div>

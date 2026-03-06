@@ -3,7 +3,7 @@
     <h2>My Wallet</h2>
     <div class="balance-card">
       <span class="balance-label">Available Balance</span>
-      <span class="balance-amount">{{ balance | currency: "USD" }}</span>
+      <span class="balance-amount">{{ balance | nexbuyCurrency }}</span>
     </div>
   </div>
 
@@ -41,7 +41,7 @@
             [class.negative]="txn.transactionType === 'DEBIT'"
           >
             {{ txn.transactionType === "CREDIT" ? "+" : "-"
-            }}{{ txn.amount | currency: "USD" }}
+            }}{{ txn.amount | nexbuyCurrency }}
           </span>
         </div>
       </div>

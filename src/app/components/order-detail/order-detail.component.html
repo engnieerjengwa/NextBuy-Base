@@ -113,21 +113,21 @@
               </div>
               <div class="od-summary-row">
                 <span>Amount</span>
-                <span>{{ calculatedTotal | currency: "USD" }}</span>
+                <span>{{ calculatedTotal | nexbuyCurrency }}</span>
               </div>
               <div class="od-summary-row">
                 <span>Delivery</span>
-                <span>{{ deliveryCost | currency: "USD" }}</span>
+                <span>{{ deliveryCost | nexbuyCurrency }}</span>
               </div>
               <div class="od-summary-divider"></div>
               <div class="od-summary-row od-summary-total">
                 <span>Order Total:</span>
-                <span>{{ order.totalPrice | currency: "USD" }}</span>
+                <span>{{ order.totalPrice | nexbuyCurrency }}</span>
               </div>
               <div class="od-summary-row od-summary-paid">
                 <span>Paid (Credit / Debit Card)</span>
                 <span class="od-text-negative"
-                  >-{{ order.totalPrice | currency: "USD" }}</span
+                  >-{{ order.totalPrice | nexbuyCurrency }}</span
                 >
               </div>
             </div>
@@ -220,14 +220,14 @@
               </a>
               <span class="od-item-qty">Qty: {{ item.quantity }}</span>
               <span class="od-item-price-mobile">{{
-                item.unitPrice | currency: "USD"
+                item.unitPrice | nexbuyCurrency
               }}</span>
               <span class="od-item-seller"
                 >Sold by <strong>NexBuy Store</strong></span
               >
             </div>
             <div class="od-item-price">
-              {{ item.unitPrice | currency: "USD" }}
+              {{ item.unitPrice | nexbuyCurrency }}
             </div>
           </div>
 

@@ -82,10 +82,10 @@
                     <p class="deal-product-name">{{ product.productName }}</p>
                     <div class="deal-product-pricing">
                       <span class="deal-price">{{
-                        product.dealPrice | currency: "USD"
+                        product.dealPrice | nexbuyCurrency
                       }}</span>
                       <span class="original-price">{{
-                        product.originalPrice | currency: "USD"
+                        product.originalPrice | nexbuyCurrency
                       }}</span>
                       <span class="discount-tag"
                         >-{{ product.discountPercentage }}%</span
@@ -156,10 +156,10 @@
                     <p class="deal-product-name">{{ product.productName }}</p>
                     <div class="deal-product-pricing">
                       <span class="deal-price">{{
-                        product.dealPrice | currency: "USD"
+                        product.dealPrice | nexbuyCurrency
                       }}</span>
                       <span class="original-price">{{
-                        product.originalPrice | currency: "USD"
+                        product.originalPrice | nexbuyCurrency
                       }}</span>
                       <span class="discount-tag"
                         >-{{ product.discountPercentage }}%</span

@@ -2,6 +2,7 @@ import { Component, OnDestroy, ElementRef, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NexbuyCurrencyPipe } from '../../pipes/nexbuy-currency.pipe';
 import { Subject, Subscription } from 'rxjs';
 import {
   debounceTime,
@@ -11,11 +12,12 @@ import {
 } from 'rxjs/operators';
 import { ProductService } from '../../services/product.service';
 import { ProductSearchResult } from '../../common/product';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NexbuyCurrencyPipe, TranslateModule],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css',
 })

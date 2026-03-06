@@ -5,10 +5,12 @@ import {
   OnDestroy,
   ViewChild,
   ElementRef,
+  Inject,
+  PLATFORM_ID,
 } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../common/product';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { CartItem } from '../../common/cart-item';
 import { CartService } from '../../services/cart.service';
@@ -91,11 +93,14 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     private productService: ProductService,
     private cartService: CartService,
     private route: ActivatedRoute,
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {
     // Load view preference from localStorage
-    const savedView = localStorage.getItem('nexbuy_viewMode');
-    if (savedView === 'list' || savedView === 'grid') {
-      this.viewMode = savedView;
+    if (isPlatformBrowser(this.platformId)) {
+      const savedView = localStorage.getItem('nexbuy_viewMode');
+      if (savedView === 'list' || savedView === 'grid') {
+        this.viewMode = savedView;
+      }
     }
   }
 
@@ -423,7 +428,9 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   toggleViewMode(): void {
     this.viewMode = this.viewMode === 'grid' ? 'list' : 'grid';
-    localStorage.setItem('nexbuy_viewMode', this.viewMode);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('nexbuy_viewMode', this.viewMode);
+    }
   }
 
   private hasActiveFilters(): boolean {

@@ -9,7 +9,7 @@
         <img [src]="currentProduct.imageUrl" [alt]="currentProduct.name" />
         <span class="product-name">{{ currentProduct.name }}</span>
         <span class="product-price">{{
-          currentProduct.unitPrice | currency: "USD"
+          currentProduct.unitPrice | nexbuyCurrency
         }}</span>
         <span class="this-item-label">This item</span>
       </div>
@@ -34,11 +34,11 @@
             {{ product.productName }}
           </a>
           <span class="product-price" *ngIf="!hasSalePrice(product)">
-            {{ product.unitPrice | currency: "USD" }}
+            {{ product.unitPrice | nexbuyCurrency }}
           </span>
           <span class="product-price sale" *ngIf="hasSalePrice(product)">
-            {{ product.bundlePrice | currency: "USD" }}
-            <del>{{ product.unitPrice | currency: "USD" }}</del>
+            {{ product.bundlePrice | nexbuyCurrency }}
+            <del>{{ product.unitPrice | nexbuyCurrency }}</del>
           </span>
         </div>
       </ng-container>
@@ -47,9 +47,9 @@
     <!-- Summary -->
     <div class="fbt-summary">
       <span class="total-label">Total price:</span>
-      <span class="total-amount">{{ bundleTotal | currency: "USD" }}</span>
+      <span class="total-amount">{{ bundleTotal | nexbuyCurrency }}</span>
       <div class="bundle-savings" *ngIf="bundleSavings > 0">
-        You save {{ bundleSavings | currency: "USD" }}
+        You save {{ bundleSavings | nexbuyCurrency }}
       </div>
       <div class="selected-count">{{ selectedCount }} items selected</div>
       <button

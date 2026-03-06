@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { NexbuyCurrencyPipe } from '../../pipes/nexbuy-currency.pipe';
 import { WishlistService } from '../../services/wishlist.service';
 import { CartService } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
@@ -11,7 +12,7 @@ import { Product } from '../../common/product';
 @Component({
   selector: 'app-wishlist',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, NexbuyCurrencyPipe],
   templateUrl: './wishlist.component.html',
   styleUrl: './wishlist.component.css',
 })

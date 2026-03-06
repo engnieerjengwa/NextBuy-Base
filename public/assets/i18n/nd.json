@@ -1,0 +1,128 @@
+{
+  "NAV": {
+    "HOME": "Ekhaya",
+    "CATEGORIES": "Izigaba",
+    "CART": "Inqola",
+    "ACCOUNT": "I-Akhawunti Yami",
+    "LOGIN": "Ngena",
+    "REGISTER": "Bhalisa",
+    "LOGOUT": "Phuma",
+    "SEARCH_PLACEHOLDER": "Dinga imikhiqizo...",
+    "ORDERS": "Ama-Odha Ami",
+    "WISHLIST": "Engikufisayo",
+    "ADDRESSES": "Amakheli",
+    "WALLET": "Isikhwama",
+    "LOYALTY": "Imivuzo",
+    "DEALS": "Izivumelwano Zosuku",
+    "BRANDS": "Amabhulendi",
+    "GIFT_CARDS": "Amakhadi Ezipho"
+  },
+  "PRODUCT": {
+    "ADD_TO_CART": "Faka eNqoleni",
+    "BUY_NOW": "Thenga Khathesi",
+    "OUT_OF_STOCK": "Akusekho",
+    "IN_STOCK": "Kukhona",
+    "UNIT_PRICE": "Intengo",
+    "QUANTITY": "Inani",
+    "DESCRIPTION": "Incazelo",
+    "REVIEWS": "Ukuhlolwa",
+    "FREE_DELIVERY": "Ukuhanjiswa Mahala",
+    "SKU": "SKU",
+    "CATEGORY": "Isigaba"
+  },
+  "CART": {
+    "TITLE": "Inqola Yokuthenga",
+    "EMPTY": "Inqola yakho ayinalutho",
+    "SUBTOTAL": "Inani Elincane",
+    "DELIVERY": "Ukuhanjiswa",
+    "TOTAL": "Isamba",
+    "CHECKOUT": "Qhubeka Ekubhadaleni",
+    "CONTINUE_SHOPPING": "Qhubeka Ukuthenga",
+    "REMOVE": "Susa",
+    "ITEMS": "izinto"
+  },
+  "CHECKOUT": {
+    "TITLE": "Bhadala",
+    "SHIPPING": "Ikheli Lokuhanjiswa",
+    "PAYMENT": "Ukubhadala",
+    "PLACE_ORDER": "Misa I-Odha",
+    "FIRST_NAME": "Ibizo Lokuqala",
+    "LAST_NAME": "Isibongo",
+    "EMAIL": "I-Imeyili",
+    "PHONE": "Inombolo yeFoni",
+    "ADDRESS": "Ikheli loMgwaqo",
+    "CITY": "Idolobho",
+    "COUNTRY": "Ilizwe"
+  },
+  "AUTH": {
+    "LOGIN_TITLE": "Ngena",
+    "REGISTER_TITLE": "Dala I-Akhawunti",
+    "EMAIL": "Ikheli le-Imeyili",
+    "PASSWORD": "Iphasiwedi",
+    "CONFIRM_PASSWORD": "Qinisekisa Iphasiwedi",
+    "FORGOT_PASSWORD": "Ukhohlwe Iphasiwedi?",
+    "SIGN_UP": "Bhalisa",
+    "SIGN_IN": "Ngena"
+  },
+  "ORDERS": {
+    "TITLE": "Ama-Odha Ami",
+    "ORDER_NUMBER": "I-Odha #",
+    "DATE": "Usuku",
+    "STATUS": "Isimo",
+    "TOTAL": "Isamba",
+    "DETAILS": "Bona Imininingwane",
+    "NO_ORDERS": "Awukamisi ma-odha"
+  },
+  "ACCOUNT": {
+    "TITLE": "I-Akhawunti Yami",
+    "PROFILE": "Iphrofayili",
+    "ADDRESSES": "Ibhuku Lamakheli",
+    "ORDERS": "Umlando Wama-Odha",
+    "WISHLIST": "Engikufisayo"
+  },
+  "COMMON": {
+    "LOADING": "Kuyavulwa...",
+    "ERROR": "Kukhona okungahambanga kuhle",
+    "RETRY": "Zama Futhi",
+    "BACK": "Buyela",
+    "NEXT": "Okulandelayo",
+    "SAVE": "Gcina",
+    "CANCEL": "Khansela",
+    "DELETE": "Cisha",
+    "CLOSE": "Vala",
+    "YES": "Yebo",
+    "NO": "Hatshi",
+    "SEARCH": "Dinga",
+    "NO_RESULTS": "Akukho okutholakeleyo",
+    "BACK_TO_HOME": "Buyela Ekhaya",
+    "VIEW_ALL": "Bona Konke"
+  },
+  "FOOTER": {
+    "ABOUT": "Mayelana leNexBuy",
+    "HELP": "Indawo Yosizo",
+    "RETURNS": "Umthetho Wokubuyisa",
+    "PRIVACY": "Umthetho Wobumfihlo",
+    "TERMS": "Imigomo Lemibandela",
+    "CONTACT": "Xhumana Lathi",
+    "COPYRIGHT": "© 2026 NexBuy. Wonke amalungelo agcinwe."
+  },
+  "DEALS": {
+    "TITLE": "Izivumelwano Zosuku",
+    "ENDS_IN": "Kuphela ngo",
+    "SOLD": "kuthengisiwe",
+    "REMAINING": "okuseleyo"
+  },
+  "WISHLIST": {
+    "TITLE": "Engikufisayo",
+    "EMPTY": "Uhlu lwakho alulalutho",
+    "MOVE_TO_CART": "Faka eNqoleni"
+  },
+  "ERRORS": {
+    "NOT_FOUND_TITLE": "Ikhasi Alitholakalanga",
+    "NOT_FOUND_MESSAGE": "Ikhasi olidingayo alitholakalanga kumbe lisusiwe.",
+    "SERVER_ERROR_TITLE": "Kukhona Okungahambanga Kuhle",
+    "SERVER_ERROR_MESSAGE": "Siphatheke zinhlupho zobuchwepheshe. Sicela uzame futhi ngokuhamba kwesikhathi.",
+    "BACK_TO_HOME": "Buyela Ekhaya",
+    "BACK_TO_SHOPPING": "Buyela Ekuthengeni"
+  }
+}

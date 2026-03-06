@@ -305,6 +305,37 @@
   }
 }
 
+/* Small phone breakpoint */
+@media (max-width: 480px) {
+  .product-thumbnail {
+    width: 50px;
+    height: 50px;
+  }
+
+  .product-thumbnail img {
+    max-width: 42px;
+    max-height: 42px;
+  }
+
+  .more-items {
+    width: 50px;
+    height: 50px;
+    font-size: 12px;
+  }
+
+  .order-action {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn-buy-again,
+  .btn-outline-secondary {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
 /* Buy Again Button */
 .btn-buy-again {
   background-color: #0b79bf;

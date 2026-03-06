@@ -1,0 +1,74 @@
+.error-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 2rem 1rem;
+}
+
+.error-container {
+  text-align: center;
+  max-width: 520px;
+}
+
+.error-illustration {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.error-code {
+  font-size: 8rem;
+  font-weight: 800;
+  color: #e8ecef;
+  line-height: 1;
+  display: block;
+}
+
+.error-icon {
+  font-size: 4rem;
+  color: #dc3545;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.error-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.error-message {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.error-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.error-actions .btn {
+  min-width: 160px;
+}
+
+.error-help {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.error-help a {
+  color: #0b79bf;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.error-help a:hover {
+  text-decoration: underline;
+}

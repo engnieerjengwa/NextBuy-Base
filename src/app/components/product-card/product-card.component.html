@@ -56,10 +56,10 @@
     <!-- Pricing -->
     <div class="card-pricing">
       <span class="card-price-current">
-        {{ product.unitPrice | currency: currencyCode }}
+        {{ product.unitPrice | nexbuyCurrency }}
       </span>
       <span class="card-price-original" *ngIf="hasOriginalPrice">
-        {{ product.originalPrice | currency: currencyCode }}
+        {{ product.originalPrice | nexbuyCurrency }}
       </span>
     </div>
 

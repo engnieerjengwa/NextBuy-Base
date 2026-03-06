@@ -27,7 +27,7 @@
       <div class="gift-card-visual">
         <div class="card-front">
           <span class="brand">NexBuy</span>
-          <span class="amount">{{ selectedAmount | currency: "USD" }}</span>
+          <span class="amount">{{ selectedAmount | nexbuyCurrency }}</span>
           <span class="recipient" *ngIf="recipientName"
             >To: {{ recipientName }}</span
           >
@@ -44,7 +44,7 @@
           [class.selected]="selectedAmount === amount"
           (click)="selectAmount(amount)"
         >
-          {{ amount | currency: "USD" }}
+          {{ amount | nexbuyCurrency }}
         </button>
       </div>
 
@@ -100,7 +100,7 @@
     <div class="balance-result" *ngIf="balanceResult">
       <p>
         Balance:
-        <strong>{{ balanceResult.currentBalance | currency: "USD" }}</strong>
+        <strong>{{ balanceResult.currentBalance | nexbuyCurrency }}</strong>
       </p>
       <p>Expires: {{ balanceResult.expiryDate | date: "mediumDate" }}</p>
       <p>

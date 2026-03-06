@@ -1,0 +1,37 @@
+<div class="language-selector" (click)="$event.stopPropagation()">
+  <button
+    class="language-toggle"
+    (click)="toggle($event)"
+    [attr.aria-expanded]="isOpen"
+    aria-haspopup="listbox"
+    aria-label="Select language"
+    type="button"
+  >
+    <span class="lang-flag">{{ currentLang.flag }}</span>
+    <span class="lang-code">{{ currentLang.code | uppercase }}</span>
+    <i class="fa-solid fa-chevron-down" [class.rotated]="isOpen"></i>
+  </button>
+
+  @if (isOpen) {
+    <ul class="language-dropdown" role="listbox" aria-label="Languages">
+      @for (lang of languages; track lang.code) {
+        <li
+          class="language-option"
+          [class.active]="lang.code === currentLang.code"
+          (click)="selectLanguage(lang)"
+          role="option"
+          [attr.aria-selected]="lang.code === currentLang.code"
+        >
+          <span class="lang-flag">{{ lang.flag }}</span>
+          <span class="lang-info">
+            <span class="lang-name">{{ lang.name }}</span>
+            <span class="lang-native">{{ lang.nativeName }}</span>
+          </span>
+          @if (lang.code === currentLang.code) {
+            <i class="fa-solid fa-check"></i>
+          }
+        </li>
+      }
+    </ul>
+  }
+</div>

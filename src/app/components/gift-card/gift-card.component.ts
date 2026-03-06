@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NexbuyCurrencyPipe } from '../../pipes/nexbuy-currency.pipe';
 import { GiftCardService } from '../../services/gift-card.service';
 
 @Component({
   selector: 'app-gift-card',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NexbuyCurrencyPipe],
   templateUrl: './gift-card.component.html',
   styleUrl: './gift-card.component.css',
 })

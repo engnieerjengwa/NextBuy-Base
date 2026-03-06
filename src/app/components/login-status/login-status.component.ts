@@ -9,11 +9,12 @@ import {
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login-status',
   standalone: true,
-  imports: [NgIf, RouterLink],
+  imports: [NgIf, RouterLink, TranslateModule],
   templateUrl: './login-status.component.html',
   styleUrl: './login-status.component.css',
 })

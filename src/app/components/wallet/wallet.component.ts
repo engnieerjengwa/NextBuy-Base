@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NexbuyCurrencyPipe } from '../../pipes/nexbuy-currency.pipe';
 import {
   WalletService,
   WalletTransaction,
@@ -8,7 +9,7 @@ import {
 @Component({
   selector: 'app-wallet',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NexbuyCurrencyPipe],
   templateUrl: './wallet.component.html',
   styleUrl: './wallet.component.css',
 })

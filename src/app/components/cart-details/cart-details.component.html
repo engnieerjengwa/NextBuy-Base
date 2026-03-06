@@ -44,13 +44,13 @@
                   <span class="in-stock-badge">In stock</span>
                 </div>
                 <div class="cart-item-price-mobile">
-                  {{ tempCartItem.unitPrice | currency: "USD" }}
+                  {{ tempCartItem.unitPrice | nexbuyCurrency }}
                 </div>
               </div>
               <div class="cart-item-price">
                 {{
                   tempCartItem.unitPrice * tempCartItem.quantity
-                    | currency: "USD"
+                    | nexbuyCurrency
                 }}
               </div>
               <div class="cart-item-actions">
@@ -109,7 +109,7 @@
                   <i class="fas fa-check-circle"></i>
                   {{ appliedCoupon?.code }}
                   &mdash;
-                  {{ appliedCoupon?.discountAmount | currency: "USD" }} off
+                  {{ appliedCoupon?.discountAmount | nexbuyCurrency }} off
                 </span>
                 <button
                   class="btn btn-sm btn-link text-danger"
@@ -262,7 +262,7 @@
             <div class="delivery-promo-text">
               <i class="fas fa-truck"></i>
               Add
-              <strong>{{ amountToFreeDelivery | currency: "USD" }}</strong>
+              <strong>{{ amountToFreeDelivery | nexbuyCurrency }}</strong>
               more for
               <strong>FREE delivery</strong>
             </div>
@@ -312,12 +312,12 @@
                   >Subtotal ({{ totalQuantity }}
                   {{ totalQuantity === 1 ? "item" : "items" }})</span
                 >
-                <span>{{ totalPrice | currency: "USD" }}</span>
+                <span>{{ totalPrice | nexbuyCurrency }}</span>
               </div>
               <div class="summary-row" *ngIf="discountAmount > 0">
                 <span class="text-success">Discount</span>
                 <span class="text-success"
-                  >-{{ discountAmount | currency: "USD" }}</span
+                  >-{{ discountAmount | nexbuyCurrency }}</span
                 >
               </div>
               <div class="summary-row">
@@ -331,7 +331,7 @@
                   >FREE</span
                 >
                 <span *ngIf="deliveryLocationSet && deliveryCost > 0">{{
-                  deliveryCost | currency: "USD"
+                  deliveryCost | nexbuyCurrency
                 }}</span>
               </div>
               <div
@@ -351,9 +351,7 @@
             </div>
             <div class="summary-total">
               <span class="total-label">TOTAL:</span>
-              <span class="total-price">{{
-                finalPrice | currency: "USD"
-              }}</span>
+              <span class="total-price">{{ finalPrice | nexbuyCurrency }}</span>
             </div>
             <button (click)="proceedToCheckout()" class="btn btn-checkout">
               Proceed to Checkout

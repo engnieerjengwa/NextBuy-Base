@@ -2,6 +2,7 @@ import {
   ApplicationConfig,
   provideZoneChangeDetection,
   inject,
+  ErrorHandler,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
@@ -17,6 +18,9 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { GlobalErrorHandler } from './handlers/global-error.handler';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 // Adapter function to convert class-based interceptor to functional interceptor
 export function authInterceptorFn(
@@ -36,5 +40,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideHttpClient(withInterceptors([authInterceptorFn])),
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    provideTranslateService({
+      fallbackLang: 'en',
+    }),
+    ...provideTranslateHttpLoader(),
   ],
 };

@@ -13,7 +13,7 @@
   <div class="cart-dropdown" [class.show]="isHovering">
     <div class="cart-dropdown-inner">
       <div class="cart-header">
-        <h4>Shopping Cart</h4>
+        <h4>{{ "CART.SHOPPING_CART" | translate }}</h4>
       </div>
 
       <div class="cart-items" *ngIf="cartItems.length > 0">
@@ -28,33 +28,33 @@
           <div class="item-details">
             <div class="item-name">{{ item.name }}</div>
             <div class="item-price">
-              {{ item.unitPrice | currency: "USD" }} x {{ item.quantity }}
+              {{ item.unitPrice | nexbuyCurrency }} x {{ item.quantity }}
             </div>
           </div>
         </div>
       </div>
 
       <div class="cart-empty" *ngIf="cartItems.length === 0">
-        <p>Your cart is empty</p>
+        <p>{{ "CART.EMPTY" | translate }}</p>
       </div>
 
       <div class="cart-footer" *ngIf="cartItems.length > 0">
         <div class="cart-total">
-          <span>Total:</span>
-          <span>{{ totalPrice | currency: "USD" }}</span>
+          <span>{{ "CART.TOTAL" | translate }}</span>
+          <span>{{ totalPrice | nexbuyCurrency }}</span>
         </div>
         <div class="cart-actions">
           <a
             routerLink="/cart-details"
             class="btn-view-cart"
             (click)="closeDropdown(); $event.stopPropagation()"
-            >View Cart</a
+            >{{ "CART.VIEW_CART" | translate }}</a
           >
           <a
             routerLink="/checkout"
             class="btn-checkout"
             (click)="closeDropdown(); $event.stopPropagation()"
-            >Checkout</a
+            >{{ "CART.CHECKOUT" | translate }}</a
           >
         </div>
       </div>

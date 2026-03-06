@@ -2,13 +2,8 @@ import { Component } from '@angular/core';
 import { Product, ProductImage, ProductVariant } from '../../common/product';
 import { ProductService } from '../../services/product.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import {
-  CurrencyPipe,
-  NgIf,
-  NgClass,
-  DecimalPipe,
-  DatePipe,
-} from '@angular/common';
+import { NgIf, NgClass, DecimalPipe, DatePipe } from '@angular/common';
+import { NexbuyCurrencyPipe } from '../../pipes/nexbuy-currency.pipe';
 import { CartService } from '../../services/cart.service';
 import { CartItem } from '../../common/cart-item';
 import { ImageGalleryComponent } from '../image-gallery/image-gallery.component';
@@ -27,7 +22,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-product-details',
   imports: [
-    CurrencyPipe,
+    NexbuyCurrencyPipe,
     DecimalPipe,
     DatePipe,
     RouterLink,

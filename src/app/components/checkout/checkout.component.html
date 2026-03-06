@@ -529,7 +529,9 @@
                 </div>
                 <div class="delivery-price" [class.free]="isStandardFree">
                   {{
-                    isStandardFree ? "FREE" : (standardDeliveryCost | currency)
+                    isStandardFree
+                      ? "FREE"
+                      : (standardDeliveryCost | nexbuyCurrency)
                   }}
                 </div>
               </div>
@@ -552,7 +554,7 @@
                   <p>Estimated 1&#x2013;2 business days</p>
                 </div>
                 <div class="delivery-price">
-                  {{ expressDeliveryCost | currency }}
+                  {{ expressDeliveryCost | nexbuyCurrency }}
                 </div>
               </div>
             </div>
@@ -562,7 +564,7 @@
               <h4>Order Summary</h4>
               <div class="summary-line">
                 <span>Items ({{ totalQuantity }})</span>
-                <span>{{ totalPrice | currency }}</span>
+                <span>{{ totalPrice | nexbuyCurrency }}</span>
               </div>
               <div class="summary-line">
                 <span>Delivery</span>
@@ -570,7 +572,7 @@
                   {{
                     selectedDeliveryCost === 0
                       ? "FREE"
-                      : (selectedDeliveryCost | currency)
+                      : (selectedDeliveryCost | nexbuyCurrency)
                   }}
                 </span>
               </div>
@@ -587,7 +589,7 @@
               <div class="summary-total-box">
                 <span class="summary-total-label">Total</span>
                 <span class="summary-total-price">{{
-                  orderTotal | currency
+                  orderTotal | nexbuyCurrency
                 }}</span>
               </div>
             </div>
@@ -779,10 +781,12 @@
                       </div>
                     </td>
                     <td>
-                      <p>Price: {{ tempCartItem.unitPrice | currency }}</p>
+                      <p>
+                        Price: {{ tempCartItem.unitPrice | nexbuyCurrency }}
+                      </p>
                       <p>
                         Subtotal:
-                        {{ getProductSubtotal(tempCartItem) | currency }}
+                        {{ getProductSubtotal(tempCartItem) | nexbuyCurrency }}
                       </p>
                     </td>
                   </tr>
@@ -800,13 +804,13 @@
                           {{
                             selectedDeliveryCost === 0
                               ? "FREE"
-                              : (selectedDeliveryCost | currency)
+                              : (selectedDeliveryCost | nexbuyCurrency)
                           }}
                         </span>
                       </p>
                       <p class="review-total-price">
                         Total Price:
-                        {{ orderTotal | currency }}
+                        {{ orderTotal | nexbuyCurrency }}
                       </p>
                     </td>
                   </tr>
