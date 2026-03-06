@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   isLoading: boolean = false;
   returnUrl: string = '/products';
   isCheckoutFlow: boolean = false;
+  showPassword: boolean = false;
 
   constructor(
     private fb: FormBuilder,

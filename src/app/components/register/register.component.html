@@ -93,14 +93,24 @@
 
       <div class="form-group">
         <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          formControlName="password"
-          class="form-control"
-          placeholder="Create a password"
-          [class.is-invalid]="password?.invalid && password?.touched"
-        />
+        <div class="password-input-wrapper">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            class="form-control"
+            placeholder="Create a password"
+            [class.is-invalid]="password?.invalid && password?.touched"
+          />
+          <button
+            type="button"
+            class="password-toggle-btn"
+            (click)="showPassword = !showPassword"
+            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+          >
+            <i class="fa" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+          </button>
+        </div>
         <div
           class="invalid-feedback"
           *ngIf="password?.invalid && password?.touched"
@@ -127,16 +137,26 @@
 
       <div class="form-group">
         <label for="confirmPassword">Confirm Password</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          formControlName="confirmPassword"
-          class="form-control"
-          placeholder="Confirm your password"
-          [class.is-invalid]="
-            confirmPassword?.invalid && confirmPassword?.touched
-          "
-        />
+        <div class="password-input-wrapper">
+          <input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            class="form-control"
+            placeholder="Confirm your password"
+            [class.is-invalid]="
+              confirmPassword?.invalid && confirmPassword?.touched
+            "
+          />
+          <button
+            type="button"
+            class="password-toggle-btn"
+            (click)="showConfirmPassword = !showConfirmPassword"
+            [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'"
+          >
+            <i class="fa" [class.fa-eye]="!showConfirmPassword" [class.fa-eye-slash]="showConfirmPassword"></i>
+          </button>
+        </div>
         <div
           class="invalid-feedback"
           *ngIf="confirmPassword?.invalid && confirmPassword?.touched"

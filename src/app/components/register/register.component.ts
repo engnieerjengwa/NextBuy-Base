@@ -31,6 +31,8 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   errorMessage: string = '';
   successMessage: string = '';
   isLoading: boolean = false;
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
 
   constructor(
     private fb: FormBuilder,
